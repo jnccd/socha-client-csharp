@@ -10,12 +10,14 @@ namespace SoftwareChallengeClient
     {
         public int X, Y;
         public Direction MoveDirection;
+        public List<string> DebugHints;
 
         public Move(int X, int Y, Direction MoveDirection)
         {
             this.X = X;
             this.Y = Y;
             this.MoveDirection = MoveDirection;
+            DebugHints = new List<string>();
         }
 
         public string toXML()

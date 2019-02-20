@@ -21,6 +21,8 @@ namespace SoftwareChallengeClient
         static Logic PlayerLogic;
         static State GameState;
 
+        static Move LastMove;
+
         public static string RoomIDread
         {
             get
@@ -78,7 +80,14 @@ namespace SoftwareChallengeClient
             GameState = new State();
             PlayerLogic.GameState = GameState;
 
-            TcpClient client = new TcpClient(Host, Port);
+            TcpClient client = null;
+            try {
+                client = new TcpClient(Host, Port);
+            } catch (Exception e) {
+                ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
+                Console.ReadKey();
+                return;
+            }
             NetworkStream stream = client.GetStream();
 
             ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
@@ -94,9 +103,9 @@ namespace SoftwareChallengeClient
                 while (running)
                 {
                     string[] rawAnswers = Recieve(stream).
-                        Replace("</room>\n  <room", "༄༅༆").
+                        Replace("</room>\n  <", "༄༅༆").
                         Split('༅').
-                        Select(x => x = x.Replace("༄", "</room>\n").Replace("༆", "<room").Trim(' ')).
+                        Select(x => x = x.Replace("༄", "</room>\n").Replace("༆", "<").Trim(' ')).
                         Select(x => x.StartsWith("<protocol>") ? x.Remove(0, "<protocol>".Length) : x).
                         ToArray();
 
@@ -168,7 +177,8 @@ namespace SoftwareChallengeClient
                                                         break;
 
                                                     case "sc.framework.plugins.protocol.MoveRequest":
-                                                        Send(stream, PlayerLogic.GetMove().toXML());
+                                                        LastMove = PlayerLogic.GetMove();
+                                                        Send(stream, LastMove.toXML());
                                                         break;
                                                 }
                                                 break;
@@ -187,6 +197,8 @@ namespace SoftwareChallengeClient
 
             stream.Close();
             client.Close();
+            if (LastMove != null && LastMove.DebugHints.Count > 0)
+                ConsoleWriteLine("Debug Hints from the Last Move:\n" + LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
             ConsoleWriteLine("End of Communication!", ConsoleColor.Red);
             Console.ReadKey();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
