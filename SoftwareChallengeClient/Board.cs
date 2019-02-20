@@ -34,9 +34,9 @@ namespace SoftwareChallengeClient
                 for (int i = 0; i < BoardWidth; i++)
                     if (Fields[i, Y].hasPiranha())
                         num++;
-            
-            // Diagonal 1
-            if (Dir == Direction.UP_LEFT || Dir == Direction.DOWN_RIGHT)
+
+            // Aufsteigend
+            if (Dir == Direction.UP_RIGHT || Dir == Direction.DOWN_LEFT)
             {
                 int x = X, y = Y;
                 while (x >= 0 && y >= 0)
@@ -54,8 +54,8 @@ namespace SoftwareChallengeClient
                 }
             }
 
-            // Diagonal 2
-            if (Dir == Direction.UP_RIGHT || Dir == Direction.DOWN_LEFT)
+            // Fallend
+            if (Dir == Direction.UP_LEFT || Dir == Direction.DOWN_RIGHT)
             {
                 int x = X, y = Y;
                 while (x >= 0 && y < BoardHeight)
@@ -135,6 +135,19 @@ namespace SoftwareChallengeClient
         {
             int moveDistance = NumberOfFishInRow(M.X, M.Y, M.MoveDirection);
             Point endPoint = GetMoveEndpoint(M, moveDistance);
+
+            //M.DebugHints.Add("Movedistance = " + moveDistance);
+            //M.DebugHints.Add("endPoint = " + endPoint);
+            //var fields = GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1);
+            //if (moveDistance > 0)
+            //{
+            //    try
+            //    {
+            //        M.DebugHints.Add("Move Over Fields = " + fields.Select(x => x.X + " " + x.Y + " " + x.State).Aggregate((x, y) => x + " " + y));
+            //    } catch { }
+            //}
+            //M.DebugHints.Add("No enemies in the way = " + (fields.Where(x => x.State == Team.otherTeam().toFieldState()).Count() == 0));
+
             return endPoint.X >= 0 &&
                    endPoint.X < BoardWidth &&
                    endPoint.Y >= 0 &&
@@ -142,7 +155,7 @@ namespace SoftwareChallengeClient
                    Fields[M.X, M.Y].hasPiranha() &&
                    Fields[M.X, M.Y].State == Team.toFieldState() &&
                    GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1).
-                    TrueForAll(x => x.State != Team.otherTeam().toFieldState()) &&
+                    Where(x => x.State == Team.otherTeam().toFieldState()).Count() == 0 &&
                    (Fields[endPoint.X, endPoint.Y].State == FieldState.EMPTY || 
                     Fields[endPoint.X, endPoint.Y].hasPiranha() && 
                     Fields[endPoint.X, endPoint.Y].State != Team.toFieldState());
