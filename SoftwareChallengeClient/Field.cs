@@ -11,7 +11,7 @@ namespace SoftwareChallengeClient
         public int X, Y;
         public FieldState State;
 
-        public bool hasPiranha()
+        public bool HasPiranha()
         {
             return State == FieldState.BLUE || State == FieldState.RED;
         }

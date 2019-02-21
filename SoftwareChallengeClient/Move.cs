@@ -20,12 +20,13 @@ namespace SoftwareChallengeClient
             DebugHints = new List<string>();
         }
 
-        public string toXML()
+        public string ToXML()
         {
             if (this == null)
                 return "";
-
-            return $"<room roomId=\"{Program.RoomIDread}\"><data class=\"move\" x=\"{X}\" y=\"{Y}\" direction=\"{MoveDirection}\"></data></room>";
+            
+            return $"<room roomId=\"{Program.RoomID}\"><data class=\"move\" x=\"{X}\" y=\"{Y}\" direction=\"{MoveDirection}\">" +
+                $"{DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y)}</data></room>";
         }
     }
 
