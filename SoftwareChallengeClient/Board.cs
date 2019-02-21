@@ -131,22 +131,23 @@ namespace SoftwareChallengeClient
             }
         }
         
-        public bool isLegal(Move M, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
+        public bool IsLegal(Move M, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
         {
             int moveDistance = NumberOfFishInRow(M.X, M.Y, M.MoveDirection);
             Point endPoint = GetMoveEndpoint(M, moveDistance);
 
-            //M.DebugHints.Add("Movedistance = " + moveDistance);
-            //M.DebugHints.Add("endPoint = " + endPoint);
-            //var fields = GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1);
-            //if (moveDistance > 0)
-            //{
-            //    try
-            //    {
-            //        M.DebugHints.Add("Move Over Fields = " + fields.Select(x => x.X + " " + x.Y + " " + x.State).Aggregate((x, y) => x + " " + y));
-            //    } catch { }
-            //}
-            //M.DebugHints.Add("No enemies in the way = " + (fields.Where(x => x.State == Team.otherTeam().toFieldState()).Count() == 0));
+            M.DebugHints.Add("Movedistance = " + moveDistance);
+            M.DebugHints.Add("endPoint = " + endPoint);
+            var fields = GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1);
+            if (moveDistance > 0)
+            {
+                try
+                {
+                    M.DebugHints.Add("Move Over Fields = " + fields.Select(x => x.X + " " + x.Y + " " + x.State).Aggregate((x, y) => x + " " + y));
+                }
+                catch { }
+            }
+            M.DebugHints.Add("No enemies in the way = " + (fields.Where(x => x.State == Team.otherTeam().toFieldState()).Count() == 0));
 
             return endPoint.X >= 0 &&
                    endPoint.X < BoardWidth &&
@@ -170,7 +171,7 @@ namespace SoftwareChallengeClient
                         foreach (Direction dir in Enum.GetValues(typeof(Direction)))
                         {
                             Move m = new Move(x, y, dir);
-                            if (isLegal(m, Team))
+                            if (IsLegal(m, Team))
                                 temp.Add(m);
                         }
             return temp;

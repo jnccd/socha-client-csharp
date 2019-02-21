@@ -20,6 +20,7 @@ namespace SoftwareChallengeClient
         static string RoomID = "";
         static Logic PlayerLogic;
         static State GameState;
+        static bool LogNetwork = true;
 
         static Move LastMove;
 
@@ -102,26 +103,21 @@ namespace SoftwareChallengeClient
                 bool running = true;
                 while (running)
                 {
-                    string[] rawAnswers = Recieve(stream).
-                        Replace("</room>\n  <", "༄༅༆").
-                        Split('༅').
-                        Select(x => x = x.Replace("༄", "</room>\n").Replace("༆", "<").Trim(' ')).
-                        Select(x => x.StartsWith("<protocol>") ? x.Remove(0, "<protocol>".Length) : x).
-                        ToArray();
+                    string raw = Recieve(stream);
+                    if (raw.Contains("</protocol>"))
+                        break;
+                    raw = raw.StartsWith("<protocol>") ? raw.Remove(0, "<protocol>".Length) : raw;
+                    XElement recievedElement = XElement.Parse("<received>" + raw + "</received>");
+                    string[] nodes = recievedElement.Nodes().Where(x => x is XElement).Select(x => x.ToString()).ToArray();
 
-                    foreach (string rawAnswer in rawAnswers)
+                    foreach (string node in nodes)
                     {
-                        if (string.IsNullOrWhiteSpace(rawAnswer))
+                        if (string.IsNullOrWhiteSpace(node))
                             continue;
-                        if (rawAnswer.Contains("</protocol>"))
-                        {
-                            running = false;
-                            break;
-                        }
 
                         try
                         {
-                            XElement xmlAnswer = XElement.Parse(rawAnswer);
+                            XElement xmlAnswer = XElement.Parse(node);
 
                             switch (xmlAnswer.Name.LocalName)
                             {
@@ -208,7 +204,8 @@ namespace SoftwareChallengeClient
         {
             byte[] data = Encoding.ASCII.GetBytes(message);
             stream.Write(data, 0, data.Length);
-            ConsoleWriteLine($"Sent: {message}", ConsoleColor.Yellow);
+            if (LogNetwork)
+                ConsoleWriteLine($"Sent: {message}", ConsoleColor.Cyan);
         }
         static string Recieve(NetworkStream stream)
         {
@@ -218,14 +215,14 @@ namespace SoftwareChallengeClient
 
             while (recievedBytes == bufferlength)
             {
+                Thread.Sleep(3); // Without this it stops reading at a certain point because it reads too fast
+
                 byte[] data = new byte[bufferlength];
                 recievedBytes = stream.Read(data, 0, data.Length);
                 responseData += Encoding.ASCII.GetString(data, 0, recievedBytes);
-
-                Thread.Sleep(3); // Without this it stops reading at a certain point because it reads too fast
             }
 
-            if (!string.IsNullOrWhiteSpace(responseData))
+            if (!string.IsNullOrWhiteSpace(responseData) && LogNetwork)
                 ConsoleWriteLine($"Received: {responseData}", ConsoleColor.Yellow);
             return responseData;
         }
