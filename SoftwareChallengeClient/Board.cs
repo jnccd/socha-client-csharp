@@ -30,7 +30,7 @@ namespace SoftwareChallengeClient
                         num++;
 
             // Horizontal
-            if (Dir == Direction.DOWN || Dir == Direction.UP)
+            if (Dir == Direction.RIGHT || Dir == Direction.LEFT)
                 for (int i = 0; i < BoardWidth; i++)
                     if (Fields[i, Y].HasPiranha())
                         num++;
@@ -135,28 +135,14 @@ namespace SoftwareChallengeClient
         {
             int moveDistance = NumberOfFishInRow(M.X, M.Y, M.MoveDirection);
             Point endPoint = GetMoveEndpoint(M, moveDistance);
-
-            M.DebugHints.Add("Movedistance = " + moveDistance);
-            M.DebugHints.Add("endPoint = " + endPoint);
-            var fields = GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1);
-            if (moveDistance > 0)
-            {
-                try
-                {
-                    M.DebugHints.Add("Move Over Fields = " + fields.Select(x => x.X + " " + x.Y + " " + x.State).Aggregate((x, y) => x + " " + y));
-                }
-                catch { }
-            }
-            M.DebugHints.Add("No enemies in the way = " + (fields.Where(x => x.State == Team.OtherTeam().ToFieldState()).Count() == 0));
-
             return endPoint.X >= 0 &&
                    endPoint.X < BoardWidth &&
                    endPoint.Y >= 0 &&
                    endPoint.Y < BoardHeight && 
                    Fields[M.X, M.Y].HasPiranha() &&
                    Fields[M.X, M.Y].State == Team.ToFieldState() &&
-                   GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance - 1).
-                    Where(x => x.State == Team.OtherTeam().ToFieldState()).Count() == 0 &&
+                   GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance).
+                    TrueForAll(x => x.State != Team.OtherTeam().ToFieldState()) &&
                    (Fields[endPoint.X, endPoint.Y].State == FieldState.EMPTY || 
                     Fields[endPoint.X, endPoint.Y].HasPiranha() && 
                     Fields[endPoint.X, endPoint.Y].State != Team.ToFieldState());

@@ -13,7 +13,7 @@ namespace SoftwareChallengeClient
 
         public Logic()
         {
-
+            Program.LogNetwork = true;
         }
 
         public Move GetMove()
