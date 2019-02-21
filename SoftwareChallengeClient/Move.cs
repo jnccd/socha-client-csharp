@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,23 @@ namespace SoftwareChallengeClient
             this.Y = Y;
             this.MoveDirection = MoveDirection;
             DebugHints = new List<string>();
+        }
+
+        public bool IsLegalOn(Board B, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
+        {
+            int moveDistance = B.NumberOfFishInRow(X, Y, MoveDirection);
+            Point endPoint = B.GetMoveEndpoint(this, moveDistance);
+            return endPoint.X >= 0 &&
+                   endPoint.X < Board.BoardWidth &&
+                   endPoint.Y >= 0 &&
+                   endPoint.Y < Board.BoardHeight &&
+                   B.Fields[X, Y].HasPiranha() &&
+                   B.Fields[X, Y].State == Team.ToFieldState() &&
+                   B.GetFieldsInDir(X, Y, MoveDirection, moveDistance).
+                    TrueForAll(x => x.State != Team.OtherTeam().ToFieldState()) &&
+                   (B.Fields[endPoint.X, endPoint.Y].State == FieldState.EMPTY ||
+                    B.Fields[endPoint.X, endPoint.Y].HasPiranha() &&
+                    B.Fields[endPoint.X, endPoint.Y].State != Team.ToFieldState());
         }
 
         public string ToXML()
