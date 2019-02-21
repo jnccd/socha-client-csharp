@@ -12,18 +12,53 @@ namespace SoftwareChallengeClient
 {
     public class Program
     {
+        // Start Arguments
         static string Host = "127.0.0.1";
         static int Port = 13050;
         static string Reservation = "";
-        static string Strategy = "";
-
+        public static string Strategy { get; private set; } = "";
+        
         public static string RoomID { get; private set; } = "";
+        public static bool LogNetwork;
         static Logic PlayerLogic;
         static State GameState;
-        static Move LastMove;
-        static readonly bool LogNetwork = true;
         
         static void Main(string[] args)
+        {
+            Console.BufferHeight *= 5;
+            if (!GotProperStartArguments(args))
+                return;
+
+            GameState = new State();
+            PlayerLogic = new Logic { GameState = GameState };
+
+            TcpClient client = ConnectToServer();
+            NetworkStream stream = client.GetStream();
+            ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
+            
+            ExecuteCommunationLoop(stream);
+
+            stream.Close();
+            client.Close();
+            ConsoleWriteLine("End of Communication!", ConsoleColor.Red);
+            Console.ReadKey();
+            ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
+        }
+        static TcpClient ConnectToServer()
+        {
+            try
+            {
+                return new TcpClient(Host, Port);
+            }
+            catch (Exception e)
+            {
+                ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
+                Console.ReadKey();
+                Environment.Exit(0);
+                return null;
+            }
+        }
+        static bool GotProperStartArguments(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
                 switch (args[i])
@@ -41,7 +76,7 @@ namespace SoftwareChallengeClient
               The strategy used for the game.
           --help:
               Print this help message.", ConsoleColor.Cyan);
-                        return;
+                        return false;
 
                     case "-h":
                     case "--host":
@@ -68,125 +103,111 @@ namespace SoftwareChallengeClient
                         break;
                 }
 
-            PlayerLogic = new Logic();
-            GameState = new State();
-            PlayerLogic.GameState = GameState;
-
-            TcpClient client = null;
-            try {
-                client = new TcpClient(Host, Port);
-            } catch (Exception e) {
-                ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
-                Console.ReadKey();
-                return;
-            }
-            NetworkStream stream = client.GetStream();
-
-            ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
+            return true;
+        }
+        static void ExecuteCommunationLoop(NetworkStream stream)
+        {
+            Move LastMove = null;
 
             if (string.IsNullOrWhiteSpace(Reservation))
                 Send(stream, $"<protocol><join gameType=\"swc_2019_piranhas\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{Reservation}\" />");
-
-            try
+            
+            while (true)
             {
-                bool running = true;
-                while (running)
+                string raw = Recieve(stream);
+                if (raw.Contains("</protocol>") || raw.Contains("left room"))
+                    break;
+                raw = raw.StartsWith("<protocol>") ? raw.Remove(0, "<protocol>".Length) : raw;
+                XElement recievedElement = XElement.Parse("<received>" + raw + "</received>");
+                string[] nodes = recievedElement.Nodes().Where(x => x is XElement).Select(x => x.ToString()).ToArray();
+
+                foreach (string node in nodes)
                 {
-                    string raw = Recieve(stream);
-                    if (raw.Contains("</protocol>"))
-                        break;
-                    raw = raw.StartsWith("<protocol>") ? raw.Remove(0, "<protocol>".Length) : raw;
-                    XElement recievedElement = XElement.Parse("<received>" + raw + "</received>");
-                    string[] nodes = recievedElement.Nodes().Where(x => x is XElement).Select(x => x.ToString()).ToArray();
+                    if (string.IsNullOrWhiteSpace(node))
+                        continue;
 
-                    foreach (string node in nodes)
+                    try
                     {
-                        if (string.IsNullOrWhiteSpace(node))
-                            continue;
+                        XElement xmlAnswer = XElement.Parse(node);
 
-                        try
+                        switch (xmlAnswer.Name.LocalName)
                         {
-                            XElement xmlAnswer = XElement.Parse(node);
+                            case "joined":
+                                RoomID = xmlAnswer.FirstAttribute.Value;
+                                break;
 
-                            switch (xmlAnswer.Name.LocalName)
-                            {
-                                case "joined":
-                                    RoomID = xmlAnswer.FirstAttribute.Value;
-                                    break;
-
-                                case "room":
-                                    if (xmlAnswer.HasElements && xmlAnswer.HasAttributes && xmlAnswer.FirstAttribute.Value == RoomID)
+                            case "room":
+                                if (xmlAnswer.HasElements && xmlAnswer.HasAttributes && xmlAnswer.FirstAttribute.Value == RoomID)
+                                {
+                                    XElement first = xmlAnswer.Elements().First();
+                                    switch (first.Name.LocalName)
                                     {
-                                        XElement first = xmlAnswer.Elements().First();
-                                        switch (first.Name.LocalName)
-                                        {
-                                            case "data":
-                                                XAttribute classAttr = first.Attribute(XName.Get("class"));
-                                                switch (classAttr.Value)
-                                                {
-                                                    case "welcomeMessage":
-                                                        Enum.TryParse(first.Attribute(XName.Get("color")).Value, out PlayerLogic.MyColor);
-                                                        break;
+                                        case "data":
+                                            XAttribute classAttr = first.Attribute(XName.Get("class"));
+                                            switch (classAttr.Value)
+                                            {
+                                                case "welcomeMessage":
+                                                    Enum.TryParse(first.Attribute(XName.Get("color")).Value.ToUpper(), out PlayerLogic.MyColor);
+                                                    UpdateConsoleTitle();
+                                                    break;
 
-                                                    case "memento":
-                                                        if (first.FirstNode is XElement)
+                                                case "memento":
+                                                    if (first.FirstNode is XElement)
+                                                    {
+                                                        XElement state = first.FirstNode as XElement;
+                                                        if (state.Name.LocalName == "state")
                                                         {
-                                                            XElement state = first.FirstNode as XElement;
-                                                            if (state.Name.LocalName == "state")
+                                                            Enum.TryParse(state.Attribute(XName.Get("startPlayerColor")).Value, out GameState.StartPlayerColor);
+                                                            Enum.TryParse(state.Attribute(XName.Get("currentPlayerColor")).Value, out GameState.CurrentPlayerColor);
+
+                                                            GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
+
+                                                            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
+                                                                GameState.RedDisplayName = displayNameRed.Attribute(XName.Get("displayName")).Value;
+                                                            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
+                                                                GameState.BlueDisplayName = displayNameBlue.Attribute(XName.Get("displayName")).Value;
+                                                            UpdateConsoleTitle();
+
+                                                            XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
+                                                            string[] fields = board.ToString().Split('\n').Select(x => x.Trim(' ').Trim('\t')).Where(x => x.StartsWith("<field ")).ToArray();
+                                                            foreach (string field in fields)
                                                             {
-                                                                Enum.TryParse(state.Attribute(XName.Get("startPlayerColor")).Value, out GameState.StartPlayerColor);
-                                                                Enum.TryParse(state.Attribute(XName.Get("currentPlayerColor")).Value, out GameState.CurrentPlayerColor);
-
-                                                                GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
-
-                                                                if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
-                                                                    GameState.RedDisplayName = displayNameRed.Value;
-                                                                if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
-                                                                    GameState.BlueDisplayName = displayNameBlue.Value;
-
-                                                                XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
-                                                                string[] fields = board.ToString().Split('\n').Select(x => x.Trim(' ').Trim('\t')).Where(x => x.StartsWith("<field ")).ToArray();
-                                                                foreach (string field in fields)
-                                                                {
-                                                                    XElement fieldElement = XElement.Parse(field);
-                                                                    int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
-                                                                        y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
-                                                                    FieldState newState;
-                                                                    Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out newState);
-                                                                    GameState.BoardState.Fields[x, y].Update(x, y, newState);
-                                                                }
+                                                                XElement fieldElement = XElement.Parse(field);
+                                                                int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
+                                                                    y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
+                                                                Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out FieldState newState);
+                                                                GameState.BoardState.Fields[x, y].Update(x, y, newState);
                                                             }
                                                         }
-                                                        break;
+                                                    }
+                                                    break;
 
-                                                    case "sc.framework.plugins.protocol.MoveRequest":
-                                                        LastMove = PlayerLogic.GetMove();
-                                                        Send(stream, LastMove.ToXML());
-                                                        break;
-                                                }
-                                                break;
-                                        }
+                                                case "sc.framework.plugins.protocol.MoveRequest":
+                                                    LastMove = PlayerLogic.GetMove();
+                                                    Send(stream, LastMove.ToXML());
+                                                    break;
+                                            }
+                                            break;
                                     }
-                                    break;
-                            }
-                        } catch (Exception e) {
-                            ConsoleWriteLine("Parse-Error:\n" + e, ConsoleColor.Red);
+                                }
+                                break;
                         }
                     }
+                    catch (Exception e)
+                    {
+                        ConsoleWriteLine("Parse-Error:\n" + e, ConsoleColor.Red);
+                    }
                 }
-            } catch (Exception e) {
-                ConsoleWriteLine("Error:\n" + e, ConsoleColor.Red);
             }
 
-            stream.Close();
-            client.Close();
             if (LastMove != null && LastMove.DebugHints.Count > 0)
                 ConsoleWriteLine("Debug Hints from the Last Move:\n" + LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
-            ConsoleWriteLine("End of Communication!", ConsoleColor.Red);
-            Console.ReadKey();
-            ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
+        }
+        static void UpdateConsoleTitle()
+        {
+            Console.Title = PlayerLogic.MyColor.ToString() + " in " + GameState.RedDisplayName + " vs " + GameState.BlueDisplayName;
         }
 
         static void Send(NetworkStream stream, string message)

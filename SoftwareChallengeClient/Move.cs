@@ -26,7 +26,7 @@ namespace SoftwareChallengeClient
                 return "";
             
             return $"<room roomId=\"{Program.RoomID}\"><data class=\"move\" x=\"{X}\" y=\"{Y}\" direction=\"{MoveDirection}\">" +
-                $"{DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y)}</data></room>";
+                $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}</data></room>";
         }
     }
 
