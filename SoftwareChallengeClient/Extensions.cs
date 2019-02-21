@@ -9,7 +9,7 @@ namespace SoftwareChallengeClient
 {
     public static class Extensions
     {
-        public static Point toVector(this Direction Dir)
+        public static Point ToVector(this Direction Dir)
         {
             switch (Dir)
             {
@@ -42,7 +42,7 @@ namespace SoftwareChallengeClient
             }
         }
 
-        public static FieldState toFieldState(this PlayerColor Color)
+        public static FieldState ToFieldState(this PlayerColor Color)
         {
             if (Color == PlayerColor.RED)
                 return FieldState.RED;
@@ -50,7 +50,7 @@ namespace SoftwareChallengeClient
                 return FieldState.BLUE;
         }
 
-        public static PlayerColor otherTeam(this PlayerColor Color)
+        public static PlayerColor OtherTeam(this PlayerColor Color)
         {
             if (Color == PlayerColor.RED)
                 return PlayerColor.BLUE;

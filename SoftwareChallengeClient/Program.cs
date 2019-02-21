@@ -17,21 +17,12 @@ namespace SoftwareChallengeClient
         static string Reservation = "";
         static string Strategy = "";
 
-        static string RoomID = "";
+        public static string RoomID { get; private set; } = "";
         static Logic PlayerLogic;
         static State GameState;
-        static bool LogNetwork = true;
-
         static Move LastMove;
-
-        public static string RoomIDread
-        {
-            get
-            {
-                return RoomID;
-            }
-        }
-
+        static readonly bool LogNetwork = true;
+        
         static void Main(string[] args)
         {
             for (int i = 0; i < args.Length; i++)
@@ -150,11 +141,9 @@ namespace SoftwareChallengeClient
 
                                                                 GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
 
-                                                                XElement displayNameRed = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") as XElement;
-                                                                XElement displayNameBlue = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") as XElement;
-                                                                if (displayNameRed != null)
+                                                                if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
                                                                     GameState.RedDisplayName = displayNameRed.Value;
-                                                                if (displayNameBlue != null)
+                                                                if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
                                                                     GameState.BlueDisplayName = displayNameBlue.Value;
 
                                                                 XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
@@ -174,7 +163,7 @@ namespace SoftwareChallengeClient
 
                                                     case "sc.framework.plugins.protocol.MoveRequest":
                                                         LastMove = PlayerLogic.GetMove();
-                                                        Send(stream, LastMove.toXML());
+                                                        Send(stream, LastMove.ToXML());
                                                         break;
                                                 }
                                                 break;
