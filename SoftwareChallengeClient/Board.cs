@@ -9,7 +9,7 @@ namespace SoftwareChallengeClient
 {
     public class Board
     {
-        const int BoardWidth = 10, BoardHeight = 10;
+        public const int BoardWidth = 10, BoardHeight = 10;
         public Field[,] Fields = new Field[BoardWidth, BoardHeight];
 
         public Board()
@@ -131,23 +131,6 @@ namespace SoftwareChallengeClient
             }
         }
         
-        public bool IsLegal(Move M, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
-        {
-            int moveDistance = NumberOfFishInRow(M.X, M.Y, M.MoveDirection);
-            Point endPoint = GetMoveEndpoint(M, moveDistance);
-            return endPoint.X >= 0 &&
-                   endPoint.X < BoardWidth &&
-                   endPoint.Y >= 0 &&
-                   endPoint.Y < BoardHeight && 
-                   Fields[M.X, M.Y].HasPiranha() &&
-                   Fields[M.X, M.Y].State == Team.ToFieldState() &&
-                   GetFieldsInDir(M.X, M.Y, M.MoveDirection, moveDistance).
-                    TrueForAll(x => x.State != Team.OtherTeam().ToFieldState()) &&
-                   (Fields[endPoint.X, endPoint.Y].State == FieldState.EMPTY || 
-                    Fields[endPoint.X, endPoint.Y].HasPiranha() && 
-                    Fields[endPoint.X, endPoint.Y].State != Team.ToFieldState());
-        }
-
         public List<Move> GetAllPossibleMoves(PlayerColor Team)
         {
             List<Move> temp = new List<Move>();
@@ -155,11 +138,8 @@ namespace SoftwareChallengeClient
                 for (int y = 0; y < BoardHeight; y++)
                     if (Fields[x, y].State == Team.ToFieldState())
                         foreach (Direction dir in Enum.GetValues(typeof(Direction)))
-                        {
-                            Move m = new Move(x, y, dir);
-                            if (IsLegal(m, Team))
+                            if ((new Move(x, y, dir)) is Move m && m.IsLegalOn(this, Team))
                                 temp.Add(m);
-                        }
             return temp;
         }
     }
