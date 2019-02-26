@@ -10,6 +10,7 @@ namespace SoftwareChallengeClient
     {
         public PlayerColor MyColor;
         public State GameState;
+        string Strategy { get { return Program.Strategy; } }
 
         public Logic()
         {

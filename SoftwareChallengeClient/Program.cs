@@ -25,14 +25,14 @@ namespace SoftwareChallengeClient
         
         static void Main(string[] args)
         {
-            Console.BufferHeight *= 5;
-            if (!GotProperStartArguments(args))
-                return;
+            try { Console.BufferHeight *= 5; } catch { }
+            if (!GotProperStartArguments(args)) return;
 
             GameState = new State();
             PlayerLogic = new Logic { GameState = GameState };
 
             TcpClient client = ConnectToServer();
+            if (client == null) return;
             NetworkStream stream = client.GetStream();
             ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
             
@@ -41,7 +41,7 @@ namespace SoftwareChallengeClient
             stream.Close();
             client.Close();
             ConsoleWriteLine("End of Communication!", ConsoleColor.Red);
-            Console.ReadKey();
+            Console.Read();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
         }
         static TcpClient ConnectToServer()
@@ -53,18 +53,19 @@ namespace SoftwareChallengeClient
             catch (Exception e)
             {
                 ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
-                Console.ReadKey();
-                Environment.Exit(0);
+                Console.Read();
                 return null;
             }
         }
         static bool GotProperStartArguments(string[] args)
         {
-            for (int i = 0; i < args.Length; i++)
-                switch (args[i])
-                {
-                    case "--help":
-                        ConsoleWriteLine($@"
+            try
+            {
+                for (int i = 0; i < args.Length; i++)
+                    switch (args[i])
+                    {
+                        case "--help":
+                            ConsoleWriteLine($@"
         Usage: start.sh [options]
           -h, --host:
               The IP address of the host to connect to (default: {Host}).
@@ -76,32 +77,39 @@ namespace SoftwareChallengeClient
               The strategy used for the game.
           --help:
               Print this help message.", ConsoleColor.Cyan);
-                        return false;
+                            return false;
 
-                    case "-h":
-                    case "--host":
-                        if (args.Length > i + 1)
-                            Host = args[i + 1];
-                        break;
+                        case "-h":
+                        case "--host":
+                            if (args.Length > i + 1)
+                                Host = args[i + 1];
+                            break;
 
-                    case "-p":
-                    case "--port":
-                        if (args.Length > i + 1)
-                            Port = Convert.ToInt32(args[i + 1]);
-                        break;
+                        case "-p":
+                        case "--port":
+                            if (args.Length > i + 1)
+                                Port = Convert.ToInt32(args[i + 1]);
+                            break;
 
-                    case "-r":
-                    case "--reservation":
-                        if (args.Length > i + 1)
-                            Reservation = args[i + 1];
-                        break;
+                        case "-r":
+                        case "--reservation":
+                            if (args.Length > i + 1)
+                                Reservation = args[i + 1];
+                            break;
 
-                    case "-s":
-                    case "--strategy":
-                        if (args.Length > i + 1)
-                            Strategy = args[i + 1];
-                        break;
-                }
+                        case "-s":
+                        case "--strategy":
+                            if (args.Length > i + 1)
+                                Strategy = args[i + 1];
+                            break;
+                    }
+            }
+            catch (Exception e)
+            {
+                ConsoleWriteLine("The arguments Mason, what do they mean!?\n\n" + e, ConsoleColor.Red);
+                Console.Read();
+                return false;
+            }
 
             return true;
         }
@@ -207,7 +215,7 @@ namespace SoftwareChallengeClient
         }
         static void UpdateConsoleTitle()
         {
-            Console.Title = PlayerLogic.MyColor.ToString() + " in " + GameState.RedDisplayName + " vs " + GameState.BlueDisplayName;
+            try { Console.Title = PlayerLogic.MyColor.ToString() + " in " + GameState.RedDisplayName + " vs " + GameState.BlueDisplayName; } catch { }
         }
 
         static void Send(NetworkStream stream, string message)

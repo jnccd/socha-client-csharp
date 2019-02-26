@@ -1,2 +1,3 @@
-﻿chmod +x SoftwareChallengeClient.exe
+﻿#!/bin/sh
+chmod +x SoftwareChallengeClient.exe
 ./SoftwareChallengeClient.exe "$@"
