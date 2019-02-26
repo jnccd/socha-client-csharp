@@ -1,3 +1,3 @@
-﻿#!/bin/sh
+#!/bin/sh
 chmod +x SoftwareChallengeClient.exe
-./SoftwareChallengeClient.exe "$@"
+mono SoftwareChallengeClient.exe "$@"
