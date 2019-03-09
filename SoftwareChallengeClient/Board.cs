@@ -7,11 +7,17 @@ using System.Threading.Tasks;
 
 namespace SoftwareChallengeClient
 {
+    /// <summary>
+    /// Represents the Board of the game
+    /// </summary>
     public class Board
     {
         public const int BoardWidth = 10, BoardHeight = 10;
         public Field[,] Fields = new Field[BoardWidth, BoardHeight];
 
+        /// <summary>
+        /// Creates an empty board
+        /// </summary>
         public Board()
         {
             for (int x = 0; x < BoardWidth; x++)
@@ -19,6 +25,12 @@ namespace SoftwareChallengeClient
                     Fields[x, y] = new Field();
         }
 
+        /// <summary>
+        /// Checks how many fish are in the given Direction and the opposite direction
+        /// </summary>
+        /// <param name="X"> X value of the starting Location </param>
+        /// <param name="Y"> Y value of the starting Location </param>
+        /// <param name="Dir"> The Direction to check in, due to the nature of this Method putting opposite directions here will yield equal results </param>
         public int NumberOfFishInRow(int X, int Y, Direction Dir)
         {
             int num = 0;
@@ -75,7 +87,15 @@ namespace SoftwareChallengeClient
 
             return num;
         }
-        
+
+        /// <summary>
+        /// Gets Num Fields in the given Direction
+        /// <para> Caution: Contains the starting Field </para>
+        /// </summary>
+        /// <param name="X"> X value of the starting Location </param>
+        /// <param name="Y"> Y value of the starting Location </param>
+        /// <param name="Dir"> The Direction the Fields will be taken from </param>
+        /// <param name="Num"> The Number of Fields that will be taken </param>
         public List<Field> GetFieldsInDir(int X, int Y, Direction Dir, int Num)
         {
             if (Num <= 0)
@@ -92,7 +112,10 @@ namespace SoftwareChallengeClient
                 return temp;
             }
         }
-        
+
+        /// <summary>
+        /// Gets all the possible legal Moves for a Team
+        /// </summary>
         public List<Move> GetAllPossibleMoves(PlayerColor Team)
         {
             List<Move> temp = new List<Move>();

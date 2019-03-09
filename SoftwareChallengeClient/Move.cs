@@ -7,12 +7,21 @@ using System.Threading.Tasks;
 
 namespace SoftwareChallengeClient
 {
+    /// <summary>
+    /// This Class contains the X and Y coordinates the Move starts from, aswell as the Direction of the Move and DebugHints.
+    /// <para>The coordinates the Move ends on can be calculated by calling GetEndpointOn</para> 
+    /// </summary>
     public class Move
     {
         public int X, Y;
         public Direction MoveDirection;
         public List<string> DebugHints;
 
+        /// <summary>
+        /// Creates a New Move
+        /// </summary>
+        /// <param name="X"> X coordinate of the starting location </param>
+        /// <param name="Y"> Y coordinate of the starting location </param>
         public Move(int X, int Y, Direction MoveDirection)
         {
             this.X = X;
@@ -21,10 +30,15 @@ namespace SoftwareChallengeClient
             DebugHints = new List<string>();
         }
 
+        /// <summary>
+        /// Checks if this move can be performed on Board B
+        /// </summary>
+        /// <param name="B"> The Board this move should be performed on </param>
+        /// <param name="Team"> The Team that wants to perform the move </param>
         public bool IsLegalOn(Board B, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
         {
             int moveDistance = B.NumberOfFishInRow(X, Y, MoveDirection);
-            Point endPoint = this.GetEndpointOn(B, moveDistance);
+            Point endPoint = this.GetEndpointOn(moveDistance);
             return endPoint.X >= 0 &&
                    endPoint.X < Board.BoardWidth &&
                    endPoint.Y >= 0 &&
@@ -38,12 +52,22 @@ namespace SoftwareChallengeClient
                     B.Fields[endPoint.X, endPoint.Y].State != Team.ToFieldState());
         }
 
+        /// <summary>
+        /// Calculates the Coordinates the Move will land on.
+        /// <para>Caution: This Method neither checks if the Move is legal nor does it check if the EndPoint is even on the Board!</para> 
+        /// </summary>
+        /// <param name="B"> The Board this move should be performed on </param>
         public Point GetEndpointOn(Board B)
         {
             int moveDistance = B.NumberOfFishInRow(X, Y, MoveDirection);
-            return GetEndpointOn(B, moveDistance);
+            return GetEndpointOn(moveDistance);
         }
-        public Point GetEndpointOn(Board B, int MoveDistance)
+        /// <summary>
+        /// Calculates the Coordinates the Move will land on.
+        /// <para>Caution: This Method neither checks if the Move is legal nor does it check if the EndPoint is even on the Board!</para> 
+        /// </summary>
+        /// <param name="MoveDistance"> The Distance your fish will go in this Move </param>
+        public Point GetEndpointOn(int MoveDistance)
         {
             switch (MoveDirection)
             {
@@ -76,6 +100,11 @@ namespace SoftwareChallengeClient
             }
         }
 
+        /// <summary>
+        /// Converts this Move to XML
+        /// <para>This is used to pack the Move into a format that can be send to the Server</para> 
+        /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
+        /// </summary>
         public string ToXML()
         {
             if (this == null)
