@@ -9,6 +9,9 @@ namespace SoftwareChallengeClient
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Converts the Direction into a Point that in the given Direction from the Point (0, 0)
+        /// </summary>
         public static Point ToVector(this Direction Dir)
         {
             switch (Dir)
@@ -42,6 +45,9 @@ namespace SoftwareChallengeClient
             }
         }
 
+        /// <summary>
+        /// Converts the Color into the Fieldstate of the Color
+        /// </summary>
         public static FieldState ToFieldState(this PlayerColor Color)
         {
             if (Color == PlayerColor.RED)
@@ -50,6 +56,9 @@ namespace SoftwareChallengeClient
                 return FieldState.BLUE;
         }
 
+        /// <summary>
+        /// Gets the opposite Team
+        /// </summary>
         public static PlayerColor OtherTeam(this PlayerColor Color)
         {
             if (Color == PlayerColor.RED)
