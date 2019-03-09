@@ -24,7 +24,7 @@ namespace SoftwareChallengeClient
         public bool IsLegalOn(Board B, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
         {
             int moveDistance = B.NumberOfFishInRow(X, Y, MoveDirection);
-            Point endPoint = B.GetMoveEndpoint(this, moveDistance);
+            Point endPoint = this.GetEndpointOn(B, moveDistance);
             return endPoint.X >= 0 &&
                    endPoint.X < Board.BoardWidth &&
                    endPoint.Y >= 0 &&
@@ -36,6 +36,44 @@ namespace SoftwareChallengeClient
                    (B.Fields[endPoint.X, endPoint.Y].State == FieldState.EMPTY ||
                     B.Fields[endPoint.X, endPoint.Y].HasPiranha() &&
                     B.Fields[endPoint.X, endPoint.Y].State != Team.ToFieldState());
+        }
+
+        public Point GetEndpointOn(Board B)
+        {
+            int moveDistance = B.NumberOfFishInRow(X, Y, MoveDirection);
+            return GetEndpointOn(B, moveDistance);
+        }
+        public Point GetEndpointOn(Board B, int MoveDistance)
+        {
+            switch (MoveDirection)
+            {
+                case Direction.DOWN:
+                    return new Point(X, Y - MoveDistance);
+
+                case Direction.DOWN_LEFT:
+                    return new Point(X - MoveDistance, Y - MoveDistance);
+
+                case Direction.DOWN_RIGHT:
+                    return new Point(X + MoveDistance, Y - MoveDistance);
+
+                case Direction.LEFT:
+                    return new Point(X - MoveDistance, Y);
+
+                case Direction.RIGHT:
+                    return new Point(X + MoveDistance, Y);
+
+                case Direction.UP:
+                    return new Point(X, Y + MoveDistance);
+
+                case Direction.UP_LEFT:
+                    return new Point(X - MoveDistance, Y + MoveDistance);
+
+                case Direction.UP_RIGHT:
+                    return new Point(X + MoveDistance, Y + MoveDistance);
+
+                default:
+                    throw new Exception("That direction doesn't exist!");
+            }
         }
 
         public string ToXML()

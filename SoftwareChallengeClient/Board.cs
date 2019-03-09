@@ -75,45 +75,7 @@ namespace SoftwareChallengeClient
 
             return num;
         }
-
-        public Point GetMoveEndpoint(Move M)
-        {
-            int moveDistance = NumberOfFishInRow(M.X, M.Y, M.MoveDirection);
-            return GetMoveEndpoint(M, moveDistance);
-        }
-        public Point GetMoveEndpoint(Move M, int MoveDistance)
-        {
-            switch (M.MoveDirection)
-            {
-                case Direction.DOWN:
-                    return new Point(M.X,                M.Y - MoveDistance);
-
-                case Direction.DOWN_LEFT:
-                    return new Point(M.X - MoveDistance, M.Y - MoveDistance);
-
-                case Direction.DOWN_RIGHT:
-                    return new Point(M.X + MoveDistance, M.Y - MoveDistance);
-
-                case Direction.LEFT:
-                    return new Point(M.X - MoveDistance, M.Y               );
-
-                case Direction.RIGHT:
-                    return new Point(M.X + MoveDistance, M.Y               );
-
-                case Direction.UP:
-                    return new Point(M.X,                M.Y + MoveDistance);
-
-                case Direction.UP_LEFT:
-                    return new Point(M.X - MoveDistance, M.Y + MoveDistance);
-
-                case Direction.UP_RIGHT:
-                    return new Point(M.X + MoveDistance, M.Y + MoveDistance);
-
-                default:
-                    throw new Exception("That direction doesn't exist!");
-            }
-        }
-
+        
         public List<Field> GetFieldsInDir(int X, int Y, Direction Dir, int Num)
         {
             if (Num <= 0)
