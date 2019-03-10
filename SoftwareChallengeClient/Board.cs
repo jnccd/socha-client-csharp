@@ -114,7 +114,7 @@ namespace SoftwareChallengeClient
         }
 
         /// <summary>
-        /// Gets all the possible legal Moves for a Team
+        /// Gets all legal Moves for a Team
         /// </summary>
         public List<Move> GetAllPossibleMoves(PlayerColor Team)
         {

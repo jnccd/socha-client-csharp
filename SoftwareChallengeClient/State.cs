@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SoftwareChallengeClient
 {
+    /// <summary>
+    /// Contains all the information of the current GameState
+    /// </summary>
     public class State
     {
         public PlayerColor StartPlayerColor;

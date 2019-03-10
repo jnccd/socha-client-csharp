@@ -20,7 +20,7 @@ namespace SoftwareChallengeClient
         }
 
         /// <summary>
-        /// Used to set all the variables of this class in one line
+        /// Used to set all the variables of this class in one line of code
         /// </summary>
         public void Update(int X, int Y, FieldState State)
         {
