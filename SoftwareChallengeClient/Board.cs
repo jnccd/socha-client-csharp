@@ -10,7 +10,7 @@ namespace SoftwareChallengeClient
     /// <summary>
     /// Represents the Board of the game
     /// </summary>
-    public class Board
+    public class Board : ICloneable
     {
         public const int BoardWidth = 10, BoardHeight = 10;
         public Field[,] Fields = new Field[BoardWidth, BoardHeight];
@@ -126,6 +126,18 @@ namespace SoftwareChallengeClient
                             if ((new Move(x, y, dir)) is Move m && m.IsLegalOn(this, Team))
                                 temp.Add(m);
             return temp;
+        }
+
+        /// <summary>
+        /// Creates a deep copy of this object
+        /// </summary>
+        public object Clone()
+        {
+            Board b = (Board)MemberwiseClone();
+            for (int x = 0; x < BoardWidth; x++)
+                for (int y = 0; y < BoardHeight; y++)
+                    b.Fields[x, y] = (Field)Fields[x, y].Clone();
+            return b;
         }
     }
 }
