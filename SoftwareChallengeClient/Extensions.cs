@@ -10,7 +10,7 @@ namespace SoftwareChallengeClient
     public static class Extensions
     {
         /// <summary>
-        /// Converts the Direction into a Point that in the given Direction from the Point (0, 0)
+        /// Converts the Direction into a Point that is in the given Direction from the Point (0, 0)
         /// </summary>
         public static Point ToVector(this Direction Dir)
         {

@@ -25,7 +25,6 @@ namespace SoftwareChallengeClient
         
         static void Main(string[] args)
         {
-            try { Console.BufferHeight *= 5; } catch { }
             if (!GotProperStartArguments(args)) return;
 
             GameState = new State();
@@ -186,7 +185,7 @@ namespace SoftwareChallengeClient
                                                                 int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
                                                                     y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
                                                                 Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out FieldState newState);
-                                                                GameState.BoardState.Fields[x, y].Update(x, y, newState);
+                                                                GameState.CurrentBoard.Fields[x, y].Update(x, y, newState);
                                                             }
                                                         }
                                                     }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace SoftwareChallengeClient
 {
-    public class Field
+    public class Field : ICloneable
     {
         public int X, Y;
         public FieldState State;
-
+        
         /// <summary>
-        /// Checks if theres a fish on this Field
+        /// Checks if there is a fish on this Field
         /// </summary>
         public bool HasPiranha()
         {
@@ -27,6 +27,14 @@ namespace SoftwareChallengeClient
             this.X = X;
             this.Y = Y;
             this.State = State;
+        }
+
+        /// <summary>
+        /// Creates a deep copy of this object
+        /// </summary>
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 

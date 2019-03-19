@@ -14,12 +14,12 @@ namespace SoftwareChallengeClient
 
         public Logic()
         {
-            Program.LogNetwork = true;
+            
         }
 
         public Move GetMove()
         {
-            return GameState.BoardState.GetAllPossibleMoves(MyColor).First();
+            return GameState.CurrentBoard.GetAllPossibleMoves(MyColor).First();
         }
     }
 }
