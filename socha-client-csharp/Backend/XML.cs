@@ -12,7 +12,7 @@ namespace Xml
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 		[XmlText]
-		public string Text { get; set; }
+		public PlayerTeam Text { get; set; }
 	}
 
 	[XmlRoot(ElementName = "field")]
@@ -190,7 +190,7 @@ namespace Xml
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 		[XmlAttribute(AttributeName = "color")]
-		public string Color { get; set; }
+		public PlayerTeam Color { get; set; }
 	}
 
 	[XmlRoot(ElementName = "room")]
@@ -204,6 +204,13 @@ namespace Xml
 		public string Text { get; set; }
 	}
 
+	[XmlRoot(ElementName = "left")]
+	public class Left
+	{
+		[XmlAttribute(AttributeName = "roomId")]
+		public string RoomId { get; set; }
+	}
+
 	[XmlRoot(ElementName = "joined")]
 	public class Joined
 	{
@@ -214,6 +221,8 @@ namespace Xml
 	[XmlRoot(ElementName = "received")]
 	public class Received
 	{
+		[XmlElement(ElementName = "left")]
+		public Left Left { get; set; }
 		[XmlElement(ElementName = "joined")]
 		public Joined Joined { get; set; }
 		[XmlElement(ElementName = "room")]

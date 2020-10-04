@@ -128,10 +128,11 @@ namespace socha_client_csharp
             while (true)
             {
                 string recieved = Recieve(stream);
-                if (recieved.Contains("</protocol>") || recieved.Contains("left room"))
-                    break;
                 recieved = recieved.StartsWith("<protocol>") ? recieved.Remove(0, "<protocol>".Length) : recieved;
                 recieved = "<received>" + recieved + "</received>";
+
+                if (recieved.Contains("</protocol>"))
+                    break;
 
                 var serializer = new XmlSerializer(typeof(Received));
                 StringReader stringReader = new StringReader(recieved);
@@ -139,15 +140,13 @@ namespace socha_client_csharp
 
                 if (recievedObjs.Joined != null)
                     RoomID = recievedObjs.Joined.RoomId;
+                if (recievedObjs.Left != null && recievedObjs.Left.RoomId == RoomID)
+                    break;
                 if (recievedObjs.Room != null)
                     foreach (var r in recievedObjs.Room)
-                        if (r.Data != null)
-                        {
+                        if (r.Data != null && r.RoomId == RoomID)
                             if (r.Data.Class == "sc.framework.plugins.protocol.MoveRequest")
-                            {
-                                LastMove = PlayerLogic.GetMove();
-                                Send(stream, LastMove.ToXML());
-                            }
+                                Send(stream, (LastMove = PlayerLogic.GetMove()).ToXML());
                             else if (r.Data.Class == "memento")
                             {
                                 var inState = r.Data.State;
@@ -157,6 +156,7 @@ namespace socha_client_csharp
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
                                 GameState.StartPiece = inState.StartPiece;
+                                GameState.StartTeam = inState.StartTeam.Text;
 
                                 // Board
                                 GameState.CurrentBoard = new Board();
@@ -187,11 +187,7 @@ namespace socha_client_csharp
                                 UpdateConsoleTitle();
                             }
                             else if (r.Data.Class == "welcomeMessage")
-                            {
-                                if (!Enum.TryParse(r.Data.Color, out PlayerLogic.MyTeam))
-                                    throw new XmlException("Couldn't parse player team!");
-                            }
-                        }
+                                PlayerLogic.MyTeam = r.Data.Color;
             }
 
             if (LastMove != null && LastMove.DebugHints.Count > 0)
