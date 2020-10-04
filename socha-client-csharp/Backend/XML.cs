@@ -1,4 +1,5 @@
-﻿using System;
+﻿using socha_client_csharp;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -22,7 +23,7 @@ namespace Xml
 		[XmlAttribute(AttributeName = "y")]
 		public int Y { get; set; }
 		[XmlAttribute(AttributeName = "content")]
-		public string Content { get; set; }
+		public PieceColor Content { get; set; }
 	}
 
 	[XmlRoot(ElementName = "board")]
@@ -36,7 +37,7 @@ namespace Xml
 	public class BlueShapes
 	{
 		[XmlElement(ElementName = "shape")]
-		public List<string> Shape { get; set; }
+		public List<PieceKind> Shape { get; set; }
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 	}
@@ -45,7 +46,7 @@ namespace Xml
 	public class YellowShapes
 	{
 		[XmlElement(ElementName = "shape")]
-		public List<string> Shape { get; set; }
+		public List<PieceKind> Shape { get; set; }
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 	}
@@ -54,7 +55,7 @@ namespace Xml
 	public class RedShapes
 	{
 		[XmlElement(ElementName = "shape")]
-		public List<string> Shape { get; set; }
+		public List<PieceKind> Shape { get; set; }
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 	}
@@ -63,7 +64,7 @@ namespace Xml
 	public class GreenShapes
 	{
 		[XmlElement(ElementName = "shape")]
-		public List<string> Shape { get; set; }
+		public List<PieceKind> Shape { get; set; }
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 	}
@@ -124,11 +125,11 @@ namespace Xml
 		[XmlElement(ElementName = "position")]
 		public Position Position { get; set; }
 		[XmlAttribute(AttributeName = "color")]
-		public string Color { get; set; }
+		public PieceColor Color { get; set; }
 		[XmlAttribute(AttributeName = "kind")]
-		public string Kind { get; set; }
+		public PieceKind Kind { get; set; }
 		[XmlAttribute(AttributeName = "rotation")]
-		public string Rotation { get; set; }
+		public Rotation Rotation { get; set; }
 		[XmlAttribute(AttributeName = "isFlipped")]
 		public bool IsFlipped { get; set; }
 	}
@@ -172,13 +173,13 @@ namespace Xml
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 		[XmlAttribute(AttributeName = "currentColorIndex")]
-		public string CurrentColorIndex { get; set; }
+		public PieceColor CurrentColorIndex { get; set; }
 		[XmlAttribute(AttributeName = "turn")]
 		public int Turn { get; set; }
 		[XmlAttribute(AttributeName = "round")]
 		public int Round { get; set; }
 		[XmlAttribute(AttributeName = "startPiece")]
-		public string StartPiece { get; set; }
+		public PieceKind StartPiece { get; set; }
 	}
 
 	[XmlRoot(ElementName = "data")]
