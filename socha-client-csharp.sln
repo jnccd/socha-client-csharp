@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socha-client-csharp", "socha-client-csharp\socha-client-csharp.csproj", "{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socha-client-csharp", "socha-client-csharp\socha-client-csharp.csproj", "{C0572259-1CDB-4110-B779-9BFA7EF06063}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0572259-1CDB-4110-B779-9BFA7EF06063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0572259-1CDB-4110-B779-9BFA7EF06063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0572259-1CDB-4110-B779-9BFA7EF06063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0572259-1CDB-4110-B779-9BFA7EF06063}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D824BAC6-C102-4219-B644-4AA37FE48837}
+		SolutionGuid = {C0061A4E-FF94-423D-8FFF-3EAE6B321F9C}
 	EndGlobalSection
 EndGlobal
