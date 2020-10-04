@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftwareChallengeClient", "SoftwareChallengeClient\SoftwareChallengeClient.csproj", "{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socha-client-csharp", "socha-client-csharp\socha-client-csharp.csproj", "{A9B027B3-B8EF-4A92-8F53-51BD538FDC55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D824BAC6-C102-4219-B644-4AA37FE48837}
 	EndGlobalSection
 EndGlobal
