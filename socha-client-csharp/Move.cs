@@ -10,6 +10,12 @@ namespace socha_client_csharp
     public abstract class Move
     {
         /// <summary>
+        /// Checks if this move can be performed on Board B
+        /// </summary>
+        /// <param name="S"> The State this move should be performed on </param>
+        public abstract bool IsLegalOn(State S);
+
+        /// <summary>
         /// Converts this Move to XML
         /// <para>This is used to pack the Move into a format that can be send to the Server</para> 
         /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
@@ -19,6 +25,12 @@ namespace socha_client_csharp
 
     public class SkipMove : Move
     {
+        /// <summary>
+        /// Checks if this move can be performed on Board B
+        /// </summary>
+        /// <param name="B"> The Board this move should be performed on </param>
+        public override bool IsLegalOn(State S) => S.Turn > 1;
+
         public override string ToXML() => $"<data class=\"sc.plugin2021.SkipMove\"/>";
     }
 
@@ -53,7 +65,7 @@ namespace socha_client_csharp
         /// Checks if this move can be performed on Board B
         /// </summary>
         /// <param name="B"> The Board this move should be performed on </param>
-        public bool IsLegalOn(Board B) // https://youtu.be/nz20lu2AM2k?t=8
+        public override bool IsLegalOn(State B) // https://youtu.be/nz20lu2AM2k?t=8
         {
             throw new NotImplementedException();
         }
