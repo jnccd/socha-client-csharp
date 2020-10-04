@@ -14,11 +14,13 @@ namespace SoftwareChallengeClient
 
         public Logic()
         {
-            
+            // TODO: Add init logic
         }
 
-        public Move GetMove()
+        public SetMove GetMove()
         {
+            // TODO: Add your game logic
+
             return GameState.CurrentBoard.GetAllPossibleMoves(MyColor).First();
         }
     }
