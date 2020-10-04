@@ -1,12 +1,16 @@
 ﻿using SoftwareChallengeClient;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using Xml;
 
 namespace socha_client_csharp
 {
@@ -31,7 +35,6 @@ namespace socha_client_csharp
             PlayerLogic = new Logic { GameState = GameState };
 
             TcpClient client = ConnectToServer();
-            if (client == null) return;
             NetworkStream stream = client.GetStream();
             ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
             
@@ -39,22 +42,9 @@ namespace socha_client_csharp
 
             stream.Close();
             client.Close();
-            ConsoleWriteLine("End of Communication!", ConsoleColor.Red);
+            ConsoleWriteLine("End of communication!", ConsoleColor.Red);
             Console.Read();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
-        }
-        static TcpClient ConnectToServer()
-        {
-            try
-            {
-                return new TcpClient(Host, Port);
-            }
-            catch (Exception e)
-            {
-                ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
-                Console.Read();
-                return null;
-            }
         }
         static bool GotProperStartArguments(string[] args)
         {
@@ -113,6 +103,20 @@ namespace socha_client_csharp
 
             return true;
         }
+        static TcpClient ConnectToServer()
+        {
+            try
+            {
+                return new TcpClient(Host, Port);
+            }
+            catch (Exception e)
+            {
+                ConsoleWriteLine("Couldn't connect to the game server!\n\n" + e, ConsoleColor.Red);
+                Console.Read();
+                Environment.Exit(1);
+                return null;
+            }
+        }
         static void ExecuteCommunationLoop(NetworkStream stream)
         {
             SetMove LastMove = null;
@@ -124,96 +128,56 @@ namespace socha_client_csharp
             
             while (true)
             {
-                string raw = Recieve(stream);
-                if (raw.Contains("</protocol>") || raw.Contains("left room"))
+                string recieved = Recieve(stream);
+                if (recieved.Contains("</protocol>") || recieved.Contains("left room"))
                     break;
-                raw = raw.StartsWith("<protocol>") ? raw.Remove(0, "<protocol>".Length) : raw;
-                XElement recievedElement = XElement.Parse("<received>" + raw + "</received>");
-                string[] nodes = recievedElement.Nodes().Where(x => x is XElement).Select(x => x.ToString()).ToArray();
+                recieved = recieved.StartsWith("<protocol>") ? recieved.Remove(0, "<protocol>".Length) : recieved;
+                recieved = "<received>" + recieved + "</received>";
 
-                foreach (string node in nodes)
-                {
-                    if (string.IsNullOrWhiteSpace(node))
-                        continue;
+                var serializer = new XmlSerializer(typeof(Received));
+                StringReader stringReader = new StringReader(recieved);
+                var recievedObjs = (Received)serializer.Deserialize(stringReader);
 
-                    try
-                    {
-                        XElement xmlAnswer = XElement.Parse(node);
-
-                        switch (xmlAnswer.Name.LocalName)
+                if (recievedObjs.Joined != null)
+                    RoomID = recievedObjs.Joined.RoomId;
+                if (recievedObjs.Room != null)
+                    foreach (var r in recievedObjs.Room)
+                        if (r.Data != null)
                         {
-                            case "joined":
-                                RoomID = xmlAnswer.FirstAttribute.Value;
-                                break;
+                            if (r.Data.Class == "sc.framework.plugins.protocol.MoveRequest")
+                            {
+                                LastMove = PlayerLogic.GetMove();
+                                Send(stream, LastMove.ToXML());
+                            }
+                            else if (r.Data.Class == "memento")
+                            {
+                                var inState = r.Data.State;
 
-                            case "room":
-                                if (xmlAnswer.HasElements && xmlAnswer.HasAttributes && xmlAnswer.FirstAttribute.Value == RoomID)
+                                if (!Enum.TryParse(inState.CurrentColorIndex, out GameState.CurrentColorIndex))
+                                    throw new XmlException("Couldn't parse current color index!");
+                                GameState.Turn = inState.Turn;
+                                GameState.Round = inState.Round;
+                                if (!Enum.TryParse(inState.StartPiece, out GameState.StartPiece))
+                                    throw new XmlException("Couldn't parse start piece!");
+
+                                GameState.CurrentBoard = new Board();
+                                foreach (var f in inState.Board.Field)
                                 {
-                                    XElement first = xmlAnswer.Elements().First();
-                                    switch (first.Name.LocalName)
-                                    {
-                                        case "data":
-                                            XAttribute classAttr = first.Attribute(XName.Get("class"));
-                                            switch (classAttr.Value)
-                                            {
-                                                case "welcomeMessage":
-                                                    Enum.TryParse(first.Attribute(XName.Get("color")).Value.ToUpper(), out PlayerLogic.MyColor);
-                                                    UpdateConsoleTitle();
-                                                    break;
-
-                                                case "memento":
-                                                    if (first.FirstNode is XElement)
-                                                    {
-                                                        XElement state = first.FirstNode as XElement;
-                                                        if (state.Name.LocalName == "state")
-                                                            ParseMemento(state);
-                                                    }
-                                                    break;
-
-                                                case "sc.framework.plugins.protocol.MoveRequest":
-                                                    LastMove = PlayerLogic.GetMove();
-                                                    Send(stream, LastMove.ToXML());
-                                                    break;
-                                            }
-                                            break;
-                                    }
+                                    //GameState.CurrentBoard.Fields[f.X, f.Y] = f.Content;
                                 }
-                                break;
+                            }
+                            else if (r.Data.Class == "welcomeMessage")
+                            {
+                                if (!Enum.TryParse(r.Data.Color, out PlayerLogic.MyTeam))
+                                    throw new XmlException("Couldn't parse player team!");
+                                UpdateConsoleTitle();
+                            }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleWriteLine("Parse-Error:\n" + e, ConsoleColor.Red);
-                    }
-                }
             }
 
             if (LastMove != null && LastMove.DebugHints.Count > 0)
-                ConsoleWriteLine("Debug Hints from the Last Move:\n" + LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
-        }
-        static void ParseMemento(XElement state)
-        {
-            Enum.TryParse(state.Attribute(XName.Get("currentColorIndex")).Value, out GameState.StartPlayerColor);
-            Enum.TryParse(state.Attribute(XName.Get("currentPlayerColor")).Value, out GameState.CurrentPlayerColor);
-
-            GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
-
-            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
-                GameState.RedDisplayName = displayNameRed.Attribute(XName.Get("displayName")).Value;
-            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
-                GameState.BlueDisplayName = displayNameBlue.Attribute(XName.Get("displayName")).Value;
-            UpdateConsoleTitle();
-
-            XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
-            string[] fields = board.ToString().Split('\n').Select(x => x.Trim(' ').Trim('\t')).Where(x => x.StartsWith("<field ")).ToArray();
-            foreach (string field in fields)
-            {
-                XElement fieldElement = XElement.Parse(field);
-                int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
-                    y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
-                Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out FieldState newState);
-                GameState.CurrentBoard.Fields[x, y].Update(x, y, newState);
-            }
+                ConsoleWriteLine("Debug Hints from the Last Move:\n" + 
+                    LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
         }
         static void UpdateConsoleTitle()
         {
