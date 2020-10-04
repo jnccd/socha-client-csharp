@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftwareChallengeClient
+namespace socha_client_csharp
 {
+    public class IllegalMoveException : Exception { }
+
     /// <summary>
     /// Contains all the information of the current GameState
     /// </summary>
@@ -66,8 +68,4 @@ namespace SoftwareChallengeClient
             return s;
         }
     }
-
-    public enum PlayerColor { RED, BLUE }
-
-    public class IllegalMoveException : Exception { }
 }
