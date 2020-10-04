@@ -5,7 +5,7 @@ using System.Text;
 namespace socha_client_csharp
 {
     public enum PlayerTeam { ONE, TWO }
-    public enum PieceColor { BLUE, YELLOW, RED, GREEN }
+    public enum PieceColor { BLUE=1, YELLOW=2, RED=3, GREEN=4 }
     public enum Rotation { NONE, RIGHT, MIRROR, LEFT }
     public enum PieceKind
     {
