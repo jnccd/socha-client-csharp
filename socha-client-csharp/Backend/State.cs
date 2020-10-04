@@ -26,6 +26,8 @@ namespace socha_client_csharp
         public List<PieceKind> RedShapes;
         public List<PieceKind> GreenShapes;
 
+        public PlayerTeam StartTeam;
+
         public string FirstPlayerName;
         public string SecondPlayerName;
 
