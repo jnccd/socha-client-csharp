@@ -21,6 +21,16 @@ namespace socha_client_csharp
 
         public Board CurrentBoard;
 
+        public List<PieceKind> BlueShapes;
+        public List<PieceKind> YellowShapes;
+        public List<PieceKind> RedShapes;
+        public List<PieceKind> GreenShapes;
+
+        public string FirstPlayerName;
+        public string SecondPlayerName;
+
+        public Move LastMove;
+
         public State()
         {
             CurrentBoard = new Board();
