@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace SoftwareChallengeClient
+namespace socha_client_csharp
 {
     public class Program
     {
@@ -166,29 +166,7 @@ namespace SoftwareChallengeClient
                                                     {
                                                         XElement state = first.FirstNode as XElement;
                                                         if (state.Name.LocalName == "state")
-                                                        {
-                                                            Enum.TryParse(state.Attribute(XName.Get("startPlayerColor")).Value, out GameState.StartPlayerColor);
-                                                            Enum.TryParse(state.Attribute(XName.Get("currentPlayerColor")).Value, out GameState.CurrentPlayerColor);
-
-                                                            GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
-
-                                                            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
-                                                                GameState.RedDisplayName = displayNameRed.Attribute(XName.Get("displayName")).Value;
-                                                            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
-                                                                GameState.BlueDisplayName = displayNameBlue.Attribute(XName.Get("displayName")).Value;
-                                                            UpdateConsoleTitle();
-
-                                                            XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
-                                                            string[] fields = board.ToString().Split('\n').Select(x => x.Trim(' ').Trim('\t')).Where(x => x.StartsWith("<field ")).ToArray();
-                                                            foreach (string field in fields)
-                                                            {
-                                                                XElement fieldElement = XElement.Parse(field);
-                                                                int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
-                                                                    y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
-                                                                Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out FieldState newState);
-                                                                GameState.CurrentBoard.Fields[x, y].Update(x, y, newState);
-                                                            }
-                                                        }
+                                                            ParseMemento(state);
                                                     }
                                                     break;
 
@@ -212,6 +190,30 @@ namespace SoftwareChallengeClient
 
             if (LastMove != null && LastMove.DebugHints.Count > 0)
                 ConsoleWriteLine("Debug Hints from the Last Move:\n" + LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
+        }
+        static void ParseMemento(XElement state)
+        {
+            Enum.TryParse(state.Attribute(XName.Get("currentColorIndex")).Value, out GameState.StartPlayerColor);
+            Enum.TryParse(state.Attribute(XName.Get("currentPlayerColor")).Value, out GameState.CurrentPlayerColor);
+
+            GameState.Turn = Convert.ToInt32(state.Attribute(XName.Get("turn")).Value);
+
+            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "red") is XElement displayNameRed)
+                GameState.RedDisplayName = displayNameRed.Attribute(XName.Get("displayName")).Value;
+            if (state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "blue") is XElement displayNameBlue)
+                GameState.BlueDisplayName = displayNameBlue.Attribute(XName.Get("displayName")).Value;
+            UpdateConsoleTitle();
+
+            XElement board = state.Nodes().FirstOrDefault(x => x is XElement && (x as XElement).Name.LocalName == "board") as XElement;
+            string[] fields = board.ToString().Split('\n').Select(x => x.Trim(' ').Trim('\t')).Where(x => x.StartsWith("<field ")).ToArray();
+            foreach (string field in fields)
+            {
+                XElement fieldElement = XElement.Parse(field);
+                int x = Convert.ToInt32(fieldElement.Attribute(XName.Get("x")).Value),
+                    y = Convert.ToInt32(fieldElement.Attribute(XName.Get("y")).Value);
+                Enum.TryParse(fieldElement.Attribute(XName.Get("state")).Value, out FieldState newState);
+                GameState.CurrentBoard.Fields[x, y].Update(x, y, newState);
+            }
         }
         static void UpdateConsoleTitle()
         {
