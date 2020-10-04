@@ -80,7 +80,7 @@ namespace Xml
 	public class OrderedColors
 	{
 		[XmlElement(ElementName = "color")]
-		public List<string> Color { get; set; }
+		public List<PieceColor> Color { get; set; }
 	}
 
 	[XmlRoot(ElementName = "color")]

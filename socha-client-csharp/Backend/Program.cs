@@ -157,6 +157,7 @@ namespace socha_client_csharp
                                 GameState.Round = inState.Round;
                                 GameState.StartPiece = inState.StartPiece;
                                 GameState.StartTeam = inState.StartTeam.Text;
+                                GameState.OrderedColors = inState.OrderedColors.Color;
 
                                 // Board
                                 GameState.CurrentBoard = new Board();
