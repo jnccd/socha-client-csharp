@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftwareChallengeClient
+namespace socha_client_csharp
 {
     public class Logic
     {

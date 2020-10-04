@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftwareChallengeClient
+namespace socha_client_csharp
 {
     public static class Extensions
     {
