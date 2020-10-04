@@ -62,6 +62,62 @@ namespace socha_client_csharp
         }
 
         /// <summary>
+        /// Returns all points that this move will change on the board
+        /// </summary>
+        internal Point[] GetAffectedPositions()
+        {
+            static Point Coordinates(int x, int y) => new Point(x, y);
+
+            Point[] shapePos;
+            if (Kind == PieceKind.MONO)
+                shapePos = new Point[] { Coordinates(0, 0) };
+            else if (Kind == PieceKind.DOMINO)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0) };
+            else if (Kind == PieceKind.TRIO_L)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(1, 1) };
+            else if (Kind == PieceKind.TRIO_I)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2) };
+            else if (Kind == PieceKind.TETRO_O)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(0, 1), Coordinates(1, 1) };
+            else if (Kind == PieceKind.TETRO_T)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(2, 0), Coordinates(1, 1) };
+            else if (Kind == PieceKind.TETRO_I)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(1, 2) };
+            else if (Kind == PieceKind.TETRO_Z)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(1, 1), Coordinates(2, 1) };
+            else if (Kind == PieceKind.PENTO_L)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(0, 3), Coordinates(1, 3) };
+            else if (Kind == PieceKind.PENTO_T)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(2, 0), Coordinates(1, 1), Coordinates(1, 2) };
+            else if (Kind == PieceKind.PENTO_V)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(1, 2), Coordinates(2, 2) };
+            else if (Kind == PieceKind.PENTO_S)
+                shapePos = new Point[] { Coordinates(1, 0), Coordinates(2, 0), Coordinates(3, 0), Coordinates(0, 1), Coordinates(1, 1) };
+            else if (Kind == PieceKind.PENTO_Z)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(1, 1), Coordinates(1, 2), Coordinates(2, 2) };
+            else if (Kind == PieceKind.PENTO_I)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(0, 3), Coordinates(0, 4) };
+            else if (Kind == PieceKind.PENTO_P)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(0, 1), Coordinates(1, 1), Coordinates(0, 2) };
+            else if (Kind == PieceKind.PENTO_W)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(1, 1), Coordinates(1, 2), Coordinates(2, 2) };
+            else if (Kind == PieceKind.PENTO_U)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(1, 1), Coordinates(2, 1), Coordinates(2, 0) };
+            else if (Kind == PieceKind.PENTO_R)
+                shapePos = new Point[] { Coordinates(0, 1), Coordinates(1, 1), Coordinates(1, 2), Coordinates(2, 1), Coordinates(2, 0) };
+            else if (Kind == PieceKind.PENTO_X)
+                shapePos = new Point[] { Coordinates(1, 0), Coordinates(0, 1), Coordinates(1, 1), Coordinates(2, 1), Coordinates(1, 2) };
+            else if (Kind == PieceKind.PENTO_Y)
+                shapePos = new Point[] { Coordinates(0, 1), Coordinates(1, 0), Coordinates(1, 1), Coordinates(1, 2), Coordinates(1, 3) };
+            else 
+                shapePos = new Point[] {  };
+
+            //if (Rot == Rotation.) TODO
+
+            return shapePos;
+        }
+
+        /// <summary>
         /// Checks if this move can be performed on Board B
         /// </summary>
         /// <param name="B"> The Board this move should be performed on </param>

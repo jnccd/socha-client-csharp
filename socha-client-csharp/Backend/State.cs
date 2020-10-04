@@ -21,6 +21,8 @@ namespace socha_client_csharp
         public PlayerTeam StartTeam;
 
         public Board CurrentBoard;
+        public PlayerTeam CurrentTeam;
+        public PieceColor CurrentColor;
 
         public List<PieceKind> BlueShapes;
         public List<PieceKind> YellowShapes;
@@ -59,13 +61,17 @@ namespace socha_client_csharp
         public State PerformWithoutChecks(Move M)
         {
             State re = (State)this.Clone();
-            Point e = M.GetEndpointOn(re.CurrentBoard);
 
-            re.CurrentBoard.Fields[M.X, M.Y].State = FieldState.EMPTY;
-            re.CurrentBoard.Fields[e.X, e.Y].State = re.CurrentPlayerColor.ToFieldState();
+            if (M is SetMove)
+            {
+                var setMove = M as SetMove;
+                foreach (var pos in setMove.GetAffectedPositions())
+                    re.CurrentBoard.Fields[pos.X, pos.Y].Value = setMove.Color;
+            }
 
             re.Turn++;
-            re.CurrentPlayerColor = re.CurrentPlayerColor.OtherTeam();
+            re.CurrentTeam = re.CurrentTeam.OtherTeam();
+            re.CurrentColor = re.CurrentColor.Next(OrderedColors);
 
             return re;
         }
