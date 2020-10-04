@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftwareChallengeClient
+namespace socha_client_csharp
 {
     public abstract class Move
     {
@@ -34,6 +34,8 @@ namespace SoftwareChallengeClient
         public bool Flipped;
         public int X, Y;
 
+        public List<string> DebugHints;
+
         /// <summary>
         /// Creates a New Move
         /// </summary>
@@ -51,8 +53,7 @@ namespace SoftwareChallengeClient
         /// Checks if this move can be performed on Board B
         /// </summary>
         /// <param name="B"> The Board this move should be performed on </param>
-        /// <param name="Team"> The Team that wants to perform the move </param>
-        public bool IsLegalOn(Board B, PlayerColor Team) // https://youtu.be/nz20lu2AM2k?t=8
+        public bool IsLegalOn(Board B) // https://youtu.be/nz20lu2AM2k?t=8
         {
             throw new NotImplementedException();
         }
@@ -63,17 +64,8 @@ namespace SoftwareChallengeClient
                     $"<piece color=\"{Color}\" kind=\"{Kind}\" rotation=\"{Rot}\" isFlipped=\"{Flipped}\">" +
                         $"<position x=\"{X}\" y=\"{Y}\"/>" +
                     $"</piece>" +
+                $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}" +
                 $"</data>" +
             $"</room>";
-    }
-
-    public enum PieceColor { BLUE, YELLOW, RED, GREEN }
-    public enum Rotation { NONE, RIGHT, MIRROR, LEFT }
-    public enum PieceKind
-    {
-        MONO, DOMINO,
-        TRIO_L, TRIO_I,
-        TETRO_O, TETRO_T, TETRO_I, TETRO_L, TETRO_Z,
-        PENTO_L, PENTO_T, PENTO_V, PENTO_S, PENTO_Z, PENTO_I, PENTO_P, PENTO_W, PENTO_U, PENTO_R, PENTO_X, PENTO_Y
     }
 }
