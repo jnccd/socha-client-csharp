@@ -13,7 +13,7 @@ namespace socha_client_csharp
     public class Board : ICloneable
     {
         public const int BoardWidth = 20, BoardHeight = 20;
-        public Field[,] Fields = new Field[BoardWidth, BoardHeight];
+        public PieceColor?[,] Fields = new PieceColor?[BoardWidth, BoardHeight];
         
         /// <summary>
         /// Creates an empty board
@@ -22,7 +22,7 @@ namespace socha_client_csharp
         {
             for (int x = 0; x < BoardWidth; x++)
                 for (int y = 0; y < BoardHeight; y++)
-                    Fields[x, y] = new Field(x, y);
+                    Fields[x, y] = null;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace socha_client_csharp
             Board b = (Board)MemberwiseClone();
             for (int x = 0; x < BoardWidth; x++)
                 for (int y = 0; y < BoardHeight; y++)
-                    b.Fields[x, y] = (Field)Fields[x, y].Clone();
+                    b.Fields[x, y] = Fields[x, y].Value;
             return b;
         }
     }

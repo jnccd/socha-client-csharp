@@ -153,24 +153,43 @@ namespace socha_client_csharp
                             {
                                 var inState = r.Data.State;
 
-                                if (!Enum.TryParse(inState.CurrentColorIndex, out GameState.CurrentColorIndex))
-                                    throw new XmlException("Couldn't parse current color index!");
+                                // Attr Parse
+                                GameState.CurrentColorIndex = (PieceColor)Enum.Parse(typeof(PieceColor), inState.CurrentColorIndex);
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
-                                if (!Enum.TryParse(inState.StartPiece, out GameState.StartPiece))
-                                    throw new XmlException("Couldn't parse start piece!");
+                                GameState.StartPiece = (PieceKind)Enum.Parse(typeof(PieceKind), inState.StartPiece);
 
+                                // Board Parse
                                 GameState.CurrentBoard = new Board();
                                 foreach (var f in inState.Board.Field)
-                                {
-                                    //GameState.CurrentBoard.Fields[f.X, f.Y] = f.Content;
-                                }
+                                    GameState.CurrentBoard.Fields[f.X, f.Y] = (PieceColor)Enum.Parse(typeof(PieceColor), f.Content);
+
+                                // Piece Inventories Parse
+                                GameState.BlueShapes = inState.BlueShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
+                                GameState.YellowShapes = inState.YellowShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
+                                GameState.RedShapes = inState.RedShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
+                                GameState.GreenShapes = inState.GreenShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
+
+                                if (inState.LastMove.Class == "sc.plugin2021.SkipMove")
+                                    GameState.LastMove = new SkipMove();
+                                else if (inState.LastMove.Class == "sc.plugin2021.SetMove")
+                                    GameState.LastMove = new SetMove(
+                                        (PieceColor)Enum.Parse(typeof(PieceColor), inState.LastMove.Piece.Color),
+                                        (PieceKind)Enum.Parse(typeof(PieceKind), inState.LastMove.Piece.Kind),
+                                        (Rotation)Enum.Parse(typeof(Rotation), inState.LastMove.Piece.Rotation),
+                                        inState.LastMove.Piece.IsFlipped,
+                                        inState.LastMove.Piece.Position.X,
+                                        inState.LastMove.Piece.Position.Y);
+
+                                GameState.FirstPlayerName = inState.First.DisplayName;
+                                GameState.SecondPlayerName = inState.Second.DisplayName;
+
+                                UpdateConsoleTitle();
                             }
                             else if (r.Data.Class == "welcomeMessage")
                             {
                                 if (!Enum.TryParse(r.Data.Color, out PlayerLogic.MyTeam))
                                     throw new XmlException("Couldn't parse player team!");
-                                UpdateConsoleTitle();
                             }
                         }
             }

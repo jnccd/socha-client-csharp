@@ -130,7 +130,7 @@ namespace Xml
 		[XmlAttribute(AttributeName = "rotation")]
 		public string Rotation { get; set; }
 		[XmlAttribute(AttributeName = "isFlipped")]
-		public string IsFlipped { get; set; }
+		public bool IsFlipped { get; set; }
 	}
 
 	[XmlRoot(ElementName = "lastMove")]
