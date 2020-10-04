@@ -18,6 +18,7 @@ namespace socha_client_csharp
         public int Turn;
         public int Round;
         public PieceKind StartPiece;
+        public PlayerTeam StartTeam;
 
         public Board CurrentBoard;
 
@@ -26,7 +27,7 @@ namespace socha_client_csharp
         public List<PieceKind> RedShapes;
         public List<PieceKind> GreenShapes;
 
-        public PlayerTeam StartTeam;
+        public List<PieceColor> OrderedColors;
 
         public string FirstPlayerName;
         public string SecondPlayerName;
