@@ -1,5 +1,4 @@
-﻿using SoftwareChallengeClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -154,29 +153,29 @@ namespace socha_client_csharp
                                 var inState = r.Data.State;
 
                                 // Attr Parse
-                                GameState.CurrentColorIndex = (PieceColor)Enum.Parse(typeof(PieceColor), inState.CurrentColorIndex);
+                                GameState.CurrentColorIndex = inState.CurrentColorIndex;
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
-                                GameState.StartPiece = (PieceKind)Enum.Parse(typeof(PieceKind), inState.StartPiece);
+                                GameState.StartPiece = inState.StartPiece;
 
                                 // Board Parse
                                 GameState.CurrentBoard = new Board();
                                 foreach (var f in inState.Board.Field)
-                                    GameState.CurrentBoard.Fields[f.X, f.Y] = (PieceColor)Enum.Parse(typeof(PieceColor), f.Content);
+                                    GameState.CurrentBoard.Fields[f.X, f.Y] = f.Content;
 
                                 // Piece Inventories Parse
-                                GameState.BlueShapes = inState.BlueShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
-                                GameState.YellowShapes = inState.YellowShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
-                                GameState.RedShapes = inState.RedShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
-                                GameState.GreenShapes = inState.GreenShapes.Shape.Select(x => (PieceKind)Enum.Parse(typeof(PieceKind), x)).ToList();
+                                GameState.BlueShapes = inState.BlueShapes.Shape;
+                                GameState.YellowShapes = inState.YellowShapes.Shape;
+                                GameState.RedShapes = inState.RedShapes.Shape;
+                                GameState.GreenShapes = inState.GreenShapes.Shape;
 
                                 if (inState.LastMove.Class == "sc.plugin2021.SkipMove")
                                     GameState.LastMove = new SkipMove();
                                 else if (inState.LastMove.Class == "sc.plugin2021.SetMove")
                                     GameState.LastMove = new SetMove(
-                                        (PieceColor)Enum.Parse(typeof(PieceColor), inState.LastMove.Piece.Color),
-                                        (PieceKind)Enum.Parse(typeof(PieceKind), inState.LastMove.Piece.Kind),
-                                        (Rotation)Enum.Parse(typeof(Rotation), inState.LastMove.Piece.Rotation),
+                                        inState.LastMove.Piece.Color,
+                                        inState.LastMove.Piece.Kind,
+                                        inState.LastMove.Piece.Rotation,
                                         inState.LastMove.Piece.IsFlipped,
                                         inState.LastMove.Piece.Position.X,
                                         inState.LastMove.Piece.Position.Y);
@@ -200,7 +199,7 @@ namespace socha_client_csharp
         }
         static void UpdateConsoleTitle()
         {
-            try { Console.Title = PlayerLogic.MyColor.ToString() + " in " + GameState.RedDisplayName + " vs " + GameState.BlueDisplayName; } catch { }
+            try { Console.Title = PlayerLogic.MyTeam.ToString() + " in " + GameState.FirstPlayerName + " vs " + GameState.SecondPlayerName; } catch { }
         }
 
         static void Send(NetworkStream stream, string message)
