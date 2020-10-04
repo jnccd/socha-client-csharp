@@ -152,23 +152,24 @@ namespace socha_client_csharp
                             {
                                 var inState = r.Data.State;
 
-                                // Attr Parse
+                                // Attr
                                 GameState.CurrentColorIndex = inState.CurrentColorIndex;
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
                                 GameState.StartPiece = inState.StartPiece;
 
-                                // Board Parse
+                                // Board
                                 GameState.CurrentBoard = new Board();
                                 foreach (var f in inState.Board.Field)
                                     GameState.CurrentBoard.Fields[f.X, f.Y] = f.Content;
 
-                                // Piece Inventories Parse
+                                // Piece Inventories
                                 GameState.BlueShapes = inState.BlueShapes.Shape;
                                 GameState.YellowShapes = inState.YellowShapes.Shape;
                                 GameState.RedShapes = inState.RedShapes.Shape;
                                 GameState.GreenShapes = inState.GreenShapes.Shape;
 
+                                // Last moves
                                 if (inState.LastMove.Class == "sc.plugin2021.SkipMove")
                                     GameState.LastMove = new SkipMove();
                                 else if (inState.LastMove.Class == "sc.plugin2021.SetMove")
@@ -180,9 +181,9 @@ namespace socha_client_csharp
                                         inState.LastMove.Piece.Position.X,
                                         inState.LastMove.Piece.Position.Y);
 
+                                // Names
                                 GameState.FirstPlayerName = inState.First.DisplayName;
                                 GameState.SecondPlayerName = inState.Second.DisplayName;
-
                                 UpdateConsoleTitle();
                             }
                             else if (r.Data.Class == "welcomeMessage")
