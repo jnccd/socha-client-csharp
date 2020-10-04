@@ -116,16 +116,17 @@ namespace SoftwareChallengeClient
         /// <summary>
         /// Gets all legal Moves for a Team
         /// </summary>
-        public List<Move> GetAllPossibleMoves(PlayerColor Team)
+        public List<SetMove> GetAllPossibleMoves(PlayerColor Team)
         {
-            List<Move> temp = new List<Move>();
-            for (int x = 0; x < BoardWidth; x++)
-                for (int y = 0; y < BoardHeight; y++)
-                    if (Fields[x, y].State == Team.ToFieldState())
-                        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
-                            if ((new Move(x, y, dir)) is Move m && m.IsLegalOn(this, Team))
-                                temp.Add(m);
-            return temp;
+            //List<SetMove> temp = new List<SetMove>();
+            //for (int x = 0; x < BoardWidth; x++)
+            //    for (int y = 0; y < BoardHeight; y++)
+            //        if (Fields[x, y].State == Team.ToFieldState())
+            //            foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+            //                if ((new SetMove(x, y, dir)) is SetMove m && m.IsLegalOn(this, Team))
+            //                    temp.Add(m);
+            //return temp;
+            throw new NotImplementedException();
         }
 
         /// <summary>

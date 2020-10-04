@@ -17,9 +17,9 @@ namespace SoftwareChallengeClient
         static int Port = 13050;
         static string Reservation = "";
         public static string Strategy { get; private set; } = "";
-        
+
         public static string RoomID { get; private set; } = "";
-        public static bool LogNetwork;
+        public static bool LogNetwork = true;
         static Logic PlayerLogic;
         static State GameState;
         
@@ -105,7 +105,8 @@ namespace SoftwareChallengeClient
             }
             catch (Exception e)
             {
-                ConsoleWriteLine("The arguments Mason, what do they mean!?\n\n" + e, ConsoleColor.Red);
+                ConsoleWriteLine("The arguments Mason, what do they mean!?\n" +
+                                 "Tip: Try 'start --help' if you need help with the argument syntax\n\n" + e, ConsoleColor.Red);
                 Console.Read();
                 return false;
             }
@@ -114,10 +115,10 @@ namespace SoftwareChallengeClient
         }
         static void ExecuteCommunationLoop(NetworkStream stream)
         {
-            Move LastMove = null;
+            SetMove LastMove = null;
 
             if (string.IsNullOrWhiteSpace(Reservation))
-                Send(stream, $"<protocol><join gameType=\"swc_2019_piranhas\" />");
+                Send(stream, $"<protocol><join gameType=\"swc_2021_blokus\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{Reservation}\" />");
             
@@ -232,7 +233,7 @@ namespace SoftwareChallengeClient
 
             while (recievedBytes == bufferlength)
             {
-                Thread.Sleep(3); // Without this it stops reading at a certain point because it reads too fast
+                Thread.Sleep(3); // Without this it stops reading at a certain point
 
                 byte[] data = new byte[bufferlength];
                 recievedBytes = stream.Read(data, 0, data.Length);
