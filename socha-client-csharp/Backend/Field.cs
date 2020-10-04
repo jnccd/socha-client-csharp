@@ -9,20 +9,22 @@ namespace socha_client_csharp
     public class Field : ICloneable
     {
         public int X, Y;
-        public FieldState State;
-        
+        public PieceColor? State;
+
         /// <summary>
-        /// Checks if there is a fish on this Field
+        /// Create a new field object
         /// </summary>
-        public bool HasPiranha()
+        public Field(int X, int Y)
         {
-            return State == FieldState.BLUE || State == FieldState.RED;
+            this.X = X;
+            this.Y = Y;
+            State = null;
         }
 
         /// <summary>
         /// Used to set all the variables of this class in one line of code
         /// </summary>
-        public void Update(int X, int Y, FieldState State)
+        public void Update(int X, int Y, PieceColor? State)
         {
             this.X = X;
             this.Y = Y;
@@ -37,6 +39,4 @@ namespace socha_client_csharp
             return MemberwiseClone();
         }
     }
-
-    public enum FieldState { EMPTY, RED, BLUE, OBSTRUCTED }
 }

@@ -8,9 +8,8 @@ namespace socha_client_csharp
 {
     public class Logic
     {
-        public PlayerColor MyColor;
+        public PlayerTeam MyTeam;
         public State GameState;
-        string Strategy { get { return Program.Strategy; } }
 
         public Logic()
         {
@@ -21,7 +20,7 @@ namespace socha_client_csharp
         {
             // TODO: Add your game logic
 
-            return GameState.CurrentBoard.GetAllPossibleMoves(MyColor).First();
+            return GameState.CurrentBoard.GetAllPossibleMoves(MyTeam).First();
         }
     }
 }

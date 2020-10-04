@@ -14,11 +14,10 @@ namespace socha_client_csharp
     /// </summary>
     public class State : ICloneable
     {
-        public PlayerColor StartPlayerColor;
-        public PlayerColor CurrentPlayerColor;
+        public PieceColor CurrentColorIndex;
         public int Turn;
-        public string RedDisplayName;
-        public string BlueDisplayName;
+        public int Round;
+        public PieceKind StartPiece;
 
         public Board CurrentBoard;
 
@@ -30,11 +29,11 @@ namespace socha_client_csharp
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
         /// <para>Caution: This method will check if the Move is legal before performing it which results 
-        /// in worse perofrmance. If you are using this method a lot I recommend using PerformWithoutChecks</para>
+        /// in worse performance. If you are using this method a lot I recommend using PerformWithoutChecks</para>
         /// </summary>
         public State Perform(Move M)
         {
-            if (M.IsLegalOn(CurrentBoard, CurrentPlayerColor))
+            if (M.IsLegalOn(this))
                 return PerformWithoutChecks(M);
             else
                 throw new IllegalMoveException();
