@@ -42,7 +42,6 @@ namespace socha_client_csharp
             stream.Close();
             client.Close();
             ConsoleWriteLine("End of communication!", ConsoleColor.Red);
-            Console.Read();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
         }
         static bool GotProperStartArguments(string[] args)
@@ -174,9 +173,9 @@ namespace socha_client_csharp
                                 GameState.GreenShapes = inState.GreenShapes.Shape;
 
                                 // Last moves
-                                if (inState.LastMove.Class == "sc.plugin2021.SkipMove")
+                                if (inState.LastMove?.Class == "sc.plugin2021.SkipMove")
                                     GameState.LastMove = new SkipMove();
-                                else if (inState.LastMove.Class == "sc.plugin2021.SetMove")
+                                else if (inState.LastMove?.Class == "sc.plugin2021.SetMove")
                                     GameState.LastMove = new SetMove(
                                         inState.LastMove.Piece.Color,
                                         inState.LastMove.Piece.Kind,
@@ -192,11 +191,11 @@ namespace socha_client_csharp
                             }
                             else if (r.Data.Class == "welcomeMessage")
                                 PlayerLogic.MyTeam = r.Data.Color;
-            }
 
-            if (LastMove != null && LastMove.DebugHints.Count > 0)
-                ConsoleWriteLine("Debug Hints from the Last Move:\n" + 
-                    LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
+                if (LastMove != null && LastMove.DebugHints.Count > 0)
+                    ConsoleWriteLine("Debug Hints from the Last Move:\n" +
+                        LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
+            }
         }
         static void UpdateConsoleTitle()
         {
