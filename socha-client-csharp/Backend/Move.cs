@@ -10,7 +10,7 @@ namespace socha_client_csharp
     /// <summary>
     /// This is a generic move class
     /// </summary>
-    public abstract class Move
+    public abstract class Move : ICloneable
     {
         /// <summary>
         /// Checks if this move can be performed on Board B
@@ -24,9 +24,14 @@ namespace socha_client_csharp
         /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
         /// </summary>
         public abstract string ToXML();
+
+        /// <summary>
+        /// Creates a deep copy of this object
+        /// </summary>
+        public virtual object Clone() => MemberwiseClone();
     }
 
-    public class SkipMove : Move
+    public class SkipMove : Move, ICloneable
     {
         /// <summary>
         /// Checks if this move can be performed on Board B
@@ -41,7 +46,7 @@ namespace socha_client_csharp
     /// This Class contains the X and Y coordinates the Move starts from, aswell as the Direction of the Move and DebugHints.
     /// <para>The coordinates the Move ends on can be calculated by calling GetEndpointOn</para> 
     /// </summary>
-    public class SetMove : Move
+    public class SetMove : Move, ICloneable
     {
         public readonly PieceColor Color;
         public readonly PieceKind Kind;
@@ -49,9 +54,18 @@ namespace socha_client_csharp
         public readonly bool Flipped;
         public readonly int X, Y;
 
-        public readonly Point[] AffectedPositions;
+        public List<string> DebugHints;
 
-        public readonly List<string> DebugHints;
+        private Point[] affectedPositions;
+        public Point[] AffectedPositions
+        {
+            get 
+            {
+                if (affectedPositions == null)
+                    affectedPositions = GetAffectedPositions();
+                return affectedPositions;
+            }
+        }
 
         /// <summary>
         /// Creates a New Move
@@ -68,8 +82,6 @@ namespace socha_client_csharp
             this.DebugHints = DebugHints;
             if (DebugHints == null)
                 this.DebugHints = new List<string>();
-
-            AffectedPositions = GetAffectedPositions();
         }
 
         /// <summary>
@@ -189,5 +201,18 @@ namespace socha_client_csharp
                     $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}" +
                 $"</data>" +
             $"</room>";
+
+        /// <summary>
+        /// Creates a deep copy of this object
+        /// </summary>
+        public override object Clone()
+        {
+            SetMove m = (SetMove)MemberwiseClone();
+
+            m.DebugHints = DebugHints.Select(x => (string)x.Clone()).ToList();
+            affectedPositions = null;
+
+            return m;
+        }
     }
 }
