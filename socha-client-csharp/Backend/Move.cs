@@ -172,22 +172,36 @@ namespace socha_client_csharp
             if (AffectedPositions.Any(x => !S.CurrentBoard.IsInBounds(x)))
                 return false;
 
-            // Is touching other pieces?
-            var affectedFields = AffectedPositions.Select(x => S.CurrentBoard.GetField(x));
-            var piece4Neighborhood = AffectedPositions.
-                SelectMany(x => S.CurrentBoard.GetField(x).Get4Neighborhood()).
-                Except(affectedFields);
-            if (piece4Neighborhood.
-                Any(X => X.color != null))
-                return false;
+            // Placement check
+            if (S.IsStartTurn())
+            {
+                // Is in board corner?
+                if (AffectedPositions.All(x =>
+                    !(x.X == 0 && x.Y == 0) &&
+                    !(x.X == Board.BoardWidth - 1 && x.Y == 0) &&
+                    !(x.X == 0 && x.Y == Board.BoardHeight - 1) &&
+                    !(x.X == Board.BoardWidth - 1 && x.Y == Board.BoardHeight - 1)))
+                    return false;
+            }
+            else
+            {
+                // Is touching other pieces?
+                var affectedFields = AffectedPositions.Select(x => S.CurrentBoard.GetField(x));
+                var piece4Neighborhood = AffectedPositions.
+                    SelectMany(x => S.CurrentBoard.GetField(x).Get4Neighborhood()).
+                    Except(affectedFields);
+                if (piece4Neighborhood.
+                    Any(X => X.color != null))
+                    return false;
 
-            // Is cornering other pieces of same color?
-            if (AffectedPositions.
-                SelectMany(x => S.CurrentBoard.GetField(x).Get8Neighborhood()).
-                Except(piece4Neighborhood).
-                Except(affectedFields).
-                All(X => X.color != Color))
-                return false;
+                // Is cornering other pieces of same color?
+                if (AffectedPositions.
+                    SelectMany(x => S.CurrentBoard.GetField(x).Get8Neighborhood()).
+                    Except(piece4Neighborhood).
+                    Except(affectedFields).
+                    All(X => X.color != Color))
+                    return false;
+            }
 
             return true;
         }
