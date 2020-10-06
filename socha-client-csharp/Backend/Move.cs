@@ -67,7 +67,7 @@ namespace socha_client_csharp
 
             this.DebugHints = DebugHints;
             if (DebugHints == null)
-                DebugHints = new List<string>();
+                this.DebugHints = new List<string>();
 
             AffectedPositions = GetAffectedPositions();
         }
@@ -121,7 +121,7 @@ namespace socha_client_csharp
             else if (Kind == PieceKind.PENTO_Y)
                 shapePos = new Point[] { Coordinates(0, 1), Coordinates(1, 0), Coordinates(1, 1), Coordinates(1, 2), Coordinates(1, 3) };
             else 
-                shapePos = new Point[] {  };
+                return new Point[] {  };
 
             // Apply transformations
             if (Rot == Rotation.LEFT)
