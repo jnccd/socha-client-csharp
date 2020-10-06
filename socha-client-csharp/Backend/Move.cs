@@ -169,12 +169,12 @@ namespace socha_client_csharp
                 Any(X => X.color != null))
                 return false;
 
-            // Is cornering other pieces?
+            // Is cornering other pieces of same color?
             if (AffectedPositions.
                 SelectMany(x => S.CurrentBoard.GetField(x).Get8Neighborhood()).
                 Except(piece4Neighborhood).
                 Except(affectedFields).
-                All(X => X.color == null))
+                All(X => X.color != Color))
                 return false;
 
             return true;
