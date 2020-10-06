@@ -1,3 +1,2 @@
 #!/bin/sh
-chmod +x SoftwareChallengeClient.exe
-mono SoftwareChallengeClient.exe "$@"
+dotnet run
