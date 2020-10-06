@@ -19,7 +19,7 @@ namespace socha_client_csharp
         public SetMove GetMove()
         {
             // TODO: Add your game logic
-
+            
             return GameState.CurrentBoard.GetAllPossibleMoves(MyTeam).First();
         }
     }

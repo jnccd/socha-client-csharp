@@ -153,17 +153,19 @@ namespace socha_client_csharp
                                 var inState = r.Data.State;
 
                                 // Attr
-                                GameState.CurrentColorIndex = inState.CurrentColorIndex == 0 ? null : (PieceColor?)inState.CurrentColorIndex;
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
                                 GameState.StartPiece = inState.StartPiece;
                                 GameState.StartTeam = inState.StartTeam.Text;
                                 GameState.OrderedColors = inState.OrderedColors.Color;
+                                GameState.CurrentColorIndex = inState.CurrentColorIndex;
+                                if (GameState.CurrentColorIndex > 0)
+                                    GameState.CurrentColor = (PieceColor)GameState.CurrentColorIndex;
 
                                 // Board
                                 GameState.CurrentBoard = new Board();
                                 foreach (var f in inState.Board.Field)
-                                    GameState.CurrentBoard.Fields[f.X, f.Y] = f.Content;
+                                    GameState.CurrentBoard.GetField(f.X, f.Y).color = f.Content;
 
                                 // Piece Inventories
                                 GameState.BlueShapes = inState.BlueShapes.Shape;

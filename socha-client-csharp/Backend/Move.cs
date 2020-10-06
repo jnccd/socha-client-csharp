@@ -32,7 +32,7 @@ namespace socha_client_csharp
         /// Checks if this move can be performed on Board B
         /// </summary>
         /// <param name="B"> The Board this move should be performed on </param>
-        public override bool IsLegalOn(State S) => S.Turn > 1;
+        public override bool IsLegalOn(State S) => !S.IsStartTurn();
 
         public override string ToXML() => $"<data class=\"sc.plugin2021.SkipMove\"/>";
     }
@@ -43,18 +43,20 @@ namespace socha_client_csharp
     /// </summary>
     public class SetMove : Move
     {
-        public PieceColor Color;
-        public PieceKind Kind;
-        public Rotation Rot;
-        public bool Flipped;
-        public int X, Y;
+        public readonly PieceColor Color;
+        public readonly PieceKind Kind;
+        public readonly Rotation Rot;
+        public readonly bool Flipped;
+        public readonly int X, Y;
 
-        public List<string> DebugHints;
+        public readonly Point[] AffectedPositions;
+
+        public readonly List<string> DebugHints;
 
         /// <summary>
         /// Creates a New Move
         /// </summary>
-        public SetMove(PieceColor Color, PieceKind Kind, Rotation Rot, bool Flipped, int X, int Y)
+        public SetMove(PieceColor Color, PieceKind Kind, Rotation Rot, bool Flipped, int X, int Y, List<string> DebugHints = null)
         {
             this.Color = Color;
             this.Kind = Kind;
@@ -62,12 +64,18 @@ namespace socha_client_csharp
             this.Flipped = Flipped;
             this.X = X;
             this.Y = Y;
+
+            this.DebugHints = DebugHints;
+            if (DebugHints == null)
+                DebugHints = new List<string>();
+
+            AffectedPositions = GetAffectedPositions();
         }
 
         /// <summary>
         /// Returns all points that this move will change on the board
         /// </summary>
-        internal Point[] GetAffectedPositions()
+        private Point[] GetAffectedPositions()
         {
             static Point Coordinates(int x, int y) => new Point(x, y);
 
@@ -135,12 +143,41 @@ namespace socha_client_csharp
         }
 
         /// <summary>
-        /// Checks if this move can be performed on Board B
+        /// Checks if this move can be performed on game State S
         /// </summary>
-        /// <param name="B"> The Board this move should be performed on </param>
-        public override bool IsLegalOn(State B) // https://youtu.be/nz20lu2AM2k?t=8
+        /// <param name="S"> The game State this move should be performed on </param> 
+        public override bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
         {
-            throw new NotImplementedException();
+            // Is piece of right color?
+            if (S.CurrentColor != Color)
+                return false;
+
+            // Is right start piece?
+            if (S.IsStartTurn() && S.StartPiece != Kind)
+                return false;
+
+            // Is out of bounds?
+            if (AffectedPositions.Any(x => !S.CurrentBoard.IsInBounds(x)))
+                return false;
+
+            // Is touching other pieces?
+            var affectedFields = AffectedPositions.Select(x => S.CurrentBoard.GetField(x));
+            var piece4Neighborhood = AffectedPositions.
+                SelectMany(x => S.CurrentBoard.GetField(x).Get4Neighborhood()).
+                Except(affectedFields);
+            if (piece4Neighborhood.
+                Any(X => X.color != null))
+                return false;
+
+            // Is cornering other pieces?
+            if (AffectedPositions.
+                SelectMany(x => S.CurrentBoard.GetField(x).Get8Neighborhood()).
+                Except(piece4Neighborhood).
+                Except(affectedFields).
+                All(X => X.color == null))
+                return false;
+
+            return true;
         }
 
         public override string ToXML() => 
@@ -149,7 +186,7 @@ namespace socha_client_csharp
                     $"<piece color=\"{Color}\" kind=\"{Kind}\" rotation=\"{Rot}\" isFlipped=\"{Flipped}\">" +
                         $"<position x=\"{X}\" y=\"{Y}\"/>" +
                     $"</piece>" +
-                $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}" +
+                    $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}" +
                 $"</data>" +
             $"</room>";
     }

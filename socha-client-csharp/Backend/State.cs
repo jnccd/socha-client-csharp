@@ -14,7 +14,7 @@ namespace socha_client_csharp
     /// </summary>
     public class State : ICloneable
     {
-        public PieceColor? CurrentColorIndex;
+        public int CurrentColorIndex;
         public int Turn;
         public int Round;
         public PieceKind StartPiece;
@@ -41,15 +41,17 @@ namespace socha_client_csharp
             CurrentBoard = new Board();
         }
 
+        public bool IsStartTurn() => Turn <= 1;
+
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
         /// <para>Caution: This method will check if the Move is legal before performing it which results 
         /// in worse performance. If you are using this method a lot I recommend using PerformWithoutChecks</para>
         /// </summary>
-        public State Perform(Move M)
+        public State Perform(Move m)
         {
-            if (M.IsLegalOn(this))
-                return PerformWithoutChecks(M);
+            if (m.IsLegalOn(this))
+                return PerformWithoutChecks(m);
             else
                 throw new IllegalMoveException();
         }
@@ -58,15 +60,15 @@ namespace socha_client_csharp
         /// <para>Caution: This method won't check if the move is legal before commiting it to the board. 
         /// Feeding illegal moves into this method may result in unexpected behavior</para>
         /// </summary>
-        public State PerformWithoutChecks(Move M)
+        public State PerformWithoutChecks(Move m)
         {
-            State re = (State)this.Clone();
+            State re = (State)Clone();
 
-            if (M is SetMove)
+            if (m is SetMove)
             {
-                var setMove = M as SetMove;
-                foreach (var pos in setMove.GetAffectedPositions())
-                    re.CurrentBoard.Fields[pos.X, pos.Y] = setMove.Color;
+                var setMove = m as SetMove;
+                foreach (var p in setMove.AffectedPositions)
+                    re.CurrentBoard.GetField(p).color = setMove.Color;
             }
 
             re.Turn++;
@@ -79,7 +81,7 @@ namespace socha_client_csharp
         /// <summary>
         /// Creates a deep copy of this object
         /// </summary>
-        public object Clone()
+        public object Clone() // TODO: Update for new objects
         {
             State s = (State)MemberwiseClone();
             s.CurrentBoard = (Board)CurrentBoard.Clone();
