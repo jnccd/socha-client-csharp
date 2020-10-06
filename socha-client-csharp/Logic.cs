@@ -16,11 +16,11 @@ namespace socha_client_csharp
             // TODO: Add init logic
         }
 
-        public SetMove GetMove()
+        public Move GetMove()
         {
             // TODO: Add your game logic
             
-            return GameState.CurrentBoard.GetAllPossibleMoves(MyTeam).First();
+            return GameState.GetAllPossibleMoves().First();
         }
     }
 }

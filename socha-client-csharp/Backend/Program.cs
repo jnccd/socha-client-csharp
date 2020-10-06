@@ -117,7 +117,7 @@ namespace socha_client_csharp
         }
         static void ExecuteCommunationLoop(NetworkStream stream)
         {
-            SetMove LastMove = null;
+            Move LastMove = null;
 
             if (string.IsNullOrWhiteSpace(Reservation))
                 Send(stream, $"<protocol><join gameType=\"swc_2021_blokus\" />");
@@ -192,9 +192,9 @@ namespace socha_client_csharp
                             else if (r.Data.Class == "welcomeMessage")
                                 PlayerLogic.MyTeam = r.Data.Color;
 
-                if (LastMove != null && LastMove.DebugHints.Count > 0)
+                if (LastMove != null && LastMove is SetMove && (LastMove as SetMove).DebugHints.Count > 0)
                     ConsoleWriteLine("Debug Hints from the Last Move:\n" +
-                        LastMove.DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
+                        (LastMove as SetMove).DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
             }
         }
         static void UpdateConsoleTitle()
