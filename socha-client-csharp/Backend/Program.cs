@@ -130,6 +130,7 @@ namespace socha_client_csharp
                 string recieved = Recieve(stream);
                 recieved = recieved.StartsWith("<protocol>") ? recieved.Remove(0, "<protocol>".Length) : recieved;
                 recieved = "<received>" + recieved + "</received>";
+                recieved = recieved.Replace("\"one\"", "\"ONE\"").Replace("\"two\"", "\"TWO\"");
 
                 if (recieved.Contains("</protocol>"))
                     break;
@@ -152,7 +153,7 @@ namespace socha_client_csharp
                                 var inState = r.Data.State;
 
                                 // Attr
-                                GameState.CurrentColorIndex = inState.CurrentColorIndex;
+                                GameState.CurrentColorIndex = inState.CurrentColorIndex == 0 ? null : (PieceColor?)inState.CurrentColorIndex;
                                 GameState.Turn = inState.Turn;
                                 GameState.Round = inState.Round;
                                 GameState.StartPiece = inState.StartPiece;

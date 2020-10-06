@@ -14,7 +14,7 @@ namespace socha_client_csharp
     /// </summary>
     public class State : ICloneable
     {
-        public PieceColor CurrentColorIndex;
+        public PieceColor? CurrentColorIndex;
         public int Turn;
         public int Round;
         public PieceKind StartPiece;

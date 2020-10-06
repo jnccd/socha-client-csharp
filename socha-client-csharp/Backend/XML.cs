@@ -173,7 +173,7 @@ namespace Xml
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
 		[XmlAttribute(AttributeName = "currentColorIndex")]
-		public PieceColor CurrentColorIndex { get; set; }
+		public int CurrentColorIndex { get; set; }
 		[XmlAttribute(AttributeName = "turn")]
 		public int Turn { get; set; }
 		[XmlAttribute(AttributeName = "round")]
