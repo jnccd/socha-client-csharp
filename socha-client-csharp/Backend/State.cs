@@ -41,7 +41,7 @@ namespace socha_client_csharp
             CurrentBoard = new Board();
         }
 
-        public bool IsStartTurn() => Turn <= 1;
+        public bool IsStartTurn() => Round == 0;
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
@@ -85,7 +85,6 @@ namespace socha_client_csharp
         {
             List<Move> re = new List<Move>();
 
-            re.Add(new SkipMove());
             for (int x = 0; x < Board.BoardWidth; x++)
                 for (int y = 0; y < Board.BoardHeight; y++)
                     foreach (PieceKind k in Enum.GetValues(typeof(PieceKind)))
@@ -94,8 +93,10 @@ namespace socha_client_csharp
                             re.Add(new SetMove(CurrentColor, k, r, true, x, y));
                             re.Add(new SetMove(CurrentColor, k, r, false, x, y));
                         }
+            re.Add(new SkipMove());
 
-            return re.Where(x => x.IsLegalOn(this)).ToArray();
+            var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
+            return ree;
         }
 
         /// <summary>
