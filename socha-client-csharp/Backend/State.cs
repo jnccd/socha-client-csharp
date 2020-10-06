@@ -101,10 +101,21 @@ namespace socha_client_csharp
         /// <summary>
         /// Creates a deep copy of this object
         /// </summary>
-        public object Clone() // TODO: Update for new objects
+        public object Clone()
         {
             State s = (State)MemberwiseClone();
             s.CurrentBoard = (Board)CurrentBoard.Clone();
+
+            // Using ToList() for shallow list copies
+            s.BlueShapes = BlueShapes.ToList();
+            s.YellowShapes = YellowShapes.ToList();
+            s.RedShapes = RedShapes.ToList();
+            s.GreenShapes = GreenShapes.ToList();
+
+            s.OrderedColors = OrderedColors.ToList();
+
+            s.LastMove = (Move)LastMove.Clone();
+
             return s;
         }
     }
