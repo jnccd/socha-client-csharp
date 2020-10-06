@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace socha_client_csharp
 {
+    /// <summary>
+    /// This is a generic move class
+    /// </summary>
     public abstract class Move
     {
         /// <summary>
@@ -112,7 +115,21 @@ namespace socha_client_csharp
             else 
                 shapePos = new Point[] {  };
 
-            //if (Rot == Rotation.) TODO
+            // Apply transformations
+            if (Rot == Rotation.LEFT)
+                shapePos = shapePos.Select(x => new Point(-x.Y, x.X)).ToArray();
+            else if (Rot == Rotation.RIGHT)
+                shapePos = shapePos.Select(x => new Point(x.Y, -x.X)).ToArray();
+            else if (Rot == Rotation.MIRROR)
+                shapePos = shapePos.Select(x => new Point(x.X, -x.Y)).ToArray();
+
+            if (Flipped)
+                shapePos = shapePos.Select(x => new Point(-x.X, x.Y)).ToArray();
+
+            // Normalize coordinates
+            int minX = shapePos.Min(x => x.X);
+            int minY = shapePos.Min(X => X.Y);
+            shapePos = shapePos.Select(x => new Point(x.X - minX, x.Y - minY)).ToArray();
 
             return shapePos;
         }
