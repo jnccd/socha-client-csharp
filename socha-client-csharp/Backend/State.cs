@@ -79,6 +79,26 @@ namespace socha_client_csharp
         }
 
         /// <summary>
+        /// Gets all legal Moves for the current state
+        /// </summary>
+        public Move[] GetAllPossibleMoves()
+        {
+            List<Move> re = new List<Move>();
+
+            re.Add(new SkipMove());
+            for (int x = 0; x < Board.BoardWidth; x++)
+                for (int y = 0; y < Board.BoardHeight; y++)
+                    foreach (PieceKind k in Enum.GetValues(typeof(PieceKind)))
+                        foreach (Rotation r in Enum.GetValues(typeof(Rotation)))
+                        {
+                            re.Add(new SetMove(CurrentColor, k, r, true, x, y));
+                            re.Add(new SetMove(CurrentColor, k, r, false, x, y));
+                        }
+
+            return re.Where(x => x.IsLegalOn(this)).ToArray();
+        }
+
+        /// <summary>
         /// Creates a deep copy of this object
         /// </summary>
         public object Clone() // TODO: Update for new objects

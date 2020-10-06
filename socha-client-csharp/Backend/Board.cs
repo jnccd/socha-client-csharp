@@ -38,22 +38,6 @@ namespace socha_client_csharp
         public bool IsInBounds(int x, int y) => x >= 0 && x < BoardWidth && y >= 0 && y < BoardHeight;
 
         /// <summary>
-        /// Gets all legal Moves for a Team
-        /// </summary>
-        public List<SetMove> GetAllPossibleMoves(PlayerTeam Team)
-        {
-            //List<SetMove> temp = new List<SetMove>();
-            //for (int x = 0; x < BoardWidth; x++)
-            //    for (int y = 0; y < BoardHeight; y++)
-            //        if (Fields[x, y].State == Team.ToFieldState())
-            //            foreach (Direction dir in Enum.GetValues(typeof(Direction)))
-            //                if ((new SetMove(x, y, dir)) is SetMove m && m.IsLegalOn(this, Team))
-            //                    temp.Add(m);
-            //return temp;
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Creates a deep copy of this object
         /// </summary>
         public object Clone()
