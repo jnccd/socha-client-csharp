@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -21,8 +22,10 @@ namespace socha_client_csharp
         static string Reservation = "";
         public static string Strategy { get; private set; } = "";
 
-        public static string RoomID { get; private set; } = "";
         public static bool LogNetwork = true;
+        public static bool DrawBoard = true;
+
+        public static string RoomID { get; private set; } = "";
         static Logic PlayerLogic;
         static State GameState;
         
@@ -188,6 +191,9 @@ namespace socha_client_csharp
                                 GameState.FirstPlayerName = inState.First.DisplayName;
                                 GameState.SecondPlayerName = inState.Second.DisplayName;
                                 UpdateConsoleTitle();
+
+                                if (DrawBoard)
+                                    DrawBoardPng();
                             }
                             else if (r.Data.Class == "welcomeMessage")
                                 PlayerLogic.MyTeam = r.Data.Color;
@@ -200,6 +206,16 @@ namespace socha_client_csharp
         static void UpdateConsoleTitle()
         {
             try { Console.Title = PlayerLogic.MyTeam.ToString() + " in " + GameState.FirstPlayerName + " vs " + GameState.SecondPlayerName; } catch { }
+        }
+        static void DrawBoardPng()
+        {
+            Bitmap b = new Bitmap(Board.Width, Board.Height);
+
+            for (int x = 0; x < Board.Width; x++)
+                for (int y = 0; y < Board.Height; y++)
+                    b.SetPixel(x, y, GameState.CurrentBoard.GetField(x, y).color.ToColor());
+
+            b.Save("board.png");
         }
 
         static void Send(NetworkStream stream, string message)
