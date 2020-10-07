@@ -105,6 +105,8 @@ namespace socha_client_csharp
             else if (Kind == PieceKind.TETRO_T)
                 shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(2, 0), Coordinates(1, 1) };
             else if (Kind == PieceKind.TETRO_I)
+                shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(0, 3) };
+            else if (Kind == PieceKind.TETRO_L)
                 shapePos = new Point[] { Coordinates(0, 0), Coordinates(0, 1), Coordinates(0, 2), Coordinates(1, 2) };
             else if (Kind == PieceKind.TETRO_Z)
                 shapePos = new Point[] { Coordinates(0, 0), Coordinates(1, 0), Coordinates(1, 1), Coordinates(2, 1) };
@@ -185,9 +187,9 @@ namespace socha_client_csharp
                 // Is in board corner?
                 if (AffectedPositions.All(x =>
                     !(x.X == 0 && x.Y == 0) &&
-                    !(x.X == Board.BoardWidth - 1 && x.Y == 0) &&
-                    !(x.X == 0 && x.Y == Board.BoardHeight - 1) &&
-                    !(x.X == Board.BoardWidth - 1 && x.Y == Board.BoardHeight - 1)))
+                    !(x.X == Board.Width - 1 && x.Y == 0) &&
+                    !(x.X == 0 && x.Y == Board.Height - 1) &&
+                    !(x.X == Board.Width - 1 && x.Y == Board.Height - 1)))
                     return false;
             }
             else
@@ -213,13 +215,13 @@ namespace socha_client_csharp
         }
 
         public override string ToXML() => 
-            $"<room roomId=\"{Program.RoomID}\">" +
-                $"<data class=\"sc.plugin2021.SetMove\">" +
-                    $"<piece color=\"{Color}\" kind=\"{Kind}\" rotation=\"{Rot}\" isFlipped=\"{Flipped}\">" +
-                        $"<position x=\"{X}\" y=\"{Y}\"/>" +
-                    $"</piece>" +
-                    $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>").Aggregate((x, y) => x + y) : "")}" +
-                $"</data>" +
+            $"<room roomId=\"{Program.RoomID}\">\n" +
+                $"<data class=\"sc.plugin2021.SetMove\">\n" +
+                    $"<piece color=\"{Color}\" kind=\"{Kind}\" rotation=\"{Rot}\" isFlipped=\"{Flipped}\">\n" +
+                        $"<position x=\"{X}\" y=\"{Y}\"/>\n" +
+                    $"</piece>\n" +
+                    $"{(DebugHints.Count > 0 ? DebugHints.Select(x => $"<hint content=\"{x}\"/>\n").Aggregate((x, y) => x + y) : "")}" +
+                $"</data>\n" +
             $"</room>";
 
         /// <summary>

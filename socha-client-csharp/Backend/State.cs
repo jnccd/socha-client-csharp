@@ -85,8 +85,8 @@ namespace socha_client_csharp
         {
             List<Move> re = new List<Move>();
 
-            for (int x = 0; x < Board.BoardWidth; x++)
-                for (int y = 0; y < Board.BoardHeight; y++)
+            for (int x = 0; x < Board.Width; x++)
+                for (int y = 0; y < Board.Height; y++)
                     foreach (PieceKind k in Enum.GetValues(typeof(PieceKind)))
                         foreach (Rotation r in Enum.GetValues(typeof(Rotation)))
                         {
