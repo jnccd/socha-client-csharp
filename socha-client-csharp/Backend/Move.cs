@@ -146,10 +146,10 @@ namespace socha_client_csharp
             if (Flipped)
                 shapePos = shapePos.Select(x => new Point(-x.X, x.Y)).ToArray();
 
-            // Normalize coordinates
+            // Normalize coordinates & Translate to board coords
             int minX = shapePos.Min(x => x.X);
             int minY = shapePos.Min(X => X.Y);
-            shapePos = shapePos.Select(x => new Point(x.X - minX, x.Y - minY)).ToArray();
+            shapePos = shapePos.Select(x => new Point(x.X - minX + X, x.Y - minY + Y)).ToArray();
 
             return shapePos;
         }
@@ -172,7 +172,14 @@ namespace socha_client_csharp
             if (AffectedPositions.Any(x => !S.CurrentBoard.IsInBounds(x)))
                 return false;
 
-            // Placement check
+            // --- Placement check
+
+            // Is colliding with other pieces?
+            var affectedFields = AffectedPositions.Select(x => S.CurrentBoard.GetField(x));
+            if (affectedFields.
+                Any(X => X.color != null))
+                return false;
+
             if (S.IsStartTurn())
             {
                 // Is in board corner?
@@ -186,7 +193,6 @@ namespace socha_client_csharp
             else
             {
                 // Is touching other pieces?
-                var affectedFields = AffectedPositions.Select(x => S.CurrentBoard.GetField(x));
                 var piece4Neighborhood = AffectedPositions.
                     SelectMany(x => S.CurrentBoard.GetField(x).Get4Neighborhood()).
                     Except(affectedFields);
