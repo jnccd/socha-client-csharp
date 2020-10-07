@@ -42,6 +42,7 @@ namespace socha_client_csharp
             stream.Close();
             client.Close();
             ConsoleWriteLine("End of communication!", ConsoleColor.Red);
+            Console.ReadLine();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
         }
         static bool GotProperStartArguments(string[] args)
@@ -158,8 +159,7 @@ namespace socha_client_csharp
                                 GameState.StartTeam = inState.StartTeam.Text;
                                 GameState.OrderedColors = inState.OrderedColors.Color;
                                 GameState.CurrentColorIndex = inState.CurrentColorIndex;
-                                if (GameState.CurrentColorIndex > 0)
-                                    GameState.CurrentColor = (PieceColor)GameState.CurrentColorIndex;
+                                GameState.CurrentColor = (PieceColor)((GameState.CurrentColorIndex % Enum.GetValues(typeof(PieceColor)).Length) + 1);
 
                                 // Board
                                 GameState.CurrentBoard = new Board();

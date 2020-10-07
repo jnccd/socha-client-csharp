@@ -41,7 +41,7 @@ namespace socha_client_csharp
             CurrentBoard = new Board();
         }
 
-        public bool IsStartTurn() => Round == 0;
+        public bool IsStartTurn() => Round == 1;
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
@@ -90,8 +90,8 @@ namespace socha_client_csharp
                     foreach (PieceKind k in Enum.GetValues(typeof(PieceKind)))
                         foreach (Rotation r in Enum.GetValues(typeof(Rotation)))
                         {
-                            re.Add(new SetMove(CurrentColor, k, r, true, x, y));
                             re.Add(new SetMove(CurrentColor, k, r, false, x, y));
+                            re.Add(new SetMove(CurrentColor, k, r, true, x, y));
                         }
             re.Add(new SkipMove());
 
