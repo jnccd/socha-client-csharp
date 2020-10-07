@@ -12,16 +12,16 @@ namespace socha_client_csharp
     /// </summary>
     public class Board : ICloneable
     {
-        public const int BoardWidth = 20, BoardHeight = 20;
-        private Field[,] Fields = new Field[BoardWidth, BoardHeight];
+        public const int Width = 20, Height = 20;
+        private Field[,] Fields = new Field[Width, Height];
         
         /// <summary>
         /// Creates an empty board
         /// </summary>
         public Board()
         {
-            for (int x = 0; x < BoardWidth; x++)
-                for (int y = 0; y < BoardHeight; y++)
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
                     Fields[x, y] = new Field(null, this, x, y);
         }
 
@@ -35,7 +35,7 @@ namespace socha_client_csharp
         /// Checks if the coord (X, Y) is in bounds
         /// </summary>
         public bool IsInBounds(Point p) => IsInBounds(p.X, p.Y);
-        public bool IsInBounds(int x, int y) => x >= 0 && x < BoardWidth && y >= 0 && y < BoardHeight;
+        public bool IsInBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
         /// <summary>
         /// Creates a deep copy of this object
@@ -43,8 +43,8 @@ namespace socha_client_csharp
         public object Clone()
         {
             Board b = (Board)MemberwiseClone();
-            for (int x = 0; x < BoardWidth; x++)
-                for (int y = 0; y < BoardHeight; y++)
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
                     b.Fields[x, y] = Fields[x, y].CloneWParent(b);
             return b;
         }
