@@ -11,6 +11,8 @@ namespace socha_client_csharp
     {
         public static PlayerTeam OtherTeam(this PlayerTeam t) => t == PlayerTeam.ONE ? PlayerTeam.TWO : PlayerTeam.ONE;
 
+        public static PlayerTeam Team(this PieceColor c) => c == PieceColor.BLUE || c == PieceColor.RED ? PlayerTeam.ONE : PlayerTeam.TWO;
+
         public static PieceColor Next(this PieceColor c, List<PieceColor> OrderedColors) => OrderedColors[(OrderedColors.IndexOf(c) + 1) % OrderedColors.Count];
 
         public static Color ToColor(this PieceColor? c) 

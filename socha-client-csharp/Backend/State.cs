@@ -72,8 +72,10 @@ namespace socha_client_csharp
             }
 
             re.Turn++;
-            re.CurrentTeam = re.CurrentTeam.OtherTeam();
+            if (m is SetMove)
+                re.CurrentPlayersShapes().Remove((m as SetMove).GetKind());
             re.CurrentColor = re.CurrentColor.Next(OrderedColors);
+            re.CurrentTeam = re.CurrentColor.Team();
 
             return re;
         }
@@ -97,6 +99,23 @@ namespace socha_client_csharp
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
             return ree;
+        }
+
+        /// <summary>
+        /// Get the Shapes the current player can play
+        /// </summary>
+        public List<PieceKind> CurrentPlayersShapes()
+        {
+            if (CurrentColor == PieceColor.BLUE)
+                return BlueShapes;
+            else if (CurrentColor == PieceColor.GREEN)
+                return GreenShapes;
+            else if (CurrentColor == PieceColor.RED)
+                return RedShapes;
+            else if (CurrentColor == PieceColor.YELLOW)
+                return YellowShapes;
+            else
+                return null;
         }
 
         /// <summary>

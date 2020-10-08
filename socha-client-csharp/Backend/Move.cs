@@ -85,6 +85,11 @@ namespace socha_client_csharp
         }
 
         /// <summary>
+        /// Returns the kind of the piece that is set in this move
+        /// </summary>
+        public PieceKind GetKind() => Kind;
+
+        /// <summary>
         /// Returns all points that this move will change on the board
         /// </summary>
         private Point[] GetAffectedPositions()
@@ -138,9 +143,9 @@ namespace socha_client_csharp
                 return new Point[] {  };
 
             // Apply transformations
-            if (Rot == Rotation.LEFT)
+            if (Rot == Rotation.RIGHT)
                 shapePos = shapePos.Select(x => new Point(-x.Y, x.X)).ToArray();
-            else if (Rot == Rotation.RIGHT)
+            else if (Rot == Rotation.LEFT)
                 shapePos = shapePos.Select(x => new Point(x.Y, -x.X)).ToArray();
             else if (Rot == Rotation.MIRROR)
                 shapePos = shapePos.Select(x => new Point(x.X, -x.Y)).ToArray();
@@ -172,6 +177,10 @@ namespace socha_client_csharp
 
             // Is out of bounds?
             if (AffectedPositions.Any(x => !S.CurrentBoard.IsInBounds(x)))
+                return false;
+
+            // Is part of placable pieces
+            if (!S.CurrentPlayersShapes().Contains(Kind))
                 return false;
 
             // --- Placement check
