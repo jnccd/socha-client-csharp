@@ -148,7 +148,7 @@ namespace socha_client_csharp
             else if (Rot == Rotation.LEFT)
                 shapePos = shapePos.Select(x => new Point(x.Y, -x.X)).ToArray();
             else if (Rot == Rotation.MIRROR)
-                shapePos = shapePos.Select(x => new Point(x.X, -x.Y)).ToArray();
+                shapePos = shapePos.Select(x => new Point(-x.X, -x.Y)).ToArray();
 
             if (Flipped)
                 shapePos = shapePos.Select(x => new Point(-x.X, x.Y)).ToArray();
