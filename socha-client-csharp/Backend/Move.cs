@@ -179,7 +179,7 @@ namespace socha_client_csharp
             if (AffectedPositions.Any(x => !S.CurrentBoard.IsInBounds(x)))
                 return false;
 
-            // Is part of placable pieces
+            // Is part of placable pieces?
             if (!S.CurrentPlayersShapes().Contains(Kind))
                 return false;
 
