@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace socha_client_csharp
+namespace SochaClient
 {
     public class Logic
     {

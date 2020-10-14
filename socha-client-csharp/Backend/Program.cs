@@ -8,7 +8,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using Xml;
 
-namespace socha_client_csharp
+namespace SochaClient
 {
     public class Program
     {
@@ -20,9 +20,9 @@ namespace socha_client_csharp
 
         public static bool LogNetwork = true;
         public static bool DrawBoard = true;
-        static bool logToFile = true;
+        static readonly bool logToFile = true;
         static string instanceIdentifier;
-        static string logFileName { get => $"log{instanceIdentifier}.txt"; }
+        static string LogFileName { get => $"log{instanceIdentifier}.txt"; }
         static StreamWriter logWriter;
 
         public static string RoomID { get; private set; } = "";
@@ -37,7 +37,7 @@ namespace socha_client_csharp
             PlayerLogic = new Logic { GameState = GameState };
             instanceIdentifier = DateTime.Now.ToBinary().ToString();
             if (logToFile)
-                logWriter = File.CreateText(logFileName);
+                logWriter = File.CreateText(LogFileName);
 
             TcpClient client = ConnectToServer();
             NetworkStream stream = client.GetStream();

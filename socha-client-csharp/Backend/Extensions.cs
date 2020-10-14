@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace socha_client_csharp
+namespace SochaClient
 {
     public static class Extensions
     {
