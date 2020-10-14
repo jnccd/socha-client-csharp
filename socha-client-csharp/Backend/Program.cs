@@ -63,16 +63,17 @@ namespace SochaClient
                     {
                         case "--help":
                             ConsoleWriteLine($@"
-        Usage: start.sh [options]
-              The IP address of the host to connect to (default: {host}).
-          -p, --port:
-              The port used for the connection (default: {port}).
-          -r, --reservation:
-              The reservation code to join a prepared game.
-          -s, --strategy:
-              The strategy used for the game.
-          --help:
-              Print this help message.", ConsoleColor.Cyan);
+Usage: start.sh [options]
+    -h, --host:
+        The IP address of the host to connect to (default: {host}).
+    -p, --port:
+        The port used for the connection (default: {port}).
+    -r, --reservation:
+        The reservation code to join a prepared game.
+    -s, --strategy:
+        The strategy used for the game.
+    --help:
+        Print this help message.", ConsoleColor.Cyan);
                             return false;
 
                         case "-h":
