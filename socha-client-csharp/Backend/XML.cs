@@ -1,12 +1,10 @@
 ﻿using socha_client_csharp;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace Xml
 {
-	[XmlRoot(ElementName = "startTeam")]
+    [XmlRoot(ElementName = "startTeam")]
 	public class StartTeam
 	{
 		[XmlAttribute(AttributeName = "class")]
