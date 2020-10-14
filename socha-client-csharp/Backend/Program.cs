@@ -215,7 +215,8 @@ namespace socha_client_csharp
         }
         static void UpdateConsoleTitle()
         {
-            try { Console.Title = PlayerLogic.MyTeam.ToString() + " in " + GameState.FirstPlayerName + " vs " + GameState.SecondPlayerName; } catch { }
+            try { Console.Title = PlayerLogic.MyTeam.ToString() + " in " + GameState.FirstPlayerName + " vs " + GameState.SecondPlayerName; } 
+            catch { }
         }
         static void DrawBoardPng()
         {
@@ -264,7 +265,7 @@ namespace socha_client_csharp
                 Console.WriteLine(text);
                 Console.ForegroundColor = defaultC;
 
-                if (logToFile)
+                if (logToFile && logWriter != null)
                     logWriter.WriteLine(text);
             }
         }
