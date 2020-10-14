@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace socha_client_csharp
+namespace SochaClient
 {
     /// <summary>
     /// Represents the Board of the game

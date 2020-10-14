@@ -1,4 +1,4 @@
-﻿namespace socha_client_csharp
+﻿namespace SochaClient
 {
     public enum PlayerTeam 
     {

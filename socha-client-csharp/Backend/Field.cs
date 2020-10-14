@@ -2,13 +2,13 @@
 using System.Drawing;
 using System.Linq;
 
-namespace socha_client_csharp
+namespace SochaClient
 {
     public class Field : ICloneable
     {
         public PieceColor? color;
         Board parent;
-        int x, y;
+        readonly int x, y;
 
         public Field(PieceColor? color, Board parent, int x, int y)
         {

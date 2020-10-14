@@ -1,4 +1,4 @@
-﻿using socha_client_csharp;
+﻿using SochaClient;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
