@@ -24,6 +24,10 @@ namespace socha_client_csharp
 
         public static bool LogNetwork = true;
         public static bool DrawBoard = true;
+        static bool logToFile = true;
+        static string instanceIdentifier;
+        static string logFileName { get => $"log{instanceIdentifier}.txt"; }
+        static StreamWriter logWriter;
 
         public static string RoomID { get; private set; } = "";
         static Logic PlayerLogic;
@@ -35,6 +39,9 @@ namespace socha_client_csharp
 
             GameState = new State();
             PlayerLogic = new Logic { GameState = GameState };
+            instanceIdentifier = DateTime.Now.ToBinary().ToString();
+            if (logToFile)
+                logWriter = File.CreateText(logFileName);
 
             TcpClient client = ConnectToServer();
             NetworkStream stream = client.GetStream();
@@ -47,6 +54,9 @@ namespace socha_client_csharp
             ConsoleWriteLine("End of communication!", ConsoleColor.Red);
             Console.ReadLine();
             ConsoleWriteLine("Terminating the client!", ConsoleColor.Red);
+
+            if (logToFile)
+                logWriter.Close();
         }
         static bool GotProperStartArguments(string[] args)
         {
@@ -215,7 +225,7 @@ namespace socha_client_csharp
                 for (int y = 0; y < Board.Height; y++)
                     b.SetPixel(x, y, GameState.CurrentBoard.GetField(x, y).color.ToColor());
 
-            b.Save("board.png");
+            try { b.Save("board.png"); } catch {}
         }
 
         static void Send(NetworkStream stream, string message)
@@ -253,6 +263,9 @@ namespace socha_client_csharp
                 Console.ForegroundColor = Color;
                 Console.WriteLine(text);
                 Console.ForegroundColor = defaultC;
+
+                if (logToFile)
+                    logWriter.WriteLine(text);
             }
         }
     }
