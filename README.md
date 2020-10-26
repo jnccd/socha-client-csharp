@@ -12,6 +12,6 @@ To run this project in the latter case cd into the `socha-client-csharp` folder 
 
 ```dotnet run```
 
-If you wish to pass arguments to the command you can use `--` like so:
+If you wish to pass program arguments to the `dotnet ` execution you can use `--` like so:
 
 ```dotnet run -- --help```
