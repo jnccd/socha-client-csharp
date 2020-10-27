@@ -206,7 +206,7 @@ namespace SochaClient
                     SelectMany(x => S.CurrentBoard.GetField(x).Get4Neighborhood()).
                     Except(affectedFields);
                 if (piece4Neighborhood.
-                    Any(X => X.color != null))
+                    Any(X => X.color == Color))
                     return false;
 
                 // Is cornering other pieces of same color?
