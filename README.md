@@ -1,6 +1,6 @@
-# C# client for Software-Challenge Germany 2020/2021
+# C# client for Software-Challenge Germany 2021/2022
 
-This repository contains a simple client for the game Blokus written for the .NET Core platform.
+This repository contains a simple client for the game Ostseeschach written for the .NET Core platform.
 
 Because it is a simple client, it will only do seemingly random moves. If you wish to build your own client on top of this one you can [fork this repo](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) and add your code to the `Logic.cs` class in the `socha-client-csharp` folder.
 
