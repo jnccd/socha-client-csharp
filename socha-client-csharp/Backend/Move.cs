@@ -21,7 +21,7 @@ namespace SochaClient
         public bool IsLegalOn(State S) => // https://youtu.be/nz20lu2AM2k?t=8
             S.CurrentColor == Color &&
             S.CurrentBoard.IsInBounds(To) &&
-            S.CurrentBoard.GetField(To).color != Color &&
+            S.CurrentBoard.GetField(To).Color != Color &&
             S.CurrentBoard.GetField(From).MoveToCoords().Contains(To);
 
         /// <summary>
