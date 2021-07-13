@@ -11,25 +11,12 @@ namespace SochaClient
     /// </summary>
     public class State : ICloneable
     {
-        public int CurrentColorIndex;
         public int Turn;
-        public int Round;
         public PieceKind StartPiece;
         public PlayerTeam StartTeam;
 
         public Board CurrentBoard;
         public PlayerTeam CurrentTeam;
-        public PieceColor CurrentColor;
-
-        public List<PieceKind> BlueShapes;
-        public List<PieceKind> YellowShapes;
-        public List<PieceKind> RedShapes;
-        public List<PieceKind> GreenShapes;
-
-        public List<PieceColor> OrderedColors;
-
-        public string FirstPlayerName;
-        public string SecondPlayerName;
 
         public Move LastMove;
 
@@ -37,8 +24,6 @@ namespace SochaClient
         {
             CurrentBoard = new Board();
         }
-
-        public bool IsStartTurn() => Round == 1;
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
@@ -61,18 +46,15 @@ namespace SochaClient
         {
             State re = (State)Clone();
 
-            if (m is SetMove)
+            var targetField = CurrentBoard.GetField(m.To);
+
+            if (!targetField.Empty())
             {
-                var setMove = m as SetMove;
-                foreach (var p in setMove.AffectedPositions)
-                    re.CurrentBoard.GetField(p).Color = setMove.Color;
+
             }
 
             re.Turn++;
-            if (m is SetMove)
-                re.CurrentPlayersShapes().Remove((m as SetMove).GetKind());
-            re.CurrentColor = re.CurrentColor.Next(OrderedColors);
-            re.CurrentTeam = re.CurrentColor.Team();
+            re.CurrentTeam = re.CurrentTeam.OtherTeam();
 
             return re;
         }

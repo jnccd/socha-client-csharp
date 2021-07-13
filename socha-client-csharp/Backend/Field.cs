@@ -6,19 +6,19 @@ namespace SochaClient
 {
     public class Field : ICloneable
     {
-        public PieceColor? Color { get; private set; }
-        public PieceKind? Kind { get; private set; }
+        public Piece Piece;
         public Board Parent { get; private set; }
         public readonly int X, Y;
 
-        public Field(PieceColor? color, PieceKind? kind, Board parent, int x, int y)
+        public Field(Piece piece, Board parent, int x, int y)
         {
-            Color = color;
-            Kind = kind;
+            Piece = piece;
             Parent = parent;
             X = x;
             Y = y;
         }
+
+        public bool Empty() => Piece == null;
 
         public object Clone() => (Field)MemberwiseClone();
         public Field CloneWParent(Board cloneParent)
@@ -26,6 +26,11 @@ namespace SochaClient
             Field f = (Field)Clone();
             f.Parent = cloneParent;
             return f;
+        }
+
+        internal object MoveToCoords()
+        {
+            throw new NotImplementedException();
         }
     }
 }
