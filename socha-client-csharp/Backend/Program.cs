@@ -220,7 +220,7 @@ Usage: start.sh [options]
 
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
-                    b.SetPixel(x, y, gameState.CurrentBoard.GetField(x, y).color.ToColor());
+                    b.SetPixel(x, y, gameState.CurrentBoard.GetField(x, y).Color.ToColor());
 
             try { b.Save("board.png"); } catch {}
         }

@@ -65,7 +65,7 @@ namespace SochaClient
             {
                 var setMove = m as SetMove;
                 foreach (var p in setMove.AffectedPositions)
-                    re.CurrentBoard.GetField(p).color = setMove.Color;
+                    re.CurrentBoard.GetField(p).Color = setMove.Color;
             }
 
             re.Turn++;
