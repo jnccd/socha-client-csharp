@@ -171,9 +171,9 @@ Usage: start.sh [options]
                                 gameState.CurrentColor = (PieceColor)((gameState.CurrentColorIndex % Enum.GetValues(typeof(PieceColor)).Length) + 1);
 
                                 // Board
-                                gameState.CurrentBoard = new Board();
+                                gameState.Board = new Board();
                                 foreach (var f in inState.Board.Field)
-                                    gameState.CurrentBoard.GetField(f.X, f.Y).color = f.Content;
+                                    gameState.Board.GetField(f.X, f.Y).color = f.Content;
 
                                 // Piece Inventories
                                 gameState.BlueShapes = inState.BlueShapes.Shape;
@@ -220,7 +220,7 @@ Usage: start.sh [options]
 
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
-                    b.SetPixel(x, y, gameState.CurrentBoard.GetField(x, y).Color.ToColor());
+                    b.SetPixel(x, y, gameState.Board.GetField(x, y).Color.ToColor());
 
             try { b.Save("board.png"); } catch {}
         }

@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using SochaClient;
+using System.Linq;
 
-namespace SochaClient
+namespace SochaClientLogic
 {
     public class Logic
     {
