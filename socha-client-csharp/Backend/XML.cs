@@ -126,8 +126,6 @@ namespace Xml
 		public PieceColor Color { get; set; }
 		[XmlAttribute(AttributeName = "kind")]
 		public PieceKind Kind { get; set; }
-		[XmlAttribute(AttributeName = "rotation")]
-		public Rotation Rotation { get; set; }
 		[XmlAttribute(AttributeName = "isFlipped")]
 		public bool IsFlipped { get; set; }
 	}

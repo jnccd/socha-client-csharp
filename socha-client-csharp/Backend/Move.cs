@@ -11,17 +11,23 @@ namespace SochaClient
     public class Move : ICloneable
     {
         public readonly Point From, To;
-        public readonly PieceColor? Color;
-        public readonly PieceKind? Kind;
+        public readonly Piece Piece;
+
+        public Move(Point from, Point to, Piece piece)
+        {
+            From = from;
+            To = to;
+            Piece = piece;
+        }
 
         /// <summary>
         /// Checks if this move can be performed on game State S
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) => // https://youtu.be/nz20lu2AM2k?t=8
-            S.CurrentColor == Color &&
+            S.CurrentTeam.C == Color &&
             S.CurrentBoard.IsInBounds(To) &&
-            S.CurrentBoard.GetField(To).Color != Color &&
+            S.CurrentBoard.GetField(To).Piece.Color != Piece.Color &&
             S.CurrentBoard.GetField(From).MoveToCoords().Contains(To);
 
         /// <summary>

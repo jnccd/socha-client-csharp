@@ -7,7 +7,8 @@ namespace SochaClient
     {
         public static PlayerTeam OtherTeam(this PlayerTeam t) => t == PlayerTeam.ONE ? PlayerTeam.TWO : PlayerTeam.ONE;
 
-        public static PlayerTeam Team(this PieceColor c) => c == PieceColor.RED ? PlayerTeam.ONE : PlayerTeam.TWO;
+        public static PlayerTeam ToTeam(this PieceColor c) => c == PieceColor.RED ? PlayerTeam.ONE : PlayerTeam.TWO;
+        public static PieceColor ToColor(this PlayerTeam t) => t == PlayerTeam.ONE ? PieceColor.RED : PieceColor.BLUE;
 
         public static Color ToColor(this PieceColor? c) 
         {
