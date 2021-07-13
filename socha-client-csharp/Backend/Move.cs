@@ -25,10 +25,10 @@ namespace SochaClient
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) => // https://youtu.be/nz20lu2AM2k?t=8
-            S.CurrentTeam.C == Color &&
+            S.CurrentTeam.ToColor() == Piece.Color &&
             S.CurrentBoard.IsInBounds(To) &&
             S.CurrentBoard.GetField(To).Piece.Color != Piece.Color &&
-            S.CurrentBoard.GetField(From).MoveToCoords().Contains(To);
+            S.CurrentBoard.GetField(From).PossibleCoordsToMoveTo().Contains(To);
 
         /// <summary>
         /// Converts this Move to XML
