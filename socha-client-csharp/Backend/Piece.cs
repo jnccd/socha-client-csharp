@@ -9,7 +9,7 @@ namespace SochaClient
     {
         public PieceColor Color { get; private set; }
         public PieceKind Kind { get; private set; }
-        public int Height { get; private set; }
+        public int Height { get; internal set; }
 
         public Piece(PieceColor color, PieceKind kind, int height)
         {

@@ -12,18 +12,20 @@ namespace SochaClient
     public class State : ICloneable
     {
         public int Turn;
-        public PieceKind StartPiece;
         public PlayerTeam StartTeam;
 
-        public Board CurrentBoard;
-        public PlayerTeam CurrentTeam;
-
+        public Board Board;
+        public Player PlayerOne, PlayerTwo;
         public Move LastMove;
 
         public State()
         {
-            CurrentBoard = new Board();
+            Board = new Board();
+            PlayerOne = new Player("ONE", PlayerTeam.ONE, 0);
+            PlayerTwo = new Player("TWO", PlayerTeam.TWO, 0);
         }
+
+        public Player CurrentPlayer() => Turn % 2 == 0 ? PlayerOne : PlayerTwo;
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
@@ -46,11 +48,17 @@ namespace SochaClient
         {
             State re = (State)Clone();
 
-            var targetField = CurrentBoard.GetField(m.To);
+            var targetField = Board.GetField(m.To);
 
             if (!targetField.Empty())
             {
+                if (m.Piece != null)
+                    m.Piece.Height++;
 
+                if (m.Piece.Height >= 3)
+                {
+                    re.
+                }
             }
 
             re.Turn++;
@@ -81,37 +89,16 @@ namespace SochaClient
         }
 
         /// <summary>
-        /// Get the Shapes the current player can play
-        /// </summary>
-        public List<PieceKind> CurrentPlayersShapes()
-        {
-            if (CurrentColor == PieceColor.BLUE)
-                return BlueShapes;
-            else if (CurrentColor == PieceColor.GREEN)
-                return GreenShapes;
-            else if (CurrentColor == PieceColor.RED)
-                return RedShapes;
-            else if (CurrentColor == PieceColor.YELLOW)
-                return YellowShapes;
-            else
-                return null;
-        }
-
-        /// <summary>
         /// Creates a deep copy of this object
         /// </summary>
         public object Clone()
         {
             State s = (State)MemberwiseClone();
-            s.CurrentBoard = (Board)CurrentBoard.Clone();
 
-            // Using ToList() for shallow list copies
-            s.BlueShapes = BlueShapes.ToList();
-            s.YellowShapes = YellowShapes.ToList();
-            s.RedShapes = RedShapes.ToList();
-            s.GreenShapes = GreenShapes.ToList();
+            s.Board = (Board)Board.Clone();
 
-            s.OrderedColors = OrderedColors.ToList();
+            s.PlayerOne = (Player)PlayerOne.Clone();
+            s.PlayerTwo = (Player)PlayerTwo.Clone();
 
             s.LastMove = (Move)LastMove.Clone();
 
