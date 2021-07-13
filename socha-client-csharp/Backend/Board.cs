@@ -8,8 +8,8 @@ namespace SochaClient
     /// </summary>
     public class Board : ICloneable
     {
-        public const int Width = 20, Height = 20;
-        private Field[,] Fields = new Field[Width, Height];
+        public const int Width = 8, Height = 8;
+        private readonly Field[,] Fields = new Field[Width, Height];
         
         /// <summary>
         /// Creates an empty board
