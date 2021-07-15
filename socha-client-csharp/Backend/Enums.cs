@@ -10,7 +10,7 @@
         BLUE=1, 
         RED=2, 
     }
-    public enum PieceKind
+    public enum PieceType
     {
         Herzmuschel,
         Möwe,
