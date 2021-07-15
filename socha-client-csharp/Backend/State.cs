@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace SochaClient
@@ -17,6 +18,7 @@ namespace SochaClient
         public Board Board;
         public Player PlayerOne, PlayerTwo;
         public Move LastMove;
+        public Player CurrentPlayer { get => Turn % 2 == 0 ? PlayerOne : PlayerTwo; }
 
         public State()
         {
@@ -24,8 +26,6 @@ namespace SochaClient
             PlayerOne = new Player("ONE", PlayerTeam.ONE, 0);
             PlayerTwo = new Player("TWO", PlayerTeam.TWO, 0);
         }
-
-        public Player CurrentPlayer() => Turn % 2 == 0 ? PlayerOne : PlayerTwo;
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
@@ -55,34 +55,38 @@ namespace SochaClient
                 if (m.Piece != null)
                     m.Piece.Height++;
 
+                // Check for high tower
                 if (m.Piece.Height >= 3)
                 {
-                    re.
+                    re.CurrentPlayer.Amber++;
+                    re.Board.SetField(m.To, (Field)null);
+                    m.Piece = null;
                 }
             }
 
+            // Update board fields
+            re.Board.SetField(m.From, (Field)null);
+            if (m.Piece != null)
+                re.Board.SetField(m.To, m.Piece);
+
             re.Turn++;
-            re.CurrentTeam = re.CurrentTeam.OtherTeam();
 
             return re;
         }
 
         /// <summary>
-        /// Gets all legal Moves for the current state
+        /// Gets all legal Moves for this state
         /// </summary>
         public Move[] GetAllPossibleMoves()
         {
             List<Move> re = new List<Move>();
 
+            Field tmp;
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
-                    foreach (PieceKind k in Enum.GetValues(typeof(PieceKind)))
-                        foreach (Rotation r in Enum.GetValues(typeof(Rotation)))
-                        {
-                            re.Add(new SetMove(CurrentColor, k, r, false, x, y));
-                            re.Add(new SetMove(CurrentColor, k, r, true, x, y));
-                        }
-            re.Add(new SkipMove());
+                    if ((tmp = Board.GetField(x, y)) != null)
+                        foreach (Point p in tmp.PossibleCoordsToMoveTo())
+                            re.Add(new Move(tmp.Position(), p, tmp.Piece));
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
             return ree;

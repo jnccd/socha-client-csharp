@@ -20,6 +20,7 @@ namespace SochaClient
         }
 
         public bool Empty() => Piece == null;
+        public Point Position() => new Point(X, Y);
 
         public Point[] PossibleCoordsToMoveTo()
         {
