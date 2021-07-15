@@ -167,19 +167,21 @@ Usage: start.sh [options]
                                 gameState.StartTeam = inState.StartTeam.Text;
 
                                 // Pieces
-                                int x, y;
                                 foreach (var entry in inState.Board.Pieces.Entry)
-                                    gameState.Board.SetField(x = entry.Coordinates.X, y = entry.Coordinates.Y,
-                                            new Field(new Piece(entry.Piece.Team.ToColor(), entry.Piece.Type, entry.Piece.Count), gameState.Board, x, y));
+                                    gameState.Board.GetField(entry.Coordinates.X, entry.Coordinates.Y).Piece = new Piece(entry.Piece.Team.ToColor(), entry.Piece.Type, entry.Piece.Count);
 
                                 // Last move
-                                gameState.LastMove = new Move(new Point(inState.LastMove.From.X, inState.LastMove.From.Y), new Point(inState.LastMove.To.X, inState.LastMove.To.Y), null);
+                                if (inState.LastMove != null)
+                                    gameState.LastMove = new Move(
+                                        new Point(inState.LastMove.From.X, inState.LastMove.From.Y), new Point(inState.LastMove.To.X, inState.LastMove.To.Y), null);
 
                                 // Ambers
-                                if (inState.Ambers.Entry != null && inState.Ambers.Entry.Count > 0)
+                                if (inState.Ambers.Entry != null)
                                 {
-                                    gameState.PlayerOne.Amber = inState.Ambers.Entry[0].Int;
-                                    gameState.PlayerTwo.Amber = inState.Ambers.Entry[1].Int;
+                                    if (inState.Ambers.Entry.Count > 0)
+                                        gameState.PlayerOne.Amber = inState.Ambers.Entry[0].Int;
+                                    if (inState.Ambers.Entry.Count > 1)
+                                        gameState.PlayerTwo.Amber = inState.Ambers.Entry[1].Int;
                                 }
 
                                 UpdateConsoleTitle();
@@ -206,7 +208,7 @@ Usage: start.sh [options]
 
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
-                    b.SetPixel(x, y, gameState.Board.GetField(x, y).Piece.ToColor());
+                    b.SetPixel(x, y, gameState.Board.GetField(x, y).ToColor());
 
             try { b.Save("board.png"); } catch {}
         }

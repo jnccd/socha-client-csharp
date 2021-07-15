@@ -13,7 +13,7 @@
     public enum PieceType
     {
         Herzmuschel,
-        Möwe,
+        Moewe,
         Seestern,
         Robbe
     }

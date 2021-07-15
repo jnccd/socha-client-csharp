@@ -25,9 +25,9 @@ namespace SochaClient
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) => // https://youtu.be/nz20lu2AM2k?t=8
-            S.CurrentPlayer.Color == Piece.Color &&
+            S.CurrentPlayer.Color == Piece.PColor &&
             S.Board.IsInBounds(To) &&
-            S.Board.GetField(To).Piece.Color != Piece.Color &&
+           (S.Board.GetField(To).Piece == null || S.Board.GetField(To).Piece.PColor != Piece.PColor) &&
             S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To);
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SochaClient
         /// </summary>
         public string ToXML() =>
             $"<room roomId=\"{Program.RoomID}\">\n" +
-                $"<data class=\"move\">\n" +
+                $"<data class=\"Move\">\n" +
                     $"<from x=\"{From.X}\" y=\"{From.Y}\"/>" +
                     $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
                 $"</data>\n" +
