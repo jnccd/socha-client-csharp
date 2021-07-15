@@ -28,13 +28,6 @@ namespace SochaClient
         public Field GetField(int x, int y) => Fields[x, y];
 
         /// <summary>
-        /// Sets the field on coord (X, Y) to f
-        /// </summary>
-        public Field SetField(Point p, Field f) => Fields[p.X, p.Y] = f;
-        public Field SetField(Point p, Piece pi) => Fields[p.X, p.Y] = new Field(pi, this, p.X, p.Y);
-        public Field SetField(int x, int y, Field f) => Fields[x, y] = f;
-
-        /// <summary>
         /// Checks if the coord (X, Y) is in bounds
         /// </summary>
         public bool IsInBounds(Point p) => IsInBounds(p.X, p.Y);

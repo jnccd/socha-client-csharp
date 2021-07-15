@@ -21,18 +21,22 @@ namespace SochaClient
 
         public bool Empty() => Piece == null;
         public Point Position() => new Point(X, Y);
+        public Color ToColor() => Piece == null ? Color.Black : Piece.ToColor();
 
         public Point[] PossibleCoordsToMoveTo()
         {
-            int xDir = Piece.Color == PieceColor.RED ? 1 : -1;
+            if (Piece == null)
+                return new Point[0];
+
+            int xDir = Piece.PColor == PieceColor.RED ? 1 : -1;
 
             var gotoCoords = new Point[0];
-            switch (Piece.Kind) 
+            switch (Piece.Type) 
             {
                 case PieceType.Herzmuschel:
                     gotoCoords = new Point[] { new Point(xDir, -1), new Point(xDir, 1) };
                     break;
-                case PieceType.Möwe:
+                case PieceType.Moewe:
                     gotoCoords = new Point[] { new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1) };
                     break;
                 case PieceType.Robbe:

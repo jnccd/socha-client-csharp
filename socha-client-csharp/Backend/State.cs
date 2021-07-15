@@ -59,15 +59,15 @@ namespace SochaClient
                 if (m.Piece.Height >= 3)
                 {
                     re.CurrentPlayer.Amber++;
-                    re.Board.SetField(m.To, (Field)null);
+                    re.Board.GetField(m.To).Piece = null;
                     m.Piece = null;
                 }
             }
 
             // Update board fields
-            re.Board.SetField(m.From, (Field)null);
+            re.Board.GetField(m.From).Piece = null;
             if (m.Piece != null)
-                re.Board.SetField(m.To, m.Piece);
+                re.Board.GetField(m.To).Piece = m.Piece;
 
             re.Turn++;
 
