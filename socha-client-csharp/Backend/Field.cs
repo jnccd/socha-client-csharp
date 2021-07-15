@@ -29,16 +29,16 @@ namespace SochaClient
             var gotoCoords = new Point[0];
             switch (Piece.Kind) 
             {
-                case PieceKind.Herzmuschel:
+                case PieceType.Herzmuschel:
                     gotoCoords = new Point[] { new Point(xDir, -1), new Point(xDir, 1) };
                     break;
-                case PieceKind.Möwe:
+                case PieceType.Möwe:
                     gotoCoords = new Point[] { new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1) };
                     break;
-                case PieceKind.Robbe:
+                case PieceType.Robbe:
                     gotoCoords = new Point[] { new Point(-1, 2), new Point(1, 2), new Point(-2, 1), new Point(2, 1), new Point(-1, -2), new Point(1, -2), new Point(-2, -1), new Point(2, -1) };
                     break;
-                case PieceKind.Seestern:
+                case PieceType.Seestern:
                     gotoCoords = new Point[] { new Point(xDir, 0), new Point(1, 1), new Point(-1, 1), new Point(1, -1), new Point(-1, -1) };
                     break;
             }

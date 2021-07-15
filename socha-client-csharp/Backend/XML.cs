@@ -4,115 +4,24 @@ using System.Xml.Serialization;
 
 namespace Xml
 {
-    [XmlRoot(ElementName = "startTeam")]
+	[XmlRoot(ElementName = "startTeam")]
 	public class StartTeam
 	{
+
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
+
 		[XmlText]
 		public PlayerTeam Text { get; set; }
 	}
 
-	[XmlRoot(ElementName = "field")]
-	public class Field
+	[XmlRoot(ElementName = "coordinates")]
+	public class Coordinates
 	{
+
 		[XmlAttribute(AttributeName = "x")]
 		public int X { get; set; }
-		[XmlAttribute(AttributeName = "y")]
-		public int Y { get; set; }
-		[XmlAttribute(AttributeName = "content")]
-		public PieceColor Content { get; set; }
-	}
 
-	[XmlRoot(ElementName = "board")]
-	public class Board
-	{
-		[XmlElement(ElementName = "field")]
-		public List<Field> Field { get; set; }
-	}
-
-	[XmlRoot(ElementName = "blueShapes")]
-	public class BlueShapes
-	{
-		[XmlElement(ElementName = "shape")]
-		public List<PieceKind> Shape { get; set; }
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-	}
-
-	[XmlRoot(ElementName = "yellowShapes")]
-	public class YellowShapes
-	{
-		[XmlElement(ElementName = "shape")]
-		public List<PieceKind> Shape { get; set; }
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-	}
-
-	[XmlRoot(ElementName = "redShapes")]
-	public class RedShapes
-	{
-		[XmlElement(ElementName = "shape")]
-		public List<PieceKind> Shape { get; set; }
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-	}
-
-	[XmlRoot(ElementName = "greenShapes")]
-	public class GreenShapes
-	{
-		[XmlElement(ElementName = "shape")]
-		public List<PieceKind> Shape { get; set; }
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-	}
-
-	[XmlRoot(ElementName = "lastMoveMono")]
-	public class LastMoveMono
-	{
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-	}
-
-	[XmlRoot(ElementName = "orderedColors")]
-	public class OrderedColors
-	{
-		[XmlElement(ElementName = "color")]
-		public List<PieceColor> Color { get; set; }
-	}
-
-	[XmlRoot(ElementName = "color")]
-	public class Color
-	{
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
-		[XmlText]
-		public string Text { get; set; }
-	}
-
-	[XmlRoot(ElementName = "first")]
-	public class First
-	{
-		[XmlElement(ElementName = "color")]
-		public Color Color { get; set; }
-		[XmlAttribute(AttributeName = "displayName")]
-		public string DisplayName { get; set; }
-	}
-
-	[XmlRoot(ElementName = "second")]
-	public class Second
-	{
-		[XmlElement(ElementName = "color")]
-		public Color Color { get; set; }
-		[XmlAttribute(AttributeName = "displayName")]
-		public string DisplayName { get; set; }
-	}
-
-	[XmlRoot(ElementName = "position")]
-	public class Position
-	{
-		[XmlAttribute(AttributeName = "x")]
-		public int X { get; set; }
 		[XmlAttribute(AttributeName = "y")]
 		public int Y { get; set; }
 	}
@@ -120,82 +29,150 @@ namespace Xml
 	[XmlRoot(ElementName = "piece")]
 	public class Piece
 	{
-		[XmlElement(ElementName = "position")]
-		public Position Position { get; set; }
-		[XmlAttribute(AttributeName = "color")]
-		public PieceColor Color { get; set; }
-		[XmlAttribute(AttributeName = "kind")]
-		public PieceKind Kind { get; set; }
-		[XmlAttribute(AttributeName = "isFlipped")]
-		public bool IsFlipped { get; set; }
+
+		[XmlAttribute(AttributeName = "type")]
+		public PieceType Type { get; set; }
+
+		[XmlAttribute(AttributeName = "team")]
+		public PlayerTeam Team { get; set; }
+
+		[XmlAttribute(AttributeName = "count")]
+		public int Count { get; set; }
+	}
+
+	[XmlRoot(ElementName = "entry")]
+	public class Entry
+	{
+
+		[XmlElement(ElementName = "coordinates")]
+		public Coordinates Coordinates { get; set; }
+
+		[XmlElement(ElementName = "piece")]
+		public Piece Piece { get; set; }
+
+		[XmlElement(ElementName = "team")]
+		public string Team { get; set; }
+
+		[XmlElement(ElementName = "int")]
+		public int Int { get; set; }
+	}
+
+	[XmlRoot(ElementName = "pieces")]
+	public class Pieces
+	{
+
+		[XmlElement(ElementName = "entry")]
+		public List<Entry> Entry { get; set; }
+	}
+
+	[XmlRoot(ElementName = "board")]
+	public class Board
+	{
+
+		[XmlElement(ElementName = "pieces")]
+		public Pieces Pieces { get; set; }
+	}
+
+	[XmlRoot(ElementName = "from")]
+	public class From
+	{
+
+		[XmlAttribute(AttributeName = "x")]
+		public int X { get; set; }
+
+		[XmlAttribute(AttributeName = "y")]
+		public int Y { get; set; }
+	}
+
+	[XmlRoot(ElementName = "to")]
+	public class To
+	{
+
+		[XmlAttribute(AttributeName = "x")]
+		public int X { get; set; }
+
+		[XmlAttribute(AttributeName = "y")]
+		public int Y { get; set; }
 	}
 
 	[XmlRoot(ElementName = "lastMove")]
 	public class LastMove
 	{
-		[XmlElement(ElementName = "piece")]
-		public Piece Piece { get; set; }
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
+
+		[XmlElement(ElementName = "from")]
+		public From From { get; set; }
+
+		[XmlElement(ElementName = "to")]
+		public To To { get; set; }
+	}
+
+	[XmlRoot(ElementName = "ambers")]
+	public class Ambers
+	{
+
+		[XmlElement(ElementName = "entry")]
+		public List<Entry> Entry { get; set; }
+
+		[XmlAttribute(AttributeName = "enum-type")]
+		public string EnumType { get; set; }
+
+		[XmlText]
+		public string Text { get; set; }
 	}
 
 	[XmlRoot(ElementName = "state")]
 	public class State
 	{
+
 		[XmlElement(ElementName = "startTeam")]
 		public StartTeam StartTeam { get; set; }
+
 		[XmlElement(ElementName = "board")]
 		public Board Board { get; set; }
-		[XmlElement(ElementName = "blueShapes")]
-		public BlueShapes BlueShapes { get; set; }
-		[XmlElement(ElementName = "yellowShapes")]
-		public YellowShapes YellowShapes { get; set; }
-		[XmlElement(ElementName = "redShapes")]
-		public RedShapes RedShapes { get; set; }
-		[XmlElement(ElementName = "greenShapes")]
-		public GreenShapes GreenShapes { get; set; }
-		[XmlElement(ElementName = "lastMoveMono")]
-		public LastMoveMono LastMoveMono { get; set; }
-		[XmlElement(ElementName = "orderedColors")]
-		public OrderedColors OrderedColors { get; set; }
-		[XmlElement(ElementName = "first")]
-		public First First { get; set; }
-		[XmlElement(ElementName = "second")]
-		public Second Second { get; set; }
+
 		[XmlElement(ElementName = "lastMove")]
 		public LastMove LastMove { get; set; }
-		[XmlElement(ElementName = "startColor")]
-		public string StartColor { get; set; }
+
+		[XmlElement(ElementName = "ambers")]
+		public Ambers Ambers { get; set; }
+
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
-		[XmlAttribute(AttributeName = "currentColorIndex")]
-		public int CurrentColorIndex { get; set; }
+
 		[XmlAttribute(AttributeName = "turn")]
 		public int Turn { get; set; }
-		[XmlAttribute(AttributeName = "round")]
-		public int Round { get; set; }
-		[XmlAttribute(AttributeName = "startPiece")]
-		public PieceKind StartPiece { get; set; }
+
+		[XmlText]
+		public string Text { get; set; }
 	}
 
 	[XmlRoot(ElementName = "data")]
 	public class Data
 	{
+
 		[XmlElement(ElementName = "state")]
 		public State State { get; set; }
+
 		[XmlAttribute(AttributeName = "class")]
 		public string Class { get; set; }
+
 		[XmlAttribute(AttributeName = "color")]
 		public PlayerTeam Color { get; set; }
+
+		[XmlText]
+		public string Text { get; set; }
 	}
 
 	[XmlRoot(ElementName = "room")]
 	public class Room
 	{
+
 		[XmlElement(ElementName = "data")]
 		public Data Data { get; set; }
+
 		[XmlAttribute(AttributeName = "roomId")]
 		public string RoomId { get; set; }
+
 		[XmlText]
 		public string Text { get; set; }
 	}

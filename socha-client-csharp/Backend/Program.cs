@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SochaClientLogic;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -130,7 +131,7 @@ Usage: start.sh [options]
             Move LastMove = null;
 
             if (string.IsNullOrWhiteSpace(reservation))
-                Send(stream, $"<protocol><join gameType=\"swc_2021_blokus\" />");
+                Send(stream, $"<protocol><join gameType=\"swc_2022_ostseeschach\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{reservation}\" />");
             
@@ -163,39 +164,24 @@ Usage: start.sh [options]
 
                                 // Attr
                                 gameState.Turn = inState.Turn;
-                                gameState.Round = inState.Round;
-                                gameState.StartPiece = inState.StartPiece;
                                 gameState.StartTeam = inState.StartTeam.Text;
-                                gameState.OrderedColors = inState.OrderedColors.Color;
-                                gameState.CurrentColorIndex = inState.CurrentColorIndex;
-                                gameState.CurrentColor = (PieceColor)((gameState.CurrentColorIndex % Enum.GetValues(typeof(PieceColor)).Length) + 1);
 
-                                // Board
-                                gameState.Board = new Board();
-                                foreach (var f in inState.Board.Field)
-                                    gameState.Board.GetField(f.X, f.Y).color = f.Content;
+                                // Pieces
+                                int x, y;
+                                foreach (var entry in inState.Board.Pieces.Entry)
+                                    gameState.Board.SetField(x = entry.Coordinates.X, y = entry.Coordinates.Y,
+                                            new Field(new Piece(entry.Piece.Team.ToColor(), entry.Piece.Type, entry.Piece.Count), gameState.Board, x, y));
 
-                                // Piece Inventories
-                                gameState.BlueShapes = inState.BlueShapes.Shape;
-                                gameState.YellowShapes = inState.YellowShapes.Shape;
-                                gameState.RedShapes = inState.RedShapes.Shape;
-                                gameState.GreenShapes = inState.GreenShapes.Shape;
+                                // Last move
+                                gameState.LastMove = new Move(new Point(inState.LastMove.From.X, inState.LastMove.From.Y), new Point(inState.LastMove.To.X, inState.LastMove.To.Y), null);
 
-                                // Last moves
-                                if (inState.LastMove?.Class == "sc.plugin2021.SkipMove")
-                                    gameState.LastMove = new SkipMove();
-                                else if (inState.LastMove?.Class == "sc.plugin2021.SetMove")
-                                    gameState.LastMove = new SetMove(
-                                        inState.LastMove.Piece.Color,
-                                        inState.LastMove.Piece.Kind,
-                                        inState.LastMove.Piece.Rotation,
-                                        inState.LastMove.Piece.IsFlipped,
-                                        inState.LastMove.Piece.Position.X,
-                                        inState.LastMove.Piece.Position.Y);
+                                // Ambers
+                                if (inState.Ambers.Entry != null && inState.Ambers.Entry.Count > 0)
+                                {
+                                    gameState.PlayerOne.Amber = inState.Ambers.Entry[0].Int;
+                                    gameState.PlayerTwo.Amber = inState.Ambers.Entry[1].Int;
+                                }
 
-                                // Names
-                                gameState.FirstPlayerName = inState.First.DisplayName;
-                                gameState.SecondPlayerName = inState.Second.DisplayName;
                                 UpdateConsoleTitle();
 
                                 if (DrawBoard)
@@ -204,14 +190,14 @@ Usage: start.sh [options]
                             else if (r.Data.Class == "welcomeMessage")
                                 playerLogic.MyTeam = r.Data.Color;
 
-                if (LastMove != null && LastMove is SetMove && (LastMove as SetMove).DebugHints.Count > 0)
-                    ConsoleWriteLine("Debug Hints from the Last Move:\n" +
-                        (LastMove as SetMove).DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
+                //if (LastMove != null && LastMove is SetMove && (LastMove as SetMove).DebugHints.Count > 0)
+                //    ConsoleWriteLine("Debug Hints from the Last Move:\n" +
+                //        (LastMove as SetMove).DebugHints.Aggregate((x, y) => x + "\n" + y), ConsoleColor.Magenta);
             }
         }
         static void UpdateConsoleTitle()
         {
-            try { Console.Title = playerLogic.MyTeam.ToString() + " in " + gameState.FirstPlayerName + " vs " + gameState.SecondPlayerName; } 
+            try { Console.Title = $"{playerLogic.MyTeam} in ONE vs TWO"; } 
             catch { }
         }
         static void DrawBoardPng()
@@ -220,7 +206,7 @@ Usage: start.sh [options]
 
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
-                    b.SetPixel(x, y, gameState.Board.GetField(x, y).Color.ToColor());
+                    b.SetPixel(x, y, gameState.Board.GetField(x, y).Piece.ToColor());
 
             try { b.Save("board.png"); } catch {}
         }
@@ -234,16 +220,13 @@ Usage: start.sh [options]
         }
         static string Recieve(NetworkStream stream)
         {
-            int bufferlength = 256;
+            const int bufferlength = 256;
             string responseData = "";
-            int recievedBytes = bufferlength;
 
-            while (recievedBytes == bufferlength)
+            while (!responseData.EndsWith("</room>") && !responseData.EndsWith("</protocol>"))
             {
-                Thread.Sleep(3); // Without this it stops reading at a certain point
-
                 byte[] data = new byte[bufferlength];
-                recievedBytes = stream.Read(data, 0, data.Length);
+                int recievedBytes = stream.Read(data, 0, data.Length);
                 responseData += Encoding.ASCII.GetString(data, 0, recievedBytes);
             }
 
