@@ -37,7 +37,7 @@ namespace SochaClient
         /// </summary>
         public string ToXML() =>
             $"<room roomId=\"{Program.RoomID}\">\n" +
-                $"<data class=\"Move\">\n" +
+                $"<data class=\"move\">\n" +
                     $"<from x=\"{From.X}\" y=\"{From.Y}\"/>" +
                     $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
                 $"</data>\n" +
