@@ -156,7 +156,7 @@ Usage: start.sh [options]
                 if (recievedObjs.Room != null)
                     foreach (var r in recievedObjs.Room)
                         if (r.Data != null && r.RoomId == RoomID)
-                            if (r.Data.Class == "sc.framework.plugins.protocol.MoveRequest")
+                            if (r.Data.Class == "moveRequest")
                                 Send(stream, (LastMove = playerLogic.GetMove()).ToXML());
                             else if (r.Data.Class == "memento")
                             {
@@ -167,6 +167,7 @@ Usage: start.sh [options]
                                 gameState.StartTeam = inState.StartTeam.Text;
 
                                 // Pieces
+                                gameState.Board = new Board();
                                 foreach (var entry in inState.Board.Pieces.Entry)
                                     gameState.Board.GetField(entry.Coordinates.X, entry.Coordinates.Y).Piece = new Piece(entry.Piece.Team.ToColor(), entry.Piece.Type, entry.Piece.Count);
 
