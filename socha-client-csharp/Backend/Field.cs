@@ -55,6 +55,8 @@ namespace SochaClient
         {
             Field f = (Field)Clone();
             f.Parent = cloneParent;
+            if (Piece != null)
+                f.Piece = (Piece)Piece.Clone();
             return f;
         }
     }

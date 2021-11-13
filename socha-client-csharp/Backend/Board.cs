@@ -38,7 +38,7 @@ namespace SochaClient
         /// </summary>
         public object Clone()
         {
-            Board b = (Board)MemberwiseClone();
+            Board b = new Board();
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                     b.Fields[x, y] = Fields[x, y].CloneWParent(b);

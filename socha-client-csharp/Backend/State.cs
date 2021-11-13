@@ -104,7 +104,8 @@ namespace SochaClient
             s.PlayerOne = (Player)PlayerOne.Clone();
             s.PlayerTwo = (Player)PlayerTwo.Clone();
 
-            s.LastMove = (Move)LastMove.Clone();
+            if (LastMove != null)
+                s.LastMove = (Move)LastMove.Clone();
 
             return s;
         }

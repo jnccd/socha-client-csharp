@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SochaClient
 {
-    public class Piece
+    public class Piece : ICloneable
     {
         public PieceColor PColor { get; private set; }
         public PieceType Type { get; private set; }
@@ -51,6 +51,11 @@ namespace SochaClient
             }
 
             return Color.Black;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
