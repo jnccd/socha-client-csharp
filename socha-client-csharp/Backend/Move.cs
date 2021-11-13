@@ -48,7 +48,6 @@ namespace SochaClient
             if (!S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To))
             {
                 Debug.WriteLine("Illegal: Not possible!");
-                S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To);
                 return false;
             }
 
