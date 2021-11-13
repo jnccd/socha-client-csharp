@@ -240,16 +240,13 @@ Usage: start.sh [options]
 
         public static void ConsoleWriteLine(string text, ConsoleColor Color)
         {
-            lock (Console.Title)
-            {
-                ConsoleColor defaultC = Console.ForegroundColor;
-                Console.ForegroundColor = Color;
-                Console.WriteLine(text);
-                Console.ForegroundColor = defaultC;
+            ConsoleColor defaultC = Console.ForegroundColor;
+            Console.ForegroundColor = Color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = defaultC;
 
-                if (logToFile && logWriter != null)
-                    logWriter.WriteLine(text);
-            }
+            if (logToFile && logWriter != null)
+                logWriter.WriteLine(text);
         }
     }
 }
