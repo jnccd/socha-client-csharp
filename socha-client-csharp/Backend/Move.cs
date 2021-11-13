@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -24,11 +25,35 @@ namespace SochaClient
         /// Checks if this move can be performed on game State S
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
-        public bool IsLegalOn(State S) => // https://youtu.be/nz20lu2AM2k?t=8
-            S.CurrentPlayer.Color == Piece.PColor &&
-            S.Board.IsInBounds(To) &&
-           (S.Board.GetField(To).Piece == null || S.Board.GetField(To).Piece.PColor != Piece.PColor) &&
-            S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To);
+        public bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
+        {
+            if (S.CurrentPlayer.Color != Piece.PColor)
+            {
+                Debug.WriteLine("Illegal: Wrong Color!");
+                return false;
+            }
+
+            if (!S.Board.IsInBounds(To))
+            {
+                Debug.WriteLine("Illegal: OOB!");
+                return false;
+            }
+
+            if (S.Board.GetField(To).Piece != null && S.Board.GetField(To).Piece.PColor == Piece.PColor)
+            {
+                Debug.WriteLine("Illegal: Cant move there!");
+                return false;
+            }
+
+            if (!S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To))
+            {
+                Debug.WriteLine("Illegal: Not possible!");
+                S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To);
+                return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Converts this Move to XML
