@@ -19,9 +19,15 @@ namespace SochaClient
         static string reservation = "";
         public static string Strategy { get; private set; } = "";
 
+#if DEBUG
         public static bool LogNetwork = true;
         public static bool DrawBoard = true;
         static readonly bool logToFile = true;
+#else
+        public static bool LogNetwork = false;
+        public static bool DrawBoard = false;
+        static readonly bool logToFile = false;
+#endif
         static string instanceIdentifier;
         static string LogFileName { get => $"log{instanceIdentifier}.txt"; }
         static StreamWriter logWriter;
