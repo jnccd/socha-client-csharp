@@ -53,14 +53,30 @@ namespace SochaClient
             if (!targetField.Empty())
             {
                 if (m.Piece != null)
-                    m.Piece.Height++;
+                    m.Piece.Height += targetField.Piece.Height;
+
+                // Check for end of board
+                if (m.Piece != null && m.Piece.Type != PieceType.Robbe && 
+                       ((re.CurrentPlayer.Team == PlayerTeam.ONE && m.To.X == 7) ||
+                        (re.CurrentPlayer.Team == PlayerTeam.TWO && m.To.X == 0)))
+                {
+                    // Check for hightower at the end of the board
+                    if (m.Piece.Height >= 3)
+                    {
+                        re.CurrentPlayer.Amber++;
+                        re.Board.GetField(m.To).Piece = null;
+                    }
+
+                    re.CurrentPlayer.Amber++;
+                    m.Piece = null; // Target field wont be updated
+                }
 
                 // Check for high tower
-                if (m.Piece.Height >= 3)
+                if (m.Piece != null && m.Piece.Height >= 3)
                 {
                     re.CurrentPlayer.Amber++;
                     re.Board.GetField(m.To).Piece = null;
-                    m.Piece = null;
+                    m.Piece = null; // Target field wont be updated
                 }
             }
 
@@ -90,6 +106,17 @@ namespace SochaClient
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
             return ree;
+        }
+
+        /// <summary>
+        /// Get a Player object from the PlayerTeam enum
+        /// </summary>
+        public Player GetPlayer(PlayerTeam team)
+        {
+            if (PlayerOne.Team == team)
+                return PlayerOne;
+            else
+                return PlayerTwo;
         }
 
         /// <summary>
