@@ -11,14 +11,15 @@ namespace SochaClient
     /// </summary>
     public class Move : ICloneable
     {
-        public readonly Point From, To;
-        public Piece Piece;
+        public readonly Point From, To, HexFrom, HexTo;
 
-        public Move(Point from, Point to, Piece piece)
+        public Move(Point from, Point to)
         {
             From = from;
             To = to;
-            Piece = piece;
+
+            HexFrom = Board.ArrayToHexCoords(from);
+            HexTo = Board.ArrayToHexCoords(to);
         }
 
         /// <summary>
@@ -29,6 +30,8 @@ namespace SochaClient
         {
             if (S.Turn < 8)
             {
+                // Place Move
+
                 if (From != null)
                 {
                     Debug.WriteLine("Illegal: No Put Move!");
@@ -40,10 +43,18 @@ namespace SochaClient
                     Debug.WriteLine("Illegal: Put only on one fish field!");
                     return false;
                 }
+
+                if (S.Board.GetField(To).Piece != null)
+                {
+                    Debug.WriteLine("Illegal: Put only on one fish field!");
+                    return false;
+                }
             }
             else
             {
-                if (S.CurrentPlayer.Team != Piece.Team)
+                // Normal Move
+
+                if (From != null && S.CurrentPlayer.Team != S.Board.GetField(From).Piece?.Team)
                 {
                     Debug.WriteLine("Illegal: Wrong Team!");
                     return false;
@@ -61,7 +72,7 @@ namespace SochaClient
                     return false;
                 }
 
-                if (!S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To))
+                if (!S.Board.GetField(From).PossibleCoordsToMoveTo(S).Contains(To))
                 {
                     Debug.WriteLine("Illegal: Not possible!");
                     return false;
@@ -76,18 +87,25 @@ namespace SochaClient
         /// <para>This is used to pack the Move into a format that can be send to the Server</para> 
         /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
         /// </summary>
-        public string ToXML() => From != null ? 
-                                $"<room roomId=\"{Program.RoomID}\">\n" +
-                                    $"<data class=\"move\">\n" +
-                                        $"<from x=\"{From.Y}\" y=\"{From.X}\"/>" +
-                                        $"<to x = \"{To.Y}\" y=\"{To.X}\"/>" +
-                                    $"</data>\n" +
-                                $"</room>" :
-                                $"<room roomId=\"{Program.RoomID}\">\n" +
-                                    $"<data class=\"move\">\n" +
-                                        $"<to x = \"{To.Y}\" y=\"{To.X}\"/>" +
-                                    $"</data>\n" +
-                                $"</room>";
+        public string ToXML()
+        {
+            if (HexTo.X == 0)
+                GetHashCode();
+
+            if (From != null)
+                return  $"<room roomId=\"{Program.RoomID}\">\n" +
+                            $"<data class=\"move\">\n" +
+                                $"<from x=\"{HexFrom.X}\" y=\"{HexFrom.Y}\"/>" +
+                                $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
+                            $"</data>\n" +
+                        $"</room>";
+            else
+                return $"<room roomId=\"{Program.RoomID}\">\n" +
+                            $"<data class=\"move\">\n" +
+                            $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
+                            $"</data>\n" +
+                        $"</room>";
+        }
 
         /// <summary>
         /// Creates a deep copy of this object
