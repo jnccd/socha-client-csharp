@@ -152,7 +152,7 @@ Usage: start.sh [options]
                     break;
 
                 var serializer = new XmlSerializer(typeof(Received));
-                StringReader stringReader = new StringReader(recieved);
+                StringReader stringReader = new(recieved);
                 var recievedObjs = (Received)serializer.Deserialize(stringReader);
 
                 if (recievedObjs.Joined != null)
@@ -174,10 +174,10 @@ Usage: start.sh [options]
 
                                 // Pieces
                                 gameState.Board = new Board();
-                                for (int x = 0; x < inState.Board.List.Count; x++)
-                                    for (int y = 0; y < inState.Board.List[x].Field.Count; y++)
+                                for (int y = 0; y < inState.Board.List.Count; y++)
+                                    for (int x = 0; x < inState.Board.List[y].Field.Count; x++)
                                     {
-                                        var inField = inState.Board.List[x].Field[y];
+                                        var inField = inState.Board.List[y].Field[x];
 
                                         if (inField.ToLower() == "one")
                                             gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.ONE);
@@ -216,13 +216,13 @@ Usage: start.sh [options]
         }
         static void DrawBoardPng()
         {
-            Bitmap b = new Bitmap(Board.Width, Board.Height);
+            Bitmap b = new(Board.Width, Board.Height);
 
             for (int x = 0; x < Board.Width; x++)
                 for (int y = 0; y < Board.Height; y++)
                     b.SetPixel(x, y, gameState.Board.GetField(x, y).ToColor());
 
-            try { b.Save("board.png"); } catch {}
+            b.Save("board.png");
         }
 
         static void Send(NetworkStream stream, string message)
