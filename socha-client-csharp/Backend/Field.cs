@@ -23,7 +23,7 @@ namespace SochaClient
         public bool Empty() => Piece == null && fishes == 0;
         public bool Free() => Piece == null && fishes != 0;
         public Point Position() => new(X, Y);
-        public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*80) : Piece.ToColor();
+        public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*50) : Piece.ToColor();
 
         public Point[] PossibleCoordsToMoveTo()
         {
