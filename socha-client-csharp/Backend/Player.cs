@@ -6,16 +6,13 @@ namespace SochaClient
 {
     public class Player : ICloneable
     {
-        public string Name { get; private set; }
         public PlayerTeam Team { get; private set; }
-        public int Amber;
-        public PieceColor Color { get => Team.ToColor(); }
+        public int Fishes;
 
-        public Player(string name, PlayerTeam team, int amber)
+        public Player(PlayerTeam team, int fishes)
         {
-            Name = name;
             Team = team;
-            Amber = amber;
+            Fishes = fishes;
         }
 
         public object Clone() => MemberwiseClone();
