@@ -137,7 +137,7 @@ Usage: start.sh [options]
             Move LastMove = null;
 
             if (string.IsNullOrWhiteSpace(reservation))
-                Send(stream, $"<protocol><join gameType=\"swc_2022_ostseeschach\" />");
+                Send(stream, $"<protocol><join gameType=\"swc_2023_penguins\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{reservation}\" />");
             
@@ -170,25 +170,30 @@ Usage: start.sh [options]
 
                                 // Attr
                                 gameState.Turn = inState.Turn;
-                                gameState.StartTeam = inState.StartTeam.Text;
+                                gameState.StartTeam = inState.StartTeam;
 
                                 // Pieces
                                 gameState.Board = new Board();
-                                foreach (var entry in inState.Board.Pieces.Entry)
-                                    gameState.Board.GetField(entry.Coordinates.X, entry.Coordinates.Y).Piece = new Piece(entry.Piece.Team.ToColor(), entry.Piece.Type, entry.Piece.Count);
+                                for (int x = 0; x < inState.Board.List.Count; x++)
+                                    for (int y = 0; y < inState.Board.List[x].Field.Count; y++)
+                                    {
+                                        var inField = inState.Board.List[x].Field[y];
 
-                                // Last move
-                                if (inState.LastMove != null)
-                                    gameState.LastMove = new Move(
-                                        new Point(inState.LastMove.From.X, inState.LastMove.From.Y), new Point(inState.LastMove.To.X, inState.LastMove.To.Y), null);
+                                        if (inField.ToLower() == "one")
+                                            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.ONE);
+                                        else if (inField.ToLower() == "two")
+                                            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.TWO);
+                                        else
+                                            gameState.Board.GetField(x, y).fishes = int.Parse(inField);
+                                    }
 
-                                // Ambers
-                                if (inState.Ambers.Entry != null)
+                                // Fishpoints
+                                if (inState.Fishes != null)
                                 {
-                                    if (inState.Ambers.Entry.Count > 0)
-                                        gameState.PlayerOne.Amber = inState.Ambers.Entry[0].Int;
-                                    if (inState.Ambers.Entry.Count > 1)
-                                        gameState.PlayerTwo.Amber = inState.Ambers.Entry[1].Int;
+                                    if (inState.Fishes.Int.Count > 0)
+                                        gameState.PlayerOne.Fishes = inState.Fishes.Int[0];
+                                    if (inState.Fishes.Int.Count > 1)
+                                        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1]t;
                                 }
 
                                 UpdateConsoleTitle();

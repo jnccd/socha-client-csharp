@@ -23,8 +23,8 @@ namespace SochaClient
         public State()
         {
             Board = new Board();
-            PlayerOne = new Player("ONE", PlayerTeam.ONE, 0);
-            PlayerTwo = new Player("TWO", PlayerTeam.TWO, 0);
+            PlayerOne = new Player(PlayerTeam.ONE, 0);
+            PlayerTwo = new Player(PlayerTeam.TWO, 0);
         }
 
         /// <summary>
@@ -50,35 +50,7 @@ namespace SochaClient
 
             var targetField = Board.GetField(m.To);
 
-            if (!targetField.Empty())
-            {
-                if (m.Piece != null)
-                    m.Piece.Height += targetField.Piece.Height;
-
-                // Check for end of board
-                if (m.Piece != null && m.Piece.Type != PieceType.Robbe && 
-                       ((re.CurrentPlayer.Team == PlayerTeam.ONE && m.To.X == 7) ||
-                        (re.CurrentPlayer.Team == PlayerTeam.TWO && m.To.X == 0)))
-                {
-                    // Check for hightower at the end of the board
-                    if (m.Piece.Height >= 3)
-                    {
-                        re.CurrentPlayer.Amber++;
-                        re.Board.GetField(m.To).Piece = null;
-                    }
-
-                    re.CurrentPlayer.Amber++;
-                    m.Piece = null; // Target field wont be updated
-                }
-
-                // Check for high tower
-                if (m.Piece != null && m.Piece.Height >= 3)
-                {
-                    re.CurrentPlayer.Amber++;
-                    re.Board.GetField(m.To).Piece = null;
-                    m.Piece = null; // Target field wont be updated
-                }
-            }
+            // TODO: Add logic
 
             // Update board fields
             re.Board.GetField(m.From).Piece = null;

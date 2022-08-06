@@ -3,18 +3,20 @@
     public enum PlayerTeam 
     {
         ONE,
-        TWO 
+        TWO,
     }
     public enum PieceColor 
     { 
         BLUE=1, 
         RED=2, 
     }
-    public enum PieceType
+    public enum Direction
     {
-        Herzmuschel,
-        Moewe,
-        Seestern,
-        Robbe
+        TOPLEFT,
+        TOPRIGHT,
+        RIGHT,
+        BOTTOMRIGHT,
+        BOTTOMLEFT,
+        LEFT,
     }
 }
