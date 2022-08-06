@@ -21,6 +21,7 @@ namespace SochaClient
         }
 
         public bool Empty() => Piece == null && fishes == 0;
+        public bool Free() => Piece == null && fishes != 0;
         public Point Position() => new(X, Y);
         public Color ToColor() => Empty() ? Color.Black : Piece.ToColor();
 
@@ -29,13 +30,21 @@ namespace SochaClient
             if (Piece == null)
                 return new Point[0];
 
-            int xDir = Piece.Team == PlayerTeam.ONE ? 1 : -1;
-
             var gotoCoords = new List<Point>();
-            
-            // TODO: Add logic
 
-            return gotoCoords.Select(x => new Point(x.X + X, x.Y + Y)).ToArray();
+            var dirs = (Direction[])Enum.GetValues(typeof(Direction));
+            Point curPos = Position();
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
+                while (Parent.GetField(curPos).Free() && Board.IsInBounds(curPos))
+                {
+                    gotoCoords.Add(curPos);
+                    curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
+                }
+            }
+
+            return gotoCoords.ToArray();
         }
 
         public object Clone() => (Field)MemberwiseClone();
