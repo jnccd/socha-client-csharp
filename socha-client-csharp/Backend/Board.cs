@@ -10,7 +10,6 @@ namespace SochaClient
     {
         public const int Width = 8, Height = 8;
         private readonly Field[,] Fields = new Field[Width, Height];
-        private readonly Field[] FlatFields = new Field[Width * Height];
 
         public static readonly Point[] EvenHexNeighbors = { new(-1), new(0, -1), new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), };
         public static readonly Point[] OddHexNeighbors = { new(0, -1), new(1, -1), new(1, 0), new(1), new(0, 1), new(-1, 0), };
@@ -22,10 +21,7 @@ namespace SochaClient
         {
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                {
                     Fields[x, y] = new Field(null, this, x, y);
-                    FlatFields[x * Height + y] = Fields[x, y];
-                }
         }
 
         /// <summary>
@@ -33,7 +29,6 @@ namespace SochaClient
         /// </summary>
         public Field GetField(Point p) => GetField(p.X, p.Y);
         public Field GetField(int x, int y) => Fields[x, y];
-        public Field[] GetFlatFields() => (Field[])FlatFields.Clone();
 
         /// <summary>
         /// Checks if the coord (X, Y) is in bounds
@@ -58,10 +53,7 @@ namespace SochaClient
             Board b = new();
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                {
                     b.Fields[x, y] = Fields[x, y].CloneWParent(b);
-                    b.FlatFields[x * Height + y] = b.Fields[x, y];
-                }
             return b;
         }
     }
