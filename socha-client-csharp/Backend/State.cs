@@ -48,9 +48,14 @@ namespace SochaClient
         {
             State re = (State)Clone();
 
+            var startField = Board.GetField(m.From);
             var targetField = Board.GetField(m.To);
 
-            // TODO: Add logic
+            CurrentPlayer.Fishes += startField.fishes;
+            startField.fishes = 0;
+
+            targetField.Piece = startField.Piece;
+            startField.Piece = null; 
 
             // Update board fields
             re.Board.GetField(m.From).Piece = null;
