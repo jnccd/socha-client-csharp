@@ -25,9 +25,9 @@ namespace SochaClient
         public Point Position() => new(X, Y);
         public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*50) : Piece.ToColor();
 
-        public Point[] PossibleCoordsToMoveTo()
+        public Point[] PossibleCoordsToMoveTo(State S) // TODO: Fix
         {
-            if (Piece == null)
+            if (Piece == null || Piece.Team != S.CurrentPlayer.Team)
                 return new Point[0];
 
             var gotoCoords = new List<Point>();
@@ -37,7 +37,7 @@ namespace SochaClient
             for (int i = 0; i < dirs.Length; i++)
             {
                 curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
-                while (Parent.GetField(curPos).Free() && Board.IsInBounds(curPos))
+                while (Board.IsInBounds(curPos) && Parent.GetField(curPos).Free())
                 {
                     gotoCoords.Add(curPos);
                     curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
