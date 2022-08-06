@@ -79,13 +79,13 @@ namespace SochaClient
         public string ToXML() => From != null ? 
                                 $"<room roomId=\"{Program.RoomID}\">\n" +
                                     $"<data class=\"move\">\n" +
-                                        $"<from x=\"{From.X}\" y=\"{From.Y}\"/>" +
-                                        $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
+                                        $"<from x=\"{From.Y}\" y=\"{From.X}\"/>" +
+                                        $"<to x = \"{To.Y}\" y=\"{To.X}\"/>" +
                                     $"</data>\n" +
                                 $"</room>" :
                                 $"<room roomId=\"{Program.RoomID}\">\n" +
                                     $"<data class=\"move\">\n" +
-                                        $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
+                                        $"<to x = \"{To.Y}\" y=\"{To.X}\"/>" +
                                     $"</data>\n" +
                                 $"</room>";
 
