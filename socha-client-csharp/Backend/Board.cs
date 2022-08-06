@@ -30,6 +30,9 @@ namespace SochaClient
         public Field GetField(Point p) => GetField(p.X, p.Y);
         public Field GetField(int x, int y) => Fields[x, y];
 
+        public static Point ArrayToHexCoords(Point p) => p == null ? null : new(p.X * 2 + (p.Y % 2 == 1 ? 1 : 0), p.Y);
+        public static Point HexToArrayCoords(Point p) => p == null ? null : new(p.X / 2 - (p.Y % 2 == 1 ? 1 : 0), p.Y);
+
         /// <summary>
         /// Checks if the coord (X, Y) is in bounds
         /// </summary>
