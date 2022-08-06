@@ -27,19 +27,19 @@ namespace SochaClient
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
         {
-            if (S.CurrentPlayer.Color != Piece.PColor)
+            if (S.CurrentPlayer.Team != Piece.Team)
             {
-                Debug.WriteLine("Illegal: Wrong Color!");
+                Debug.WriteLine("Illegal: Wrong Team!");
                 return false;
             }
 
-            if (!S.Board.IsInBounds(To))
+            if (!Board.IsInBounds(To))
             {
                 Debug.WriteLine("Illegal: OOB!");
                 return false;
             }
 
-            if (S.Board.GetField(To).Piece != null && S.Board.GetField(To).Piece.PColor == Piece.PColor)
+            if (!S.Board.GetField(To).Free())
             {
                 Debug.WriteLine("Illegal: Cant move there!");
                 return false;
