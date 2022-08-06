@@ -35,7 +35,7 @@ namespace SochaClient
                     return false;
                 }
 
-                if (S.Board.GetField(To).fishes == 1)
+                if (S.Board.GetField(To).fishes != 1)
                 {
                     Debug.WriteLine("Illegal: Put only on one fish field!");
                     return false;
@@ -76,13 +76,18 @@ namespace SochaClient
         /// <para>This is used to pack the Move into a format that can be send to the Server</para> 
         /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
         /// </summary>
-        public string ToXML() =>
-            $"<room roomId=\"{Program.RoomID}\">\n" +
-                $"<data class=\"move\">\n" +
-                    $"<from x=\"{From.X}\" y=\"{From.Y}\"/>" +
-                    $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
-                $"</data>\n" +
-            $"</room>";
+        public string ToXML() => From != null ? 
+                                $"<room roomId=\"{Program.RoomID}\">\n" +
+                                    $"<data class=\"move\">\n" +
+                                        $"<from x=\"{From.X}\" y=\"{From.Y}\"/>" +
+                                        $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
+                                    $"</data>\n" +
+                                $"</room>" :
+                                $"<room roomId=\"{Program.RoomID}\">\n" +
+                                    $"<data class=\"move\">\n" +
+                                        $"<to x = \"{To.X}\" y=\"{To.Y}\"/>" +
+                                    $"</data>\n" +
+                                $"</room>";
 
         /// <summary>
         /// Creates a deep copy of this object
