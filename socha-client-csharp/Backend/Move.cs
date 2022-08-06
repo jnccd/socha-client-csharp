@@ -27,30 +27,47 @@ namespace SochaClient
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
         {
-            if (S.CurrentPlayer.Team != Piece.Team)
+            if (S.Turn < 8)
             {
-                Debug.WriteLine("Illegal: Wrong Team!");
-                return false;
-            }
+                if (From != null)
+                {
+                    Debug.WriteLine("Illegal: No Put Move!");
+                    return false;
+                }
 
-            if (!Board.IsInBounds(To))
+                if (S.Board.GetField(To).fishes == 1)
+                {
+                    Debug.WriteLine("Illegal: Put only on one fish field!");
+                    return false;
+                }
+            }
+            else
             {
-                Debug.WriteLine("Illegal: OOB!");
-                return false;
-            }
+                if (S.CurrentPlayer.Team != Piece.Team)
+                {
+                    Debug.WriteLine("Illegal: Wrong Team!");
+                    return false;
+                }
 
-            if (!S.Board.GetField(To).Free())
-            {
-                Debug.WriteLine("Illegal: Cant move there!");
-                return false;
-            }
+                if (!Board.IsInBounds(To))
+                {
+                    Debug.WriteLine("Illegal: OOB!");
+                    return false;
+                }
 
-            if (!S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To))
-            {
-                Debug.WriteLine("Illegal: Not possible!");
-                return false;
-            }
+                if (!S.Board.GetField(To).Free())
+                {
+                    Debug.WriteLine("Illegal: Cant move there!");
+                    return false;
+                }
 
+                if (!S.Board.GetField(From).PossibleCoordsToMoveTo().Contains(To))
+                {
+                    Debug.WriteLine("Illegal: Not possible!");
+                    return false;
+                }
+            }
+            
             return true;
         }
 

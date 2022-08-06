@@ -74,12 +74,24 @@ namespace SochaClient
         {
             List<Move> re = new List<Move>();
 
-            Field tmp;
-            for (int x = 0; x < Board.Width; x++)
-                for (int y = 0; y < Board.Height; y++)
-                    if ((tmp = Board.GetField(x, y)) != null)
-                        foreach (Point p in tmp.PossibleCoordsToMoveTo())
-                            re.Add(new Move(tmp.Position(), p, tmp.Piece));
+            if (Turn <= 8)
+            {
+                // Initial moves
+                for (int x = 0; x < Board.Width; x++)
+                    for (int y = 0; y < Board.Height; y++)
+                        if (Board.GetField(x, y).fishes == 1)
+                            re.Add(new Move(null, new(x, y), new Piece(CurrentPlayer.Team)));
+            }
+            else
+            {
+                // Normal moves
+                Field tmp;
+                for (int x = 0; x < Board.Width; x++)
+                    for (int y = 0; y < Board.Height; y++)
+                        if ((tmp = Board.GetField(x, y)) != null)
+                            foreach (Point p in tmp.PossibleCoordsToMoveTo())
+                                re.Add(new Move(tmp.Position(), p, tmp.Piece));
+            }
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
             return ree;
