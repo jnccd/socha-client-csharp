@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -55,12 +56,11 @@ namespace SochaClient
             startField.fishes = 0;
 
             targetField.Piece = startField.Piece;
-            startField.Piece = null; 
+            startField.Piece = null;
 
             // Update board fields
+            re.Board.GetField(m.To).Piece = re.Board.GetField(m.From).Piece;
             re.Board.GetField(m.From).Piece = null;
-            if (m.Piece != null)
-                re.Board.GetField(m.To).Piece = m.Piece;
 
             re.Turn++;
 
@@ -74,23 +74,24 @@ namespace SochaClient
         {
             List<Move> re = new List<Move>();
 
-            if (Turn <= 8)
+            if (Turn < 8)
             {
                 // Initial moves
                 for (int x = 0; x < Board.Width; x++)
                     for (int y = 0; y < Board.Height; y++)
                         if (Board.GetField(x, y).fishes == 1)
-                            re.Add(new Move(null, new(x, y), new Piece(CurrentPlayer.Team)));
+                            re.Add(new Move(null, new(x, y)));
+
+                Debug.WriteLine($"Found {re} possible place moves");
             }
             else
             {
                 // Normal moves
-                Field tmp;
                 for (int x = 0; x < Board.Width; x++)
                     for (int y = 0; y < Board.Height; y++)
-                        if ((tmp = Board.GetField(x, y)) != null)
-                            foreach (Point p in tmp.PossibleCoordsToMoveTo())
-                                re.Add(new Move(tmp.Position(), p, tmp.Piece));
+                        if (Board.GetField(x, y).Piece?.Team == CurrentPlayer.Team)
+                            foreach (Point p in Board.GetField(x, y).PossibleCoordsToMoveTo(this))
+                                re.Add(new Move(new Point(x, y), p));
             }
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
