@@ -193,7 +193,7 @@ Usage: start.sh [options]
                                     if (inState.Fishes.Int.Count > 0)
                                         gameState.PlayerOne.Fishes = inState.Fishes.Int[0];
                                     if (inState.Fishes.Int.Count > 1)
-                                        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1]t;
+                                        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1];
                                 }
 
                                 UpdateConsoleTitle();
