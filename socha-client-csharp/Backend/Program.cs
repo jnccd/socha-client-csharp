@@ -220,13 +220,16 @@ Usage: start.sh [options]
         }
         static void DrawBoardPng()
         {
-            Bitmap b = new(Board.Width, Board.Height);
+            if (OperatingSystem.IsWindows())
+            {
+                Bitmap b = new(Board.Width, Board.Height);
 
-            for (int x = 0; x < Board.Width; x++)
-                for (int y = 0; y < Board.Height; y++)
-                    b.SetPixel(x, y, gameState.Board.GetField(x, y).ToColor());
+                for (int x = 0; x < Board.Width; x++)
+                    for (int y = 0; y < Board.Height; y++)
+                        b.SetPixel(x, y, gameState.Board.GetField(x, y).ToColor());
 
-            b.Save("board.png");
+                b.Save("board.png");
+            }
         }
 
         static void Send(NetworkStream stream, string message)
