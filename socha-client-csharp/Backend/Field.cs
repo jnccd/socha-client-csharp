@@ -32,11 +32,11 @@ namespace SochaClient
 
             var gotoCoords = new List<Point>();
 
+            Point curPos;
             var dirs = (Direction[])Enum.GetValues(typeof(Direction));
-            Point curPos = Position();
             for (int i = 0; i < dirs.Length; i++)
             {
-                curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
+                curPos = Position() + Board.GetDirectionDisplacement(dirs[i], Position());
                 while (Board.IsInBounds(curPos) && Parent.GetField(curPos).Free())
                 {
                     gotoCoords.Add(curPos);
