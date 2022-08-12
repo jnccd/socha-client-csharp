@@ -74,7 +74,7 @@ namespace SochaClient
 
                 if (!S.Board.GetField(From).PossibleCoordsToMoveTo(S).Contains(To))
                 {
-                    Debug.WriteLine("Illegal: Not possible!");
+                    Debug.WriteLine("Illegal: Not possible to move there!");
                     return false;
                 }
             }
