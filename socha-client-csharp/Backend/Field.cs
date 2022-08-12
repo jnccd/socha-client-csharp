@@ -25,7 +25,7 @@ namespace SochaClient
         public Point Position() => new(X, Y);
         public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*50) : Piece.ToColor();
 
-        public Point[] PossibleCoordsToMoveTo(State S) // TODO: Fix
+        public Point[] PossibleCoordsToMoveTo(State S)
         {
             if (Piece == null || Piece.Team != S.CurrentPlayer.Team)
                 return new Point[0];
