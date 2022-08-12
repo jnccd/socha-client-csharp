@@ -1,5 +1,6 @@
 ﻿using SochaClientLogic;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -163,7 +164,10 @@ Usage: start.sh [options]
                     foreach (var r in recievedObjs.Room)
                         if (r.Data != null && r.RoomId == RoomID)
                             if (r.Data.Class == "moveRequest")
+                            {
+                                Debug.WriteLine("Got MoveReq");
                                 Send(stream, (LastMove = playerLogic.GetMove()).ToXML());
+                            }
                             else if (r.Data.Class == "memento")
                             {
                                 var inState = r.Data.State;
