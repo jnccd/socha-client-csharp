@@ -56,8 +56,8 @@ namespace SochaClient
             startField.fishes = 0;
 
             // Update board fields
-            re.Board.GetField(m.To).Piece = re.Board.GetField(m.From).Piece;
-            re.Board.GetField(m.From).Piece = null;
+            targetField.Piece = startField.Piece;
+            startField.Piece = null;
 
             re.Turn++;
 
