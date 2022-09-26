@@ -20,13 +20,8 @@ If you wish to pass program arguments to the `dotnet ` execution you can use `--
 
 Make sure that you only include standard .NET libraries.
 
-Build this Project in Release mode with dotnet using `dotnet build -c Release`.
-A release build is more optimized and runs faster.
-
-Now you should find the files you need to upload in `socha-client-csharp/bin/Release/netx.x`, with the `x` representing some version number.
-
-Put all of these files in a `.zip` archive and upload them on the contest site.
-
+Put all files and folders in this folder in a `.zip` archive including the `start.sh`.
+Then upload that `.zip` on the contest site.
 
 If you want to make modifications and edit the `start.sh` file, make sure to save it using linux line endings.
-You can either edit it on a Linux system or use Notepadd++ on Windows.
+You can either edit it on a Linux system or use Notepad++/wsl on Windows.
