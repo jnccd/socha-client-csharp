@@ -170,6 +170,13 @@ Usage: start.sh [options]
                             {
                                 Debug.WriteLine("Got MoveReq");
 
+                                if (gameState.Turn == 0)
+                                    gameState.MyselfPlayer = gameState.GetPlayer(gameState.StartTeam);
+                                else if (gameState.Turn == 1)
+                                    gameState.MyselfPlayer = gameState.GetOtherPlayer(gameState.GetPlayer(gameState.StartTeam));
+
+                                gameState.CurrentPlayer = gameState.MyselfPlayer;
+
                                 Send(stream, (LastMove = playerLogic.GetMove()).ToXML());
                             }
                             else if (r.Data.Class == "memento")
