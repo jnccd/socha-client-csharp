@@ -19,7 +19,7 @@ namespace SochaClient
         public Board Board;
         public Player PlayerOne, PlayerTwo;
         public Move LastMove;
-        public Player CurrentPlayer;
+        public Player CurrentPlayer, MyselfPlayer;
 
         public State()
         {
