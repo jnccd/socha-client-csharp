@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Xml;
 
 namespace SochaClient
 {
@@ -40,6 +42,19 @@ namespace SochaClient
         public static bool IsInBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
         /// <summary>
+        /// Returns all Fields that the given player has pieces on
+        /// </summary>
+        public Field[] GetFieldsOfPlayer(PlayerTeam team)
+        {
+            var re = new List<Field>();
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    if (Fields[x, y].Piece.Team == team)
+                        re.Add(Fields[x, y]);
+            return re.ToArray();
+        }
+
+        /// <summary>
         /// Returns possible vectors for all Directions in hexspace
         /// </summary>
         public static Point[] GetNeighbors(Point pos) => pos.Y % 2 == 0 ? EvenHexNeighbors : OddHexNeighbors;
@@ -47,6 +62,20 @@ namespace SochaClient
         /// Returns a vector that points in the given Direction in hexspace
         /// </summary>
         public static Point GetDirectionDisplacement(Direction d, Point pos) => GetNeighbors(pos)[(int)d];
+        /// <summary>
+        /// Returns all neighboring fields of a field on the board
+        /// </summary>
+        public Field[] GetNeighborFields(Field f)
+        {
+            var ps = GetNeighbors(f.Position());
+            var rs = new List<Field>();
+
+            foreach (var p in ps)
+                if (IsInBounds(p))
+                    rs.Add(GetField(p));
+
+            return rs.ToArray();
+        }
 
         /// <summary>
         /// Creates a deep copy of this object
