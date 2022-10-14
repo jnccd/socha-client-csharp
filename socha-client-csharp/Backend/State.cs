@@ -19,7 +19,7 @@ namespace SochaClient
         public Board Board;
         public Player PlayerOne, PlayerTwo;
         public Move LastMove;
-        public Player CurrentPlayer { get => Turn % 2 == 0 ? PlayerOne : PlayerTwo; }
+        public Player CurrentPlayer, MyselfPlayer;
 
         public State()
         {
@@ -30,8 +30,6 @@ namespace SochaClient
 
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
-        /// <para>Caution: This method will check if the Move is legal before performing it which results 
-        /// in worse performance. If you are using this method a lot I recommend using PerformWithoutChecks</para>
         /// </summary>
         public State Perform(Move m)
         {
@@ -43,7 +41,8 @@ namespace SochaClient
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
         /// <para>Caution: This method won't check if the move is legal before commiting it to the board. 
-        /// Feeding illegal moves into this method may result in unexpected behavior</para>
+        /// Feeding illegal moves into this method may result in unexpected behavior.
+        /// However, it should run faster that Perform()</para>
         /// </summary>
         public State PerformWithoutChecks(Move m)
         {
@@ -59,6 +58,11 @@ namespace SochaClient
             targetField.Piece = startField.Piece;
             startField.Piece = null;
 
+            // Update current player
+            var otherPlayer = GetOtherPlayer(CurrentPlayer);
+            if (CanMove(otherPlayer)) 
+                CurrentPlayer = otherPlayer;
+
             re.Turn++;
 
             return re;
@@ -69,7 +73,7 @@ namespace SochaClient
         /// </summary>
         public Move[] GetAllPossibleMoves()
         {
-            List<Move> re = new List<Move>();
+            var re = new List<Move>();
 
             if (Turn < 8)
             {
@@ -96,6 +100,22 @@ namespace SochaClient
         }
 
         /// <summary>
+        /// Checks whether the given player can move
+        /// </summary>
+        public bool CanMove(Player player)
+        {
+            var can = false;
+
+            foreach (var f in Board.GetFieldsOfPlayer(player.Team))
+            {
+                var n = Board.GetNeighborFields(f);
+                can &= n.Any(x => x.Free());
+            }
+
+            return can;
+        }
+
+        /// <summary>
         /// Get a Player object from the PlayerTeam enum
         /// </summary>
         public Player GetPlayer(PlayerTeam team)
@@ -105,6 +125,10 @@ namespace SochaClient
             else
                 return PlayerTwo;
         }
+        /// <summary>
+        /// Get the other Player from a player
+        /// </summary>
+        public Player GetOtherPlayer(Player player) => GetPlayer(player.Team.OtherTeam());
 
         /// <summary>
         /// Creates a deep copy of this object
