@@ -144,6 +144,7 @@ Usage: start.sh [options]
             
             while (true)
             {
+                // Recieve text over netowrk and preprocess it
                 string recieved = Recieve(stream);
                 recieved = recieved.StartsWith("<protocol>") ? recieved.Remove(0, "<protocol>".Length) : recieved;
                 recieved = "<received>" + recieved + "</received>";
@@ -152,10 +153,12 @@ Usage: start.sh [options]
                 if (recieved.Contains("</protocol>"))
                     break;
 
+                // Serialize preprocessed text
                 var serializer = new XmlSerializer(typeof(Received));
                 StringReader stringReader = new(recieved);
                 var recievedObjs = (Received)serializer.Deserialize(stringReader);
 
+                // Handle XML object
                 if (recievedObjs.Joined != null)
                     RoomID = recievedObjs.Joined.RoomId;
                 if (recievedObjs.Left != null && recievedObjs.Left.RoomId == RoomID)
@@ -166,6 +169,7 @@ Usage: start.sh [options]
                             if (r.Data.Class == "moveRequest")
                             {
                                 Debug.WriteLine("Got MoveReq");
+
                                 Send(stream, (LastMove = playerLogic.GetMove()).ToXML());
                             }
                             else if (r.Data.Class == "memento")
