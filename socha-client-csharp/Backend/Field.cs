@@ -20,7 +20,13 @@ namespace SochaClient
             this.Y = y;
         }
 
+        /// <summary>
+        /// No piece and no fishes on this field
+        /// </summary>
         public bool Empty() => Piece == null && fishes == 0;
+        /// <summary>
+        /// No piece but some fishes on this field
+        /// </summary>
         public bool Free() => Piece == null && fishes != 0;
         public Point Position() => new(X, Y);
         public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*50) : Piece.ToColor();
