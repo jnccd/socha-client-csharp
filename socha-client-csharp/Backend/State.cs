@@ -96,6 +96,22 @@ namespace SochaClient
         }
 
         /// <summary>
+        /// Checks whether the given player can move
+        /// </summary>
+        public bool CanMove(Player player)
+        {
+            var can = false;
+
+            foreach (var f in Board.GetFieldsOfPlayer(player.Team))
+            {
+                var n = Board.GetNeighborFields(f);
+                can &= n.Any(x => x.Free());
+            }
+
+            return can;
+        }
+
+        /// <summary>
         /// Get a Player object from the PlayerTeam enum
         /// </summary>
         public Player GetPlayer(PlayerTeam team)
