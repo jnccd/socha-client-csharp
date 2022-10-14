@@ -19,7 +19,7 @@ namespace SochaClient
         public Board Board;
         public Player PlayerOne, PlayerTwo;
         public Move LastMove;
-        public Player CurrentPlayer { get => Turn % 2 == 0 ? PlayerOne : PlayerTwo; }
+        public Player CurrentPlayer;
 
         public State()
         {
@@ -58,6 +58,8 @@ namespace SochaClient
             // Update board fields
             targetField.Piece = startField.Piece;
             startField.Piece = null;
+
+            
 
             re.Turn++;
 
@@ -121,6 +123,10 @@ namespace SochaClient
             else
                 return PlayerTwo;
         }
+        /// <summary>
+        /// Get the other Player from a player
+        /// </summary>
+        public Player GetOtherPlayer(Player player) => GetPlayer(player.Team.OtherTeam());
 
         /// <summary>
         /// Creates a deep copy of this object
