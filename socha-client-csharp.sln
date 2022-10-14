@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "socha-client-csharp", "socha-client-csharp\socha-client-csharp.csproj", "{C0572259-1CDB-4110-B779-9BFA7EF06063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socha-client-csharp-tests", "socha-client-csharpTests\socha-client-csharp-tests.csproj", "{F60B6BDA-479E-49DE-99EE-380DD2960895}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socha-client-csharp-tests", "socha-client-csharp-tests\socha-client-csharp-tests.csproj", "{F60B6BDA-479E-49DE-99EE-380DD2960895}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
