@@ -3,13 +3,10 @@ using SochaClient.Backend;
 
 namespace SochaClient
 {
-    public class Program
-    {
-        static void Main(string[] args) => Starter.Main(args, new Logic());
-    }
-
     public class Logic : Backend.Logic
     {
+        static void Main(string[] args) => Starter.Main(args, new Logic());
+
         public Logic()
         {
             // TODO: Add init logic
