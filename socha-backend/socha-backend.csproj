@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Software-Challenge C# Client Template</Title>
-    <Version>23.0.2</Version>
+    <Version>23.0.2.0</Version>
     <Authors>Dobiko</Authors>
     <Company>Software-Challenge</Company>
     <Product>Software Challenge Client</Product>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageLicenseExpression>cc0-1.0</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +32,14 @@
 
   <ItemGroup>
     <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
