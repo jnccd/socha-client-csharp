@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
     public class IllegalMoveException : Exception { }
 

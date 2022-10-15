@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
     public class Field : ICloneable
     {

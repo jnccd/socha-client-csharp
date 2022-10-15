@@ -1,18 +1,14 @@
-﻿using SochaClientLogic;
-using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using System.Xml.Serialization;
-using Xml;
+using SochaClient.Backend.XML;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
-    public class Program
+    public class Starter
     {
         // Start Arguments
         static string host = "127.0.0.1";
@@ -36,21 +32,26 @@ namespace SochaClient
         public static string RoomID { get; private set; } = "";
         static Logic playerLogic;
         static State gameState;
-        
-        static void Main(string[] args)
+
+        public static void Main(string[] args, Logic playerLogic)
         {
             if (!GotProperStartArguments(args)) return;
 
-            gameState = new State();
-            playerLogic = new Logic { GameState = gameState };
+            // Setup object hooks
+            Starter.playerLogic = playerLogic;
+            playerLogic.GameState = new State();
+            gameState = playerLogic.GameState;
+
+            // Setup logging
             instanceIdentifier = DateTime.Now.ToBinary().ToString();
             if (logToFile)
                 logWriter = File.CreateText(LogFileName);
 
+            // Setup TCP communication tunnel to server
             TcpClient client = ConnectToServer();
             NetworkStream stream = client.GetStream();
             ConsoleWriteLine("Connected to the game server!", ConsoleColor.Green);
-            
+
             ExecuteCommunationLoop(stream);
 
             stream.Close();
@@ -141,7 +142,7 @@ Usage: start.sh [options]
                 Send(stream, $"<protocol><join gameType=\"swc_2023_penguins\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{reservation}\" />");
-            
+
             while (true)
             {
                 // Recieve text over netowrk and preprocess it
@@ -226,7 +227,7 @@ Usage: start.sh [options]
         }
         static void UpdateConsoleTitle()
         {
-            try { Console.Title = $"{playerLogic.MyTeam} in ONE vs TWO"; } 
+            try { Console.Title = $"{playerLogic.MyTeam} in ONE vs TWO"; }
             catch { }
         }
         static void DrawBoardPng()

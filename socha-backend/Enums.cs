@@ -1,4 +1,4 @@
-﻿namespace SochaClient
+﻿namespace SochaClient.Backend
 {
     public enum PlayerTeam 
     {

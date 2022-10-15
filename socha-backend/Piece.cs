@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
     public class Piece : ICloneable
     {
