@@ -13,8 +13,7 @@
     <Copyright>GNU Lesser General Public License v3 (LGPLv3)</Copyright>
     <PackageProjectUrl>https://github.com/jnccd/socha-client-csharp</PackageProjectUrl>
     <Description>Provides a client template for the software challenge upon which students can build their own clients in C#</Description>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile></PackageReadmeFile>
     <RepositoryUrl>https://github.com/jnccd/socha-client-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>socha;software-challenge;software-challenge-germany</PackageTags>
@@ -23,21 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\README.md" Link="resources\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="resources\logo.png" Link="resources\logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
 </Project>
