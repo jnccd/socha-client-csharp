@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xml;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
     /// <summary>
     /// Represents the Board of the game

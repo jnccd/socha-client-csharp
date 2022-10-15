@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>socha</Title>
+    <Version>23.0.2</Version>
+    <Authors>Dobiko</Authors>
+    <Company>Software-Challenge</Company>
+    <Product>Software Challenge Client</Product>
+    <Copyright>GNU Lesser General Public License v3 (LGPLv3)</Copyright>
+    <PackageProjectUrl>https://github.com/jnccd/socha-client-csharp</PackageProjectUrl>
+    <Description>Provides a client template for the software challenge upon which students can build their own clients in C#</Description>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/jnccd/socha-client-csharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>socha;software-challenge;software-challenge-germany</PackageTags>
+    <PackageReleaseNotes>Initial release with support for the game "Hey, danke für den Fisch!" in the season 22/23</PackageReleaseNotes>
+    <NeutralLanguage>en-DE</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Link="resources\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="resources\logo.png" Link="resources\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-namespace SochaClient
+namespace SochaClient.Backend
 {
     /// <summary>
     /// This is a generic move class
@@ -93,14 +93,14 @@ namespace SochaClient
                 GetHashCode();
 
             if (From != null)
-                return  $"<room roomId=\"{Program.RoomID}\">\n" +
+                return  $"<room roomId=\"{Starter.RoomID}\">\n" +
                             $"<data class=\"move\">\n" +
                                 $"<from x=\"{HexFrom.X}\" y=\"{HexFrom.Y}\"/>" +
                                 $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
                             $"</data>\n" +
                         $"</room>";
             else
-                return $"<room roomId=\"{Program.RoomID}\">\n" +
+                return $"<room roomId=\"{Starter.RoomID}\">\n" +
                             $"<data class=\"move\">\n" +
                             $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
                             $"</data>\n" +

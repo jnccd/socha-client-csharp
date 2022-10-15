@@ -1,10 +1,9 @@
-﻿using SochaClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 // Generated using: https://json2csharp.com/code-converters/xml-to-csharp
 
-namespace Xml
+namespace SochaClient.Backend.XML
 {
 	[XmlRoot(ElementName = "data")]
 	public class Data
