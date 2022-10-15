@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Software-Challenge C# Client Template</Title>
-    <Version>23.0.2.0</Version>
+    <Version>23.0.2.1</Version>
     <Authors>Dobiko</Authors>
     <Company>Software-Challenge</Company>
     <Product>Software Challenge Client</Product>
@@ -19,7 +19,7 @@
     <PackageReleaseNotes>Initial release with support for the game "Hey, danke für den Fisch!" in the season 22/23</PackageReleaseNotes>
     <NeutralLanguage>en-DE</NeutralLanguage>
     <PackageIcon>resources\logo.png</PackageIcon>
-    <PackageId>socha</PackageId>
+    <PackageId>Socha</PackageId>
   </PropertyGroup>
 
   <PropertyGroup>
