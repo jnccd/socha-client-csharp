@@ -10,7 +10,6 @@
     <Authors>Dobiko</Authors>
     <Company>Software-Challenge</Company>
     <Product>Software Challenge Client</Product>
-    <Copyright>GNU Lesser General Public License v3 (LGPLv3)</Copyright>
     <PackageProjectUrl>https://github.com/jnccd/socha-client-csharp</PackageProjectUrl>
     <Description>Provides a client template for the software challenge upon which students can build their own clients in C#</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -23,16 +22,20 @@
     <PackageId>socha</PackageId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageLicenseExpression>cc0-1.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
