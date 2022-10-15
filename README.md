@@ -1,6 +1,10 @@
 # C# client for Software-Challenge Germany 2022/2023
 
 [![build and test](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
+[![Discord](https://img.shields.io/discord/233577109363097601?color=blue&label=Discord)](https://discord.gg/ARZamDptG5)
+[![Documentation](https://img.shields.io/badge/Software--Challenge%20-Documentation-%234299e1)](https://docs.software-challenge.de/)
+> Please note that this is a very early version, which may still contain some bugs. However, the client is able to play
+> a game from start to end.
 
 This repository contains a simple client for the game "Hey, Danke für den Fisch" written for the .NET Core platform.
 
