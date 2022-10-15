@@ -1,5 +1,7 @@
 # C# client for Software-Challenge Germany 2022/2023
 
+[![build and test](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
+
 This repository contains a simple client for the game "Hey, Danke für den Fisch" written for the .NET Core platform.
 
 Because it is a simple client, it will only do seemingly random moves. If you wish to build your own client on top of this one you can [clone this repo](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) and add your code to the `Logic.cs` class in the `socha-client-csharp` folder.
