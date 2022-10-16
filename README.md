@@ -1,6 +1,7 @@
 # C# client for Software-Challenge Germany 2022/2023
 
-[![build and test](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
+[![Tests](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
+[![Nuget CD](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml)
 [![NuGet version (Socha)](https://img.shields.io/nuget/v/socha)](https://www.nuget.org/packages/socha/)
 [![Discord](https://img.shields.io/discord/233577109363097601?color=blue&label=Discord)](https://discord.gg/ARZamDptG5)
 [![Documentation](https://img.shields.io/badge/Software--Challenge%20-Documentation-%234299e1)](https://docs.software-challenge.de/)
