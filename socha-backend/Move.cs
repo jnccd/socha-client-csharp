@@ -102,7 +102,7 @@ namespace SochaClient.Backend
             else
                 return $"<room roomId=\"{Starter.RoomID}\">\n" +
                             $"<data class=\"move\">\n" +
-                            $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
+                                $"<to x = \"{HexTo.X}\" y=\"{HexTo.Y}\"/>" +
                             $"</data>\n" +
                         $"</room>";
         }
