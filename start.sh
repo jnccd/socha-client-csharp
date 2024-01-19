@@ -1,3 +1,3 @@
 #!/bin/sh
-cd socha-client-csharp
+cd socha-logic
 dotnet run -c Release -- "$@"
