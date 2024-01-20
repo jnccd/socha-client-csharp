@@ -11,15 +11,64 @@ namespace SochaClient.Backend
     /// </summary>
     public class Move : ICloneable
     {
-        public readonly Point From, To, HexFrom, HexTo;
-
-        public Move(Point from, Point to)
+        public abstract class Action
         {
-            From = from;
-            To = to;
+            abstract public string ToXML();
+        }
 
-            HexFrom = Board.ArrayToHexCoords(from);
-            HexTo = Board.ArrayToHexCoords(to);
+        public class Acceleration : Action
+        {
+            int acc;
+
+            public Acceleration(int acc)
+            {
+                this.acc = acc;
+            }
+
+            public override string ToXML() => $"<acceleration acc=\"{acc}\" />";
+        }
+
+        public class Advance : Action
+        {
+            int distance;
+
+            public Advance(int distance)
+            {
+                this.distance = distance;
+            }
+
+            public override string ToXML() => $"<advance distance=\"{distance}\" />";
+        }
+
+        public class Push : Action
+        {
+            Direction direction;
+
+            public Push(Direction direction)
+            {
+                this.direction = direction;
+            }
+
+            public override string ToXML() => $"<push direction=\"{direction}\" />";
+        }
+
+        public class Turn : Action
+        {
+            Direction direction;
+
+            public Turn(Direction direction)
+            {
+                this.direction = direction;
+            }
+
+            public override string ToXML() => $"<turn direction=\"{direction}\" />";
+        }
+
+        List<Action> actions;
+
+        public Move(List<Action> actions)
+        {
+            this.actions = actions;
         }
 
         /// <summary>
@@ -28,56 +77,7 @@ namespace SochaClient.Backend
         /// <param name="S"> The game State this move should be performed on </param> 
         public bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
         {
-            if (S.Turn < 8)
-            {
-                // Place Move
-
-                if (From != null)
-                {
-                    Debug.WriteLine("Illegal: No Put Move!");
-                    return false;
-                }
-
-                if (S.Board.GetField(To).fishes != 1)
-                {
-                    Debug.WriteLine("Illegal: Put only on one fish field!");
-                    return false;
-                }
-
-                if (S.Board.GetField(To).Piece != null)
-                {
-                    Debug.WriteLine("Illegal: Put only on one fish field!");
-                    return false;
-                }
-            }
-            else
-            {
-                // Normal Move
-
-                if (From != null && S.CurrentPlayer.Team != S.Board.GetField(From).Piece?.Team)
-                {
-                    Debug.WriteLine("Illegal: Wrong Team!");
-                    return false;
-                }
-
-                if (!Board.IsInBounds(To))
-                {
-                    Debug.WriteLine("Illegal: OOB!");
-                    return false;
-                }
-
-                if (!S.Board.GetField(To).Free())
-                {
-                    Debug.WriteLine("Illegal: Cant move there!");
-                    return false;
-                }
-
-                if (!S.Board.GetField(From).PossibleCoordsToMoveTo(S).Contains(To))
-                {
-                    Debug.WriteLine("Illegal: Not possible to move there!");
-                    return false;
-                }
-            }
+            
             
             return true;
         }
@@ -89,9 +89,6 @@ namespace SochaClient.Backend
         /// </summary>
         public string ToXML()
         {
-            if (HexTo.X == 0)
-                GetHashCode();
-
             if (From != null)
                 return  $"<room roomId=\"{Starter.RoomID}\">\n" +
                             $"<data class=\"move\">\n" +

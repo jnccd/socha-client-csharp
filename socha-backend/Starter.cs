@@ -139,7 +139,7 @@ Usage: start.sh [options]
             Move LastMove = null;
 
             if (string.IsNullOrWhiteSpace(reservation))
-                Send(stream, $"<protocol><join gameType=\"swc_2023_penguins\" />");
+                Send(stream, $"<protocol><join gameType=\"swc_2024_mississippi_queen\" />");
             else
                 Send(stream, $"<protocol><joinPrepared reservationCode=\"{reservation}\" />");
 

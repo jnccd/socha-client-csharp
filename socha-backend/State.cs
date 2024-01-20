@@ -24,8 +24,8 @@ namespace SochaClient.Backend
         public State()
         {
             Board = new Board();
-            PlayerOne = new Player(PlayerTeam.ONE, 0);
-            PlayerTwo = new Player(PlayerTeam.TWO, 0);
+            PlayerOne = new Player(PlayerTeam.ONE, new Ship());
+            PlayerTwo = new Player(PlayerTeam.TWO, new Ship());
         }
 
         /// <summary>
@@ -66,6 +66,26 @@ namespace SochaClient.Backend
             re.Turn++;
 
             return re;
+        }
+
+        public void PerformAction(Move.Action a, State s)
+        {
+            if (a is Move.Advance)
+            {
+                s.CurrentPlayer.Ship.Pos.
+            }
+            else if (a is Move.Acceleration)
+            {
+
+            }
+            else if (a is Move.Push)
+            {
+
+            }
+            else if (a is Move.Turn)
+            {
+
+            }
         }
 
         /// <summary>

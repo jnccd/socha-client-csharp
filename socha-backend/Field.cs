@@ -7,59 +7,42 @@ namespace SochaClient.Backend
 {
     public class Field : ICloneable
     {
-        public int fishes = 0;
-        public Piece Piece;
+        public FieldType FType;
         public Board Parent { get; private set; }
-        public readonly int X, Y;
+        public CubeCoords Coords { get; private set; }
 
-        public Field(Piece piece, Board parent, int x, int y)
+        public Field(FieldType fType, CubeCoords coords, Board parent)
         {
-            Piece = piece;
+            FType = fType;
+            Coords = coords;
             Parent = parent;
-            this.X = x;
-            this.Y = y;
         }
 
-        /// <summary>
-        /// No piece and no fishes on this field
-        /// </summary>
-        public bool Empty() => Piece == null && fishes == 0;
-        /// <summary>
-        /// No piece but some fishes on this field
-        /// </summary>
-        public bool Free() => Piece == null && fishes != 0;
-        public Point Position() => new(X, Y);
-        public Color ToColor() => Piece == null ? Color.FromArgb(0,0,fishes*50) : Piece.ToColor();
-
-        public Point[] PossibleCoordsToMoveTo(State S)
+        public Color ToColor()
         {
-            if (Piece == null || Piece.Team != S.CurrentPlayer.Team)
-                return new Point[0];
-
-            var gotoCoords = new List<Point>();
-
-            Point curPos;
-            var dirs = (Direction[])Enum.GetValues(typeof(Direction));
-            for (int i = 0; i < dirs.Length; i++)
+            switch (FType)
             {
-                curPos = Position() + Board.GetDirectionDisplacement(dirs[i], Position());
-                while (Board.IsInBounds(curPos) && Parent.GetField(curPos).Free())
-                {
-                    gotoCoords.Add(curPos);
-                    curPos += Board.GetDirectionDisplacement(dirs[i], curPos);
-                }
-            }
-
-            return gotoCoords.ToArray();
+                case FieldType.island:
+                    return Color.FromArgb(0, 255, 0);
+                case FieldType.water:
+                    return Color.FromArgb(0, 0, 255);
+                case FieldType.passenger:
+                    return Color.FromArgb(255, 0, 0);
+                default:
+                    throw new ArgumentException("wat");
+            };
         }
 
-        public object Clone() => (Field)MemberwiseClone();
+        public object Clone()
+        {
+            Field f = (Field)MemberwiseClone();
+            f.Coords = (CubeCoords)Coords.Clone();
+            return f;
+        }
         public Field CloneWParent(Board cloneParent)
         {
             Field f = (Field)Clone();
             f.Parent = cloneParent;
-            if (Piece != null)
-                f.Piece = (Piece)Piece.Clone();
             return f;
         }
     }
