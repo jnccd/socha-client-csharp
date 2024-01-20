@@ -5,96 +5,145 @@ using System.Xml.Serialization;
 
 namespace SochaClient.Backend.XML
 {
-	[XmlRoot(ElementName = "data")]
-	public class Data
-	{
+    [XmlRoot(ElementName = "center")]
+    public class Center
+    {
 
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
+        [XmlAttribute(AttributeName = "q")]
+        public int Q { get; set; }
 
-		[XmlAttribute(AttributeName = "color")]
-		public PlayerTeam Color { get; set; }
+        [XmlAttribute(AttributeName = "r")]
+        public int R { get; set; }
 
-		[XmlElement(ElementName = "state")]
-		public State State { get; set; }
+        [XmlAttribute(AttributeName = "s")]
+        public int S { get; set; }
+    }
 
-		[XmlText]
-		public string Text { get; set; }
-	}
+    [XmlRoot(ElementName = "field-array")]
+    public class Fieldarray
+    {
 
-	[XmlRoot(ElementName = "room")]
-	public class Room
-	{
+        [XmlElement(ElementName = "water")]
+        public List<object> Water { get; set; }
 
-		[XmlElement(ElementName = "data")]
-		public Data Data { get; set; }
+        [XmlElement(ElementName = "island")]
+        public List<object> Island { get; set; }
+    }
 
-		[XmlAttribute(AttributeName = "roomId")]
-		public string RoomId { get; set; }
+    [XmlRoot(ElementName = "segment")]
+    public class Segment
+    {
 
-		[XmlText]
-		public string Text { get; set; }
-	}
+        [XmlElement(ElementName = "center")]
+        public Center Center { get; set; }
 
-	[XmlRoot(ElementName = "list")]
-	public class List
-	{
+        [XmlElement(ElementName = "fieldarray")]
+        public List<Fieldarray> Fieldarray { get; set; }
 
-		[XmlElement(ElementName = "field")]
-		public List<string> Field { get; set; }
-	}
+        [XmlAttribute(AttributeName = "direction")]
+        public string Direction { get; set; }
+    }
 
-	[XmlRoot(ElementName = "board")]
-	public class Board
-	{
+    [XmlRoot(ElementName = "board")]
+    public class Board
+    {
 
-		[XmlElement(ElementName = "list")]
-		public List<List> List { get; set; }
-	}
+        [XmlElement(ElementName = "segment")]
+        public List<Segment> Segment { get; set; }
 
-	[XmlRoot(ElementName = "fishes")]
-	public class Fishes
-	{
+        [XmlAttribute(AttributeName = "nextDirection")]
+        public string NextDirection { get; set; }
+    }
 
-		[XmlElement(ElementName = "int")]
-		public List<int> Int { get; set; }
-	}
+    [XmlRoot(ElementName = "position")]
+    public class Position
+    {
 
-	[XmlRoot(ElementName = "state")]
-	public class State
-	{
+        [XmlAttribute(AttributeName = "q")]
+        public int Q { get; set; }
 
-		[XmlElement(ElementName = "startTeam")]
-		public PlayerTeam StartTeam { get; set; }
+        [XmlAttribute(AttributeName = "r")]
+        public int R { get; set; }
 
-		[XmlElement(ElementName = "board")]
-		public Board Board { get; set; }
+        [XmlAttribute(AttributeName = "s")]
+        public int S { get; set; }
+    }
 
-		[XmlElement(ElementName = "fishes")]
-		public Fishes Fishes { get; set; }
+    [XmlRoot(ElementName = "ship")]
+    public class Ship
+    {
 
-		[XmlAttribute(AttributeName = "class")]
-		public string Class { get; set; }
+        [XmlElement(ElementName = "position")]
+        public Position Position { get; set; }
 
-		[XmlAttribute(AttributeName = "turn")]
-		public int Turn { get; set; }
+        [XmlAttribute(AttributeName = "team")]
+        public string Team { get; set; }
 
-		[XmlText]
-		public string Text { get; set; }
-	}
+        [XmlAttribute(AttributeName = "direction")]
+        public string Direction { get; set; }
 
-	[XmlRoot(ElementName = "Root")]
-	public class Root
-	{
+        [XmlAttribute(AttributeName = "speed")]
+        public int Speed { get; set; }
 
-		[XmlElement(ElementName = "joined")]
-		public Joined Joined { get; set; }
+        [XmlAttribute(AttributeName = "coal")]
+        public int Coal { get; set; }
 
-		[XmlElement(ElementName = "room")]
-		public List<Room> Room { get; set; }
-	}
+        [XmlAttribute(AttributeName = "passengers")]
+        public int Passengers { get; set; }
 
-	[XmlRoot(ElementName = "left")]
+        [XmlAttribute(AttributeName = "freeTurns")]
+        public int FreeTurns { get; set; }
+
+        [XmlAttribute(AttributeName = "points")]
+        public int Points { get; set; }
+    }
+
+    [XmlRoot(ElementName = "state")]
+    public class State
+    {
+
+        [XmlElement(ElementName = "board")]
+        public Board Board { get; set; }
+
+        [XmlElement(ElementName = "ship")]
+        public List<Ship> Ship { get; set; }
+
+        [XmlAttribute(AttributeName = "class")]
+        public string Class { get; set; }
+
+        [XmlAttribute(AttributeName = "startTeam")]
+        public PlayerTeam StartTeam { get; set; }
+
+        [XmlAttribute(AttributeName = "turn")]
+        public int Turn { get; set; }
+
+        [XmlAttribute(AttributeName = "currentTeam")]
+        public PlayerTeam CurrentTeam { get; set; }
+    }
+
+    [XmlRoot(ElementName = "data")]
+    public class Data
+    {
+
+        [XmlElement(ElementName = "state")]
+        public State State { get; set; }
+
+        [XmlAttribute(AttributeName = "class")]
+        public string Class { get; set; }
+    }
+
+    [XmlRoot(ElementName = "room")]
+    public class Room
+    {
+
+        [XmlElement(ElementName = "data")]
+        public Data Data { get; set; }
+
+        [XmlAttribute(AttributeName = "roomId")]
+        public string RoomId { get; set; }
+    }
+
+    [XmlRoot(ElementName = "left")]
 	public class Left
 	{
 

@@ -5,18 +5,19 @@
         ONE,
         TWO,
     }
-    public enum PieceColor 
-    { 
-        BLUE=1, 
-        RED=2, 
-    }
     public enum Direction
     {
-        TOPLEFT,
-        TOPRIGHT,
+        UP_LEFT,
+        UP_RIGHT,
         RIGHT,
-        BOTTOMRIGHT,
-        BOTTOMLEFT,
+        DOWN_RIGHT,
+        DOWN_LEFT,
         LEFT,
+    }
+    public enum FieldType
+    {
+        water,
+        island,
+        passenger,
     }
 }
