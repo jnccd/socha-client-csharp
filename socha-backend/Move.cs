@@ -23,10 +23,24 @@ namespace SochaClient.Backend
         /// Checks if this move can be performed on game State S
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
-        public bool IsLegalOn(State S) // https://youtu.be/nz20lu2AM2k?t=8
+        public bool IsLegalOn(State s) // https://youtu.be/nz20lu2AM2k?t=8
         {
-            // TODO: Check if amount of advances correct, check for coal, check 
-            
+            if (s is null)
+                throw new ArgumentNullException(nameof(s));
+
+            // Perform and check actions
+            var sc = (State)s.Clone();
+            foreach (var action in actions)
+            {
+                if (!action.IsLegalOn(sc))
+                    return false;
+                action.PerformOn(sc);
+            }
+
+            // Check final state
+            if (sc.CurrentPlayer.Ship.Coal < 0 || sc.CurrentPlayer.Ship.MovementPoints != 0)
+                return false;
+
             return true;
         }
 
