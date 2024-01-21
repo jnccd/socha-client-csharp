@@ -68,26 +68,6 @@ namespace SochaClient.Backend
             return re;
         }
 
-        public void PerformAction(Move.Action a, State s)
-        {
-            if (a is Move.Advance)
-            {
-                s.CurrentPlayer.Ship.Pos.
-            }
-            else if (a is Move.Acceleration)
-            {
-
-            }
-            else if (a is Move.Push)
-            {
-
-            }
-            else if (a is Move.Turn)
-            {
-
-            }
-        }
-
         /// <summary>
         /// Gets all legal Moves for this state
         /// </summary>
@@ -117,22 +97,6 @@ namespace SochaClient.Backend
 
             var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
             return ree;
-        }
-
-        /// <summary>
-        /// Checks whether the given player can move
-        /// </summary>
-        public bool CanMove(Player player)
-        {
-            var can = false;
-
-            foreach (var f in Board.GetFieldsOfPlayer(player.Team))
-            {
-                var n = Board.GetNeighborFields(f);
-                can &= n.Any(x => x.Free());
-            }
-
-            return can;
         }
 
         /// <summary>
