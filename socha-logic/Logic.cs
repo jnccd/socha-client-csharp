@@ -16,7 +16,7 @@ namespace SochaClient
         {
             // TODO: Add your game logic
             
-            return GameState.GetAllPossibleMoves().First();
+            return GameState.GetPossibleMoves().First();
         }
     }
 }

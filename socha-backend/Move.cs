@@ -44,7 +44,7 @@ namespace SochaClient.Backend
             bool encoutneredNonAcc = false;
             foreach (var action in actions)
             {
-                if (!(action is Acceleration))
+                if (action is not Acceleration)
                     encoutneredNonAcc = true;
                 if (encoutneredNonAcc && action is Acceleration)
                     return false;
@@ -76,13 +76,15 @@ namespace SochaClient.Backend
 
     // -- Action class structure
 
-    public abstract class Action
+    public abstract class Action : ICloneable
     {
         abstract public bool IsLegalOn(State s);
 
-        abstract public void PerformOn(State s);
+        abstract public void PerformOn(State s, Ship curShip = null, Ship otherShip = null);
 
         abstract public string ToXML();
+
+        public object Clone() => MemberwiseClone();
     }
 
     public class Advance : Action
@@ -105,13 +107,18 @@ namespace SochaClient.Backend
                     return false;
             }
 
+            // TODO: Check for other player pos
+
             return true;
         }
 
-        public override void PerformOn(State s)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
         {
-            s.CurrentPlayer.Ship.Pos += CubeCoords.DirToOffset(s.CurrentPlayer.Ship.Dir) * distance;
-            s.CurrentPlayer.Ship.MovementPoints -= distance;
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
+            curShip.Pos += CubeCoords.DirToOffset(curShip.Dir) * distance;
+            curShip.MovementPoints -= distance;
             // TODO: Check for passengers and Strömung
         }
 
@@ -136,11 +143,16 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
         {
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
             var coalCost = Math.Max(0, Math.Abs(acc) - 1);
-            s.CurrentPlayer.Ship.Coal -= coalCost;
-            s.CurrentPlayer.Ship.Speed += acc;
+            curShip.Coal -= coalCost;
+            curShip.Speed += acc;
+            curShip.MovementPoints = curShip.Speed;
+            curShip.FreeTurns = 1;
         }
 
         public override string ToXML() => $"<acceleration acc=\"{acc}\" />\n";
@@ -163,19 +175,22 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
         {
-            s.CurrentPlayer.Ship.Dir = direction;
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
+            curShip.Dir = direction;
 
             var cost = s.CurrentPlayer.Ship.Dir.Difference(direction);
-            if (s.CurrentPlayer.Ship.FreeTurns > 0)
+            if (curShip.FreeTurns > 0)
             {
                 var freeTurnsUsed = Math.Min(cost, s.CurrentPlayer.Ship.FreeTurns.Value);
                 cost -= freeTurnsUsed;
-                s.CurrentPlayer.Ship.FreeTurns -= freeTurnsUsed;
+                curShip.FreeTurns -= freeTurnsUsed;
             }
             if (cost > 0)
-                s.CurrentPlayer.Ship.Coal -= cost;
+                curShip.Coal -= cost;
         }
 
         public override string ToXML() => $"<turn direction=\"{direction}\" />\n";
@@ -196,9 +211,12 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
         {
-            s.GetOtherPlayer(s.CurrentPlayer).Ship.Pos += CubeCoords.DirToOffset(direction);
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
+            otherShip.Pos += CubeCoords.DirToOffset(direction);
             // TODO: probably something else too
         }
 
