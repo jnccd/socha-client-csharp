@@ -31,10 +31,10 @@ namespace SochaClient.Backend
         /// <summary>
         /// Returns a new State which represents the board after doing the given Move
         /// </summary>
-        public State Perform(Move m)
+        public State Perform(Move m, bool cloneState = true)
         {
             if (m.IsLegalOn(this))
-                return PerformWithoutChecks(m);
+                return PerformWithoutChecks(m, cloneState);
             else
                 throw new IllegalMoveException();
         }
@@ -44,9 +44,9 @@ namespace SochaClient.Backend
         /// Feeding illegal moves into this method may result in unexpected behavior.
         /// However, it should run faster that Perform()</para>
         /// </summary>
-        public State PerformWithoutChecks(Move m)
+        public State PerformWithoutChecks(Move m, bool cloneState = true)
         {
-            State re = (State)Clone();
+            State re = cloneState ? (State)Clone() : this;
 
             foreach (var action in m.actions)
                 action.PerformOn(this);
