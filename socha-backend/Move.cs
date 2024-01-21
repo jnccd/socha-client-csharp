@@ -12,7 +12,7 @@ namespace SochaClient.Backend
     /// </summary>
     public class Move : ICloneable
     {
-        readonly List<Action> actions;
+        readonly public List<Action> actions;
 
         public Move(List<Action> actions)
         {
@@ -43,6 +43,8 @@ namespace SochaClient.Backend
 
             return true;
         }
+
+        public void PerformOn(State s) => s.Perform(this);
 
         /// <summary>
         /// Converts this Move to XML

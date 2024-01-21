@@ -48,20 +48,11 @@ namespace SochaClient.Backend
         {
             State re = (State)Clone();
 
-            var startField = Board.GetField(m.From);
-            var targetField = Board.GetField(m.To);
-
-            CurrentPlayer.Fishes += startField.fishes;
-            startField.fishes = 0;
-
-            // Update board fields
-            targetField.Piece = startField.Piece;
-            startField.Piece = null;
+            foreach (var action in m.actions)
+                action.PerformOn(this);
 
             // Update current player
-            var otherPlayer = GetOtherPlayer(CurrentPlayer);
-            if (CanMove(otherPlayer)) 
-                CurrentPlayer = otherPlayer;
+            CurrentPlayer = GetOtherPlayer(CurrentPlayer);
 
             re.Turn++;
 
