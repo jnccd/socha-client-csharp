@@ -8,30 +8,26 @@ namespace SochaClient.Backend
     public class Field : ICloneable
     {
         public FieldType FType;
+        public bool IsMidstream;
         public Board Parent { get; private set; }
         public CubeCoords Coords { get; private set; }
-
-        public Field(FieldType fType, CubeCoords coords, Board parent)
+       
+        public Field(FieldType fType, bool isMidstream, CubeCoords coords, Board parent)
         {
             FType = fType;
+            IsMidstream = isMidstream;
             Coords = coords;
             Parent = parent;
         }
 
-        public Color ToColor()
-        {
-            switch (FType)
+        public Color ToColor() =>
+            FType switch
             {
-                case FieldType.island:
-                    return Color.FromArgb(0, 255, 0);
-                case FieldType.water:
-                    return Color.FromArgb(0, 0, 255);
-                case FieldType.passenger:
-                    return Color.FromArgb(255, 0, 0);
-                default:
-                    throw new ArgumentException("wat");
+                FieldType.island => Color.FromArgb(0, 255, 0),
+                FieldType.water => Color.FromArgb(0, 0, 255),
+                FieldType.passenger => Color.FromArgb(255, 0, 0),
+                _ => throw new ArgumentException("wat"),
             };
-        }
 
         public object Clone()
         {
