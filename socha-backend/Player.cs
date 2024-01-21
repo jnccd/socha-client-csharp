@@ -15,10 +15,15 @@ namespace SochaClient.Backend
             Ship = ship;
         }
 
-        public object Clone() => MemberwiseClone();
+        public object Clone()
+        {
+            Player re = (Player)MemberwiseClone();
+            re.Ship = (Ship)Ship.Clone();
+            return re;
+        }
     }
 
-    public class Ship
+    public class Ship : ICloneable
     {
         public int Coal;
         public Direction Dir;
@@ -38,6 +43,13 @@ namespace SochaClient.Backend
             Points = points;
             Speed = speed;
             Pos = pos;
+        }
+
+        public object Clone()
+        {
+            Ship re = (Ship)MemberwiseClone();
+            re.Pos = (CubeCoords)Pos.Clone();
+            return re;
         }
     }
 }
