@@ -103,6 +103,7 @@ namespace SochaClient.Backend
         {
             s.CurrentPlayer.Ship.Pos += CubeCoords.DirToOffset(s.CurrentPlayer.Ship.Dir) * distance;
             s.CurrentPlayer.Ship.MovementPoints -= distance;
+            // TODO: Check for passengers and Strömung
         }
 
         public override string ToXML() => $"<advance distance=\"{distance}\" />\n";
