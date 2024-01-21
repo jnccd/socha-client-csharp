@@ -7,12 +7,12 @@
     }
     public enum Direction
     {
-        UP_LEFT,
-        UP_RIGHT,
         RIGHT,
         DOWN_RIGHT,
         DOWN_LEFT,
         LEFT,
+        UP_LEFT,
+        UP_RIGHT,
     }
     public enum FieldType
     {

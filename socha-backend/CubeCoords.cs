@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SochaClient.Backend.Move;
 
 namespace SochaClient.Backend
 {
@@ -20,8 +21,11 @@ namespace SochaClient.Backend
                 throw new ArgumentException("Incorrect s");
         }
 
-        public CubeCoords Add(CubeCoords x) => new CubeCoords(this.q + x.q, this.r + x.r);
-        public CubeCoords MultScalar(float scalar) => new CubeCoords((int)(this.q * scalar), (int)(this.r * scalar));
+        public static CubeCoords operator +(CubeCoords a, CubeCoords b)
+            => new(a.q + b.q, a.r + b.r);
+        public static CubeCoords operator *(CubeCoords a, float scalar)
+            => new((int)(a.q * scalar), (int)(a.r * scalar));
+
         public CubeCoords Rotate(bool clockwise) => clockwise ? new CubeCoords(-r, -s, -q) : new CubeCoords(-s, -q, -r);
         public CubeCoords RotateByDir(Direction dir)
         {
@@ -43,7 +47,7 @@ namespace SochaClient.Backend
                     throw new ArgumentException("wat");
             }
         }
-        public CubeCoords dirToOffset(Direction dir)
+        public static CubeCoords DirToOffset(Direction dir)
         {
             switch (dir)
             {
