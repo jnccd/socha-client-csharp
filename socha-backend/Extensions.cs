@@ -12,6 +12,13 @@ namespace SochaClient.Backend
         public static int Difference(this Direction d, Direction e) => Math.Min(Math.Abs((int)d - 6) - (int)e,
                                                                        Math.Min(Math.Abs((int)d)     - (int)e,
                                                                                 Math.Abs((int)d + 6) - (int)e));
+        public static List<Action> Clone(this List<Action> actions)
+        {
+            var re = new List<Action>();
+            foreach (var a in actions)
+                re.Add((Action)a.Clone());
+            return re;
+        }
 
         public static string Combine(this IEnumerable<string> s, string combinator = "")
         {

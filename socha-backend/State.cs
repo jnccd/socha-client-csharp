@@ -60,34 +60,86 @@ namespace SochaClient.Backend
         }
 
         /// <summary>
-        /// Gets all legal Moves for this state
+        /// Gets all relevant legal Moves for this State
         /// </summary>
-        public Move[] GetAllPossibleMoves()
+        public List<Move> GetPossibleMoves() => GeneratePossibleMoves();
+        private List<Move> GeneratePossibleMoves(List<Action> pastActions = null, Ship curShip = null, Ship otherShip = null)
         {
-            var re = new List<Move>();
+            curShip ??= (Ship)CurrentPlayer.Ship.Clone();
+            otherShip ??= (Ship)this.GetOtherPlayer(CurrentPlayer).Ship.Clone();
 
-            if (Turn < 8)
+            List <Move> re = new();
+
+            if (pastActions == null)
             {
-                // Initial moves
-                for (int x = 0; x < Board.Width; x++)
-                    for (int y = 0; y < Board.Height; y++)
-                        if (Board.GetField(x, y).fishes == 1)
-                            re.Add(new Move(null, new(x, y)));
+                // Add accel action
+                for (int i = 1; i < 6+1; i++)
+                {
+                    int acc = i - curShip.Speed;
+                    var newAction = new Acceleration(acc);
+                    
+                    if (newAction.IsLegalOn(this))
+                    {
+                        var newCurShip = (Ship)curShip.Clone();
+                        var newOtherShip = (Ship)otherShip.Clone();
+                        newAction.PerformOn(this, newCurShip, newOtherShip);
 
-                Debug.WriteLine($"Found {re} possible place moves");
+                        // You're on a path in the woods, and at the end of that path is a cabin...
+                        re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                    }
+                }
             }
             else
             {
-                // Normal moves
-                for (int x = 0; x < Board.Width; x++)
-                    for (int y = 0; y < Board.Height; y++)
-                        if (Board.GetField(x, y).Piece?.Team == CurrentPlayer.Team)
-                            foreach (Point p in Board.GetField(x, y).PossibleCoordsToMoveTo(this))
-                                re.Add(new Move(new Point(x, y), p));
+                // Check for illegal state early
+                if (curShip.Coal < 0 || curShip.MovementPoints < 0 || Board.GetField(curShip.Pos) == null)
+                    return new List<Move>();
+
+                // Return early if done
+                if (curShip.MovementPoints == 0)
+                    return new List<Move> { new Move(pastActions) };
+
+                
+                if (curShip.MovementPoints > 0 && pastActions.Last() is not Advance)
+                {
+                    // Add advance action
+                    for (int i = 1; i < curShip.MovementPoints + 1; i++)
+                    {
+                        var newAction = new Advance(i);
+
+                        if (newAction.IsLegalOn(this))
+                        {
+                            var newCurShip = (Ship)curShip.Clone();
+                            var newOtherShip = (Ship)otherShip.Clone();
+                            newAction.PerformOn(this, newCurShip, newOtherShip);
+
+                            // You're on a path in the woods, and at the end of that path is a cabin...
+                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                        }
+                    }
+                }
+
+                if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && pastActions.Last() is not Backend.Turn)
+                {
+                    // Add turn action
+                    for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
+                    {
+                        var newAction = new Backend.Turn((Direction)i);
+
+                        if (newAction.IsLegalOn(this))
+                        {
+                            var newCurShip = (Ship)curShip.Clone();
+                            var newOtherShip = (Ship)otherShip.Clone();
+                            newAction.PerformOn(this, newCurShip, newOtherShip);
+
+                            // You're on a path in the woods, and at the end of that path is a cabin...
+                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                        }
+                    }
+                }
             }
 
-            var ree = re.Where(x => x.IsLegalOn(this)).ToArray();
-            return ree;
+            return re;
         }
 
         /// <summary>
