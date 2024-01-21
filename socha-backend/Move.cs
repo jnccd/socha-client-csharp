@@ -40,6 +40,15 @@ namespace SochaClient.Backend
             // Check final state
             if (sc.CurrentPlayer.Ship.Coal < 0 || sc.CurrentPlayer.Ship.MovementPoints != 0)
                 return false;
+            // Check for correct Acceleration placement
+            bool encoutneredNonAcc = false;
+            foreach (var action in actions)
+            {
+                if (!(action is Acceleration))
+                    encoutneredNonAcc = true;
+                if (encoutneredNonAcc && action is Acceleration)
+                    return false;
+            }
 
             return true;
         }
