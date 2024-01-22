@@ -26,51 +26,31 @@ namespace SochaClient.Backend
         public static CubeCoords operator *(CubeCoords a, float scalar)
             => new((int)(a.q * scalar), (int)(a.r * scalar));
 
-        public CubeCoords Rotate(bool clockwise) => clockwise ? new CubeCoords(-r, -s, -q) : new CubeCoords(-s, -q, -r);
-        public CubeCoords RotateByDir(Direction dir)
-        {
-            switch (dir)
+        public CubeCoords Rotate(bool clockwise) => 
+            clockwise ? new CubeCoords(-r, -s, -q) : new CubeCoords(-s, -q, -r);
+        public CubeCoords RotateByDir(Direction dir) =>
+            dir switch
             {
-                case Direction.RIGHT:
-                    return new CubeCoords(q, r, s);
-                case Direction.DOWN_RIGHT:
-                    return this.Rotate(true);
-                case Direction.DOWN_LEFT:
-                    return this.Rotate(true).Rotate(true);
-                case Direction.LEFT:
-                    return this.Rotate(true).Rotate(true).Rotate(true);
-                case Direction.UP_LEFT:
-                    return this.Rotate(false).Rotate(false);
-                case Direction.UP_RIGHT:
-                    return this.Rotate(false);
-                default: 
-                    throw new ArgumentException("wat");
-            }
-        }
-        public static CubeCoords DirToOffset(Direction dir)
-        {
-            switch (dir)
+                Direction.RIGHT => new CubeCoords(q, r, s),
+                Direction.DOWN_RIGHT => this.Rotate(true),
+                Direction.DOWN_LEFT => this.Rotate(true).Rotate(true),
+                Direction.LEFT => this.Rotate(true).Rotate(true).Rotate(true),
+                Direction.UP_LEFT => this.Rotate(false).Rotate(false),
+                Direction.UP_RIGHT => this.Rotate(false),
+                _ => throw new ArgumentException("wat"),
+            };
+        public static CubeCoords DirToOffset(Direction dir) =>
+            dir switch
             {
-                case Direction.RIGHT:
-                    return new CubeCoords(1, 0, -1);
-                case Direction.DOWN_RIGHT:
-                    return new CubeCoords(0, 1, -1);
-                case Direction.DOWN_LEFT:
-                    return new CubeCoords(-1, 1, 0);
-                case Direction.LEFT:
-                    return new CubeCoords(-1, 0, 1);
-                case Direction.UP_LEFT:
-                    return new CubeCoords(0, -1, 1);
-                case Direction.UP_RIGHT:
-                    return new CubeCoords(1, -1, 0);
-                default:
-                    throw new ArgumentException("wat");
-            }
-        }
+                Direction.RIGHT => new CubeCoords(1, 0, -1),
+                Direction.DOWN_RIGHT => new CubeCoords(0, 1, -1),
+                Direction.DOWN_LEFT => new CubeCoords(-1, 1, 0),
+                Direction.LEFT => new CubeCoords(-1, 0, 1),
+                Direction.UP_LEFT => new CubeCoords(0, -1, 1),
+                Direction.UP_RIGHT => new CubeCoords(1, -1, 0),
+                _ => throw new ArgumentException("wat"),
+            };
 
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
+        public object Clone() => MemberwiseClone();
     }
 }
