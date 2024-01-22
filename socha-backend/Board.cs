@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SochaClient.Backend
@@ -11,6 +12,7 @@ namespace SochaClient.Backend
     {
         public const int Width = 150, Height = 150, HalfSize = 75;
         private readonly Field[,] Fields = new Field[Width, Height];
+        private int _minQ = 0, _minR = 0, _maxQ = 0, _maxR = 0;
 
         /// <summary>
         /// Creates an empty board
@@ -27,13 +29,46 @@ namespace SochaClient.Backend
         /// </summary>
         public Field GetField(CubeCoords coords) => GetField(coords.q, coords.r);
         public Field GetField(int q, int r) => Fields[q + HalfSize, r + HalfSize];
-        public void SetField(CubeCoords coords, Field f) => Fields[coords.q + HalfSize, coords.r + HalfSize] = f;
+        public void SetField(CubeCoords coords, Field f)
+        {
+            if (f != null)
+            {
+                if (coords.q < _minQ)
+                    _minQ = coords.q;
+                if (coords.q > _maxQ)
+                    _maxQ = coords.q;
+                if (coords.r < _minR)
+                    _minR = coords.r;
+                if (coords.r > _maxR)
+                    _maxR = coords.r;
+            }
+            Fields[coords.q + HalfSize, coords.r + HalfSize] = f;
+        }
 
         /// <summary>
         /// Checks if the coord (X, Y) is in bounds
         /// </summary>
         public static bool IsInBounds(CubeCoords coords) => IsInBounds(coords.q, coords.r);
         public static bool IsInBounds(int q, int r) => q > -HalfSize && q < HalfSize && r > -HalfSize && r < HalfSize;
+
+        /// <summary>
+        /// Prints the board on the console
+        /// </summary>
+        public void Print(bool stdout = true)
+        {
+            Action<object> write;
+            if (stdout)
+                write = (o) => Console.Write(o);
+            else
+                write = (o) => Debug.Write(o);
+            
+            for (int r = _minR; r < _maxR; r++)
+            {
+                for (int q = _minQ; q < _maxQ; q++)
+                    write(GetField(q, r));
+                write("\n");
+            }
+        }
 
         /// <summary>
         /// Creates a deep copy of this object
