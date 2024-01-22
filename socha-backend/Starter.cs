@@ -193,10 +193,10 @@ Usage: start.sh [options]
                                 foreach (Segment s in inState.Board.Segment)
                                 {
                                     var centerCoords = new CubeCoords(s.Center.Q, s.Center.R, s.Center.S);
-                                    for (int x = 0; x < s.Fieldarray.ChildNodes.Count; x++)
-                                        for (int y = 0; y < s.Fieldarray.ChildNodes[x].ChildNodes.Count; y++)
+                                    for (int x = 0; x < s.Fieldarray.Count; x++)
+                                        for (int y = 0; y < s.Fieldarray[x].ChildNodes.Count; y++)
                                         {
-                                            var curNode = s.Fieldarray.ChildNodes[x].ChildNodes[y];
+                                            var curNode = s.Fieldarray[x].ChildNodes[y];
                                             if (!Enum.TryParse(curNode.Name, out FieldType ft))
                                                 throw new Exception("Cant parse this field type " + curNode.Name);
                                             var fieldCoords = centerCoords + Cache.segOffsets[y][x].RotateByDir(s.Direction);
@@ -204,34 +204,29 @@ Usage: start.sh [options]
                                         }
                                 }
 
-                                //// Pieces
-                                //gameState.Board = new Board();
-                                //for (int y = 0; y < inState.Board.List.Count; y++)
-                                //    for (int x = 0; x < inState.Board.List[y].Field.Count; x++)
-                                //    {
-                                //        var inField = inState.Board.List[y].Field[x];
+                                // Ships
+                                for (int i = 0; i < inState.Ship.Count; i++)
+                                {
+                                    var parsedShip = new Ship(
+                                        inState.Ship[i].Coal, 
+                                        inState.Ship[i].Direction, 
+                                        inState.Ship[i].Passengers, 
+                                        inState.Ship[i].Points, 
+                                        inState.Ship[i].Speed, 
+                                        new CubeCoords(inState.Ship[i].Position.Q, inState.Ship[i].Position.R, inState.Ship[i].Position.S)
+                                        );
 
-                                //        if (inField.ToLower() == "one")
-                                //            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.ONE);
-                                //        else if (inField.ToLower() == "two")
-                                //            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.TWO);
-                                //        else
-                                //            gameState.Board.GetField(x, y).fishes = int.Parse(inField);
-                                //    }
+                                    if (i == 0)
+                                        gameState.PlayerOne.Ship = parsedShip;
+                                    else if (i == 1)
+                                        gameState.PlayerTwo.Ship = parsedShip;
+                                    else
+                                        throw new Exception("Theres too many of them, what are we going to do?");
+                                }
 
-                                //// Fishpoints
-                                //if (inState.Fishes != null)
-                                //{
-                                //    if (inState.Fishes.Int.Count > 0)
-                                //        gameState.PlayerOne.Fishes = inState.Fishes.Int[0];
-                                //    if (inState.Fishes.Int.Count > 1)
-                                //        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1];
-                                //}
+                                gameState.Board.Print(false, gameState.PlayerOne, gameState.PlayerTwo);
 
                                 UpdateConsoleTitle();
-
-                                if (DrawBoard)
-                                    DrawBoardPng();
                             }
                             else if (r.Data.Class == "welcomeMessage")
                                 playerLogic.MyTeam = r.Data.Color;
