@@ -180,10 +180,10 @@ namespace SochaClient.Backend
 
             curShip.Dir = direction;
 
-            var cost = s.CurrentPlayer.Ship.Dir.Difference(direction);
+            var cost = curShip.Dir.Difference(direction);
             if (curShip.FreeTurns > 0)
             {
-                var freeTurnsUsed = Math.Min(cost, s.CurrentPlayer.Ship.FreeTurns.Value);
+                var freeTurnsUsed = Math.Min(cost, curShip.FreeTurns.Value);
                 cost -= freeTurnsUsed;
                 curShip.FreeTurns -= freeTurnsUsed;
             }
