@@ -28,7 +28,7 @@ namespace SochaClient.Backend.XML
         public Center Center { get; set; }
 
         [XmlAnyElement("field-array")]
-        public XmlElement Fieldarray { get; set; }
+        public List<XmlElement> Fieldarray { get; set; }
 
         [XmlAttribute(AttributeName = "direction")]
         public Direction Direction { get; set; }
@@ -70,7 +70,7 @@ namespace SochaClient.Backend.XML
         public string Team { get; set; }
 
         [XmlAttribute(AttributeName = "direction")]
-        public string Direction { get; set; }
+        public Direction Direction { get; set; }
 
         [XmlAttribute(AttributeName = "speed")]
         public int Speed { get; set; }
