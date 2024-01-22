@@ -19,12 +19,12 @@ namespace SochaClient.Backend
             Parent = parent;
         }
 
-        public char ToChar() =>
+        public override string ToString() =>
             FType switch
             {
-                FieldType.island => 'i',
-                FieldType.water => 'w',
-                FieldType.passenger => 'p',
+                FieldType.island => "i",
+                FieldType.water => IsMidstream ? "m" : "w",
+                FieldType.passenger => "p",
                 _ => throw new ArgumentException("wat"),
             };
 
