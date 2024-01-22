@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SochaClient.Backend
 {
