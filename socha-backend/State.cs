@@ -110,10 +110,12 @@ namespace SochaClient.Backend
                         {
                             var newCurShip = (Ship)curShip.Clone();
                             var newOtherShip = (Ship)otherShip.Clone();
+                            var newActions = pastActions.Clone();
+                            newActions.Add(newAction);
                             newAction.PerformOn(this, newCurShip, newOtherShip);
 
                             // You're on a path in the woods, and at the end of that path is a cabin...
-                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, newCurShip, newOtherShip));
+                            re.AddRange(GeneratePossibleMoves(newActions, newCurShip, newOtherShip));
                         }
                     }
                 }
@@ -129,10 +131,12 @@ namespace SochaClient.Backend
                         {
                             var newCurShip = (Ship)curShip.Clone();
                             var newOtherShip = (Ship)otherShip.Clone();
+                            var newActions = pastActions.Clone();
+                            newActions.Add(newAction);
                             newAction.PerformOn(this, newCurShip, newOtherShip);
 
                             // You're on a path in the woods, and at the end of that path is a cabin...
-                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, newCurShip, newOtherShip));
+                            re.AddRange(GeneratePossibleMoves(newActions, newCurShip, newOtherShip));
                         }
                     }
                 }
