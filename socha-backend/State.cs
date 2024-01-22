@@ -103,7 +103,7 @@ namespace SochaClient.Backend
 
             List<Move> re = new();
 
-            if (curShip.MovementPoints > 0 && pastActions.Last() is not Advance)
+            if (curShip.MovementPoints > 0 && (!pastActions.Any() || pastActions.Last() is not Advance))
             {
                 // Add advance action
                 for (int i = 1; i < curShip.MovementPoints + 1; i++)
@@ -124,7 +124,7 @@ namespace SochaClient.Backend
                 }
             }
 
-            if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && pastActions.Last() is not Backend.Turn)
+            if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && (!pastActions.Any() || pastActions.Last() is not Backend.Turn))
             {
                 // Add turn action
                 for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
