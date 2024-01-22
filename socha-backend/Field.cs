@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace SochaClient.Backend
@@ -19,15 +18,6 @@ namespace SochaClient.Backend
             Coords = coords;
             Parent = parent;
         }
-
-        public Color ToColor() =>
-            FType switch
-            {
-                FieldType.island => Color.FromArgb(0, 255, 0),
-                FieldType.water => Color.FromArgb(0, 0, 255),
-                FieldType.passenger => Color.FromArgb(255, 0, 0),
-                _ => throw new ArgumentException("wat"),
-            };
 
         public char ToChar() =>
             FType switch

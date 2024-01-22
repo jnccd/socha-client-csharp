@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -246,19 +245,6 @@ Usage: start.sh [options]
         {
             try { Console.Title = $"{playerLogic.MyTeam} in ONE vs TWO"; }
             catch { }
-        }
-        static void DrawBoardPng()
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                Bitmap b = new(Board.Width, Board.Height);
-
-                for (int x = 0; x < Board.Width; x++)
-                    for (int y = 0; y < Board.Height; y++)
-                        b.SetPixel(x, y, gameState.Board.GetField(x, y).ToColor());
-
-                b.Save("board.png");
-            }
         }
 
         static void Send(NetworkStream stream, string message)
