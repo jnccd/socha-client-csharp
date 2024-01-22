@@ -3,12 +3,13 @@ using System.Drawing;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using SochaClient.Backend.XML;
 
 namespace SochaClient.Backend
 {
-    public class Starter
+    public static class Starter
     {
         // Start Arguments
         static string host = "127.0.0.1";
@@ -156,7 +157,7 @@ Usage: start.sh [options]
 
                 // Serialize preprocessed text
                 var serializer = new XmlSerializer(typeof(Received));
-                StringReader stringReader = new(recieved);
+                var stringReader = new StringReader(recieved);
                 var recievedObjs = (Received)serializer.Deserialize(stringReader);
 
                 // Handle XML object
@@ -187,30 +188,46 @@ Usage: start.sh [options]
                                 // Attr
                                 gameState.Turn = inState.Turn;
                                 gameState.StartTeam = inState.StartTeam;
+                                gameState.CurrentPlayer = gameState.GetPlayer(inState.CurrentTeam);
 
-                                // Pieces
-                                gameState.Board = new Board();
-                                for (int y = 0; y < inState.Board.List.Count; y++)
-                                    for (int x = 0; x < inState.Board.List[y].Field.Count; x++)
-                                    {
-                                        var inField = inState.Board.List[y].Field[x];
-
-                                        if (inField.ToLower() == "one")
-                                            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.ONE);
-                                        else if (inField.ToLower() == "two")
-                                            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.TWO);
-                                        else
-                                            gameState.Board.GetField(x, y).fishes = int.Parse(inField);
-                                    }
-
-                                // Fishpoints
-                                if (inState.Fishes != null)
+                                // Segments
+                                foreach (Segment s in inState.Board.Segment)
                                 {
-                                    if (inState.Fishes.Int.Count > 0)
-                                        gameState.PlayerOne.Fishes = inState.Fishes.Int[0];
-                                    if (inState.Fishes.Int.Count > 1)
-                                        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1];
+                                    var centerCoords = new CubeCoords(s.Center.Q, s.Center.R, s.Center.S);
+                                    for (int x = 0; x < s.Fieldarray.ChildNodes.Count; x++)
+                                        for (int y = 0; y < s.Fieldarray.ChildNodes[x].ChildNodes.Count; y++)
+                                        {
+                                            var curNode = s.Fieldarray.ChildNodes[x].ChildNodes[y];
+                                            if (!Enum.TryParse(curNode.Name, out FieldType ft))
+                                                throw new Exception("Cant parse this field type " + curNode.Name);
+                                            var fieldCoords = centerCoords + Cache.segOffsets[y][x].RotateByDir(s.Direction);
+                                            gameState.Board.SetField(fieldCoords, new Field(ft, y == 2, fieldCoords, gameState.Board));
+                                        }
                                 }
+
+                                //// Pieces
+                                //gameState.Board = new Board();
+                                //for (int y = 0; y < inState.Board.List.Count; y++)
+                                //    for (int x = 0; x < inState.Board.List[y].Field.Count; x++)
+                                //    {
+                                //        var inField = inState.Board.List[y].Field[x];
+
+                                //        if (inField.ToLower() == "one")
+                                //            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.ONE);
+                                //        else if (inField.ToLower() == "two")
+                                //            gameState.Board.GetField(x, y).Piece = new Piece(PlayerTeam.TWO);
+                                //        else
+                                //            gameState.Board.GetField(x, y).fishes = int.Parse(inField);
+                                //    }
+
+                                //// Fishpoints
+                                //if (inState.Fishes != null)
+                                //{
+                                //    if (inState.Fishes.Int.Count > 0)
+                                //        gameState.PlayerOne.Fishes = inState.Fishes.Int[0];
+                                //    if (inState.Fishes.Int.Count > 1)
+                                //        gameState.PlayerTwo.Fishes = inState.Fishes.Int[1];
+                                //}
 
                                 UpdateConsoleTitle();
 

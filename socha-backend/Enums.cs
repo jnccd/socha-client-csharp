@@ -1,4 +1,6 @@
-﻿namespace SochaClient.Backend
+﻿using System.Xml.Serialization;
+
+namespace SochaClient.Backend
 {
     public enum PlayerTeam 
     {
@@ -14,6 +16,7 @@
         UP_LEFT,
         UP_RIGHT,
     }
+    [XmlType(IncludeInSchema = false)]
     public enum FieldType
     {
         water,

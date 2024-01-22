@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Serialization;
 
 // Generated using: https://json2csharp.com/code-converters/xml-to-csharp
@@ -19,17 +20,6 @@ namespace SochaClient.Backend.XML
         public int S { get; set; }
     }
 
-    [XmlRoot(ElementName = "field-array")]
-    public class Fieldarray
-    {
-
-        [XmlElement(ElementName = "water")]
-        public List<object> Water { get; set; }
-
-        [XmlElement(ElementName = "island")]
-        public List<object> Island { get; set; }
-    }
-
     [XmlRoot(ElementName = "segment")]
     public class Segment
     {
@@ -37,11 +27,11 @@ namespace SochaClient.Backend.XML
         [XmlElement(ElementName = "center")]
         public Center Center { get; set; }
 
-        [XmlElement(ElementName = "fieldarray")]
-        public List<Fieldarray> Fieldarray { get; set; }
+        [XmlAnyElement("field-array")]
+        public XmlElement Fieldarray { get; set; }
 
         [XmlAttribute(AttributeName = "direction")]
-        public string Direction { get; set; }
+        public Direction Direction { get; set; }
     }
 
     [XmlRoot(ElementName = "board")]
@@ -52,7 +42,7 @@ namespace SochaClient.Backend.XML
         public List<Segment> Segment { get; set; }
 
         [XmlAttribute(AttributeName = "nextDirection")]
-        public string NextDirection { get; set; }
+        public Direction NextDirection { get; set; }
     }
 
     [XmlRoot(ElementName = "position")]
@@ -127,6 +117,9 @@ namespace SochaClient.Backend.XML
 
         [XmlElement(ElementName = "state")]
         public State State { get; set; }
+
+        [XmlAttribute(AttributeName = "color")]
+        public PlayerTeam Color { get; set; }
 
         [XmlAttribute(AttributeName = "class")]
         public string Class { get; set; }
