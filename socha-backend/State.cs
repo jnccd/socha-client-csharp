@@ -84,7 +84,7 @@ namespace SochaClient.Backend
                         newAction.PerformOn(this, newCurShip, newOtherShip);
 
                         // You're on a path in the woods, and at the end of that path is a cabin...
-                        re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                        re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, newCurShip, newOtherShip));
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace SochaClient.Backend
                             newAction.PerformOn(this, newCurShip, newOtherShip);
 
                             // You're on a path in the woods, and at the end of that path is a cabin...
-                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, newCurShip, newOtherShip));
                         }
                     }
                 }
@@ -132,7 +132,7 @@ namespace SochaClient.Backend
                             newAction.PerformOn(this, newCurShip, newOtherShip);
 
                             // You're on a path in the woods, and at the end of that path is a cabin...
-                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, curShip, otherShip));
+                            re.AddRange(GeneratePossibleMoves(new List<Action> { newAction }, newCurShip, newOtherShip));
                         }
                     }
                 }
