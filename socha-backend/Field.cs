@@ -29,6 +29,15 @@ namespace SochaClient.Backend
                 _ => throw new ArgumentException("wat"),
             };
 
+        public char ToChar() =>
+            FType switch
+            {
+                FieldType.island => 'i',
+                FieldType.water => 'w',
+                FieldType.passenger => 'p',
+                _ => throw new ArgumentException("wat"),
+            };
+
         public object Clone()
         {
             Field f = (Field)MemberwiseClone();
