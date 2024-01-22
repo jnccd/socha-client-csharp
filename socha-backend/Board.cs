@@ -54,7 +54,7 @@ namespace SochaClient.Backend
         /// <summary>
         /// Prints the board on the console
         /// </summary>
-        public void Print(bool stdout = true)
+        public void Print(bool stdout = true, Player PlayerOne = null, Player PlayerTwo = null)
         {
             Action<object> write;
             if (stdout)
@@ -62,10 +62,23 @@ namespace SochaClient.Backend
             else
                 write = (o) => Debug.Write(o);
             
-            for (int r = _minR; r < _maxR; r++)
+            for (int r = _minR; r < _maxR+1; r++)
             {
-                for (int q = _minQ; q < _maxQ; q++)
-                    write(GetField(q, r));
+                var normR = r - _minR;
+                write(Enumerable.Repeat(" ", normR).Combine());
+                for (int q = _minQ; q < _maxQ+1; q++)
+                {
+                    var f = GetField(q, r);
+
+                    if (PlayerOne?.Ship.Pos.q == q && PlayerOne?.Ship.Pos.r == r)
+                        write("1|");
+                    else if(PlayerTwo?.Ship.Pos.q == q && PlayerTwo?.Ship.Pos.r == r)
+                        write("2|");
+                    else if (f == null)
+                        write("  ");
+                    else
+                        write($"{f}|");
+                }
                 write("\n");
             }
         }
