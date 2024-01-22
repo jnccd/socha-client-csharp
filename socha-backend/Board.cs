@@ -27,6 +27,7 @@ namespace SochaClient.Backend
         /// </summary>
         public Field GetField(CubeCoords coords) => GetField(coords.q, coords.r);
         public Field GetField(int q, int r) => Fields[q + HalfSize, r + HalfSize];
+        public void SetField(CubeCoords coords, Field f) => Fields[coords.q + HalfSize, coords.r + HalfSize] = f;
 
         /// <summary>
         /// Checks if the coord (X, Y) is in bounds
