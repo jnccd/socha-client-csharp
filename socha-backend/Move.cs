@@ -59,11 +59,11 @@ namespace SochaClient.Backend
         /// <para>You usually wont need this Method if you are programming your Client Logic</para> 
         /// </summary>
         public string ToXML() =>    $"<room roomId=\"{Starter.RoomID}\">\n" +
-                                        $"<move>\n" +
+                                        $"<data class=\"move\">\n" +
                                             $"<actions>\n" +
                                                 actions.Select(action => action.ToXML()).Combine() +
                                             $"</actions>\n" +
-                                        $"</move>\n" +
+                                        $"</data>\n" +
                                     $"</room>";
 
         /// <summary>
