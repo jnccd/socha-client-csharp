@@ -99,7 +99,7 @@ namespace SochaClient.Backend
 
             // Return early if done
             if (curShip.MovementPoints == 0)
-                return new List<Move> { new Move(pastActions) };
+                return new List<Move> { new(pastActions) };
 
             List<Move> re = new();
 
@@ -110,7 +110,7 @@ namespace SochaClient.Backend
                 {
                     var newAction = new Advance(i);
 
-                    if (newAction.IsLegalOn(this))
+                    if (newAction.IsLegalOn(this, curShip, otherShip))
                     {
                         var newCurShip = (Ship)curShip.Clone();
                         var newOtherShip = (Ship)otherShip.Clone();
@@ -131,7 +131,7 @@ namespace SochaClient.Backend
                 {
                     var newAction = new Backend.Turn((Direction)i);
 
-                    if (newAction.IsLegalOn(this))
+                    if (newAction.IsLegalOn(this, curShip, otherShip))
                     {
                         var newCurShip = (Ship)curShip.Clone();
                         var newOtherShip = (Ship)otherShip.Clone();
