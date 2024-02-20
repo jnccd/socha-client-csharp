@@ -76,7 +76,7 @@ namespace SochaClient.Backend
 
     public abstract class Action : ICloneable
     {
-        abstract public bool IsLegalOn(State s);
+        abstract public bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null);
 
         abstract public void PerformOn(State s, Ship curShip = null, Ship otherShip = null);
 
@@ -94,12 +94,15 @@ namespace SochaClient.Backend
             this.distance = distance;
         }
 
-        public override bool IsLegalOn(State s)
+        public override bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null)
         {
-            var pos = (CubeCoords)s.CurrentPlayer.Ship.Pos.Clone();
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
+            var pos = (CubeCoords)curShip.Pos.Clone();
             for (int i = 0; i < distance; i++)
             {
-                pos += CubeCoords.DirToOffset(s.CurrentPlayer.Ship.Dir);
+                pos += CubeCoords.DirToOffset(curShip.Dir);
 
                 if (s.Board.GetField(pos) == null || s.Board.GetField(pos).FType != FieldType.water)
                     return false;
@@ -132,10 +135,13 @@ namespace SochaClient.Backend
             this.acc = acc;
         }
 
-        public override bool IsLegalOn(State s)
+        public override bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null)
         {
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
             var coalCost = Math.Max(0, Math.Abs(acc) - 1);
-            if (coalCost > s.CurrentPlayer.Ship.Coal)
+            if (coalCost > curShip.Coal)
                 return false;
 
             return true;
@@ -165,10 +171,13 @@ namespace SochaClient.Backend
             this.direction = direction;
         }
 
-        public override bool IsLegalOn(State s)
+        public override bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null)
         {
-            var dirDiff = s.CurrentPlayer.Ship.Dir.Difference(direction);
-            if (dirDiff > s.CurrentPlayer.Ship.Coal + s.CurrentPlayer.Ship.FreeTurns) 
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
+            var dirDiff = curShip.Dir.Difference(direction);
+            if (dirDiff > curShip.Coal + curShip.FreeTurns) 
                 return false;
             return true;
         }
@@ -203,8 +212,11 @@ namespace SochaClient.Backend
             this.direction = direction;
         }
 
-        public override bool IsLegalOn(State s)
+        public override bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null)
         {
+            curShip ??= s.CurrentPlayer.Ship;
+            otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
+
             // TODO: idk
             return true;
         }
