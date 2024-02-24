@@ -103,7 +103,7 @@ namespace SochaClient.Backend
             for (int i = 0; i < distance; i++)
             {
                 pos += CubeCoords.DirToOffset(curShip.Dir);
-
+                
                 if (s.Board.GetField(pos) == null || s.Board.GetField(pos).FType != FieldType.water)
                     return false;
             }
@@ -118,9 +118,15 @@ namespace SochaClient.Backend
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
 
-            curShip.Pos += CubeCoords.DirToOffset(curShip.Dir) * distance;
+            var shipLookVector = CubeCoords.DirToOffset(curShip.Dir);
+            if (Enumerable.Range(1, distance).
+                Select(x => curShip.Pos + shipLookVector * x).
+                Any(x => s.Board.GetField(x).IsMidstream))
+                curShip.MovementPoints -= 1;
+            curShip.Pos += shipLookVector * distance;
             curShip.MovementPoints -= distance;
-            // TODO: Check for passengers and Strömung
+
+            // TODO: Check for passengers
         }
 
         public override string ToXML() => $"<advance distance=\"{distance}\" />\n";
