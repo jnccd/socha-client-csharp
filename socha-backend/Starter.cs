@@ -199,8 +199,17 @@ Usage: start.sh [options]
                                             var curNode = s.Fieldarray[x].ChildNodes[y];
                                             if (!Enum.TryParse(curNode.Name, out FieldType ft))
                                                 throw new Exception("Cant parse this field type " + curNode.Name);
+                                            Direction? dirOut = null;
+                                            int? passengers = null;
+                                            if (ft == FieldType.passenger)
+                                            {
+                                                if (!Enum.TryParse(curNode.Attributes["direction"].Value, out Direction dir))
+                                                    throw new Exception($"Cant parse this field types direction {curNode.Name}, {curNode.Attributes["direction"]?.Value}");
+                                                dirOut = dir;
+                                                passengers = Convert.ToInt32(curNode.Attributes["passenger"].Value);
+                                            }
                                             var fieldCoords = centerCoords + Cache.segOffsets[y][x].RotateByDir(s.Direction);
-                                            gameState.Board.SetField(fieldCoords, new Field(ft, y == 2, fieldCoords, gameState.Board));
+                                            gameState.Board.SetField(fieldCoords, new Field(ft, y == 2, fieldCoords, gameState.Board, dirOut, passengers));
                                         }
                                 }
 
