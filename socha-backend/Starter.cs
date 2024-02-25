@@ -54,6 +54,7 @@ namespace SochaClient.Backend
 
             ExecuteCommunationLoop(stream);
 
+            // Cleanup
             stream.Close();
             client.Close();
             ConsoleWriteLine("End of communication!", ConsoleColor.Red);
@@ -251,6 +252,7 @@ Usage: start.sh [options]
             catch { }
         }
 
+        // Basic NetworkStream management
         static void Send(NetworkStream stream, string message)
         {
             byte[] data = Encoding.ASCII.GetBytes(message);
@@ -275,6 +277,7 @@ Usage: start.sh [options]
             return responseData;
         }
 
+        // Wrapper for color management
         public static void ConsoleWriteLine(string text, ConsoleColor Color)
         {
             ConsoleColor defaultC = Console.ForegroundColor;
