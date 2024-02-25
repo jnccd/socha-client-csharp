@@ -105,8 +105,7 @@ namespace SochaClient.Backend
                 pos += CubeCoords.DirToOffset(curShip.Dir);
                 
                 if (s.Board.GetField(pos) == null || 
-                    s.Board.GetField(pos).FType != FieldType.water ||
-                    otherShip.Pos == pos)
+                    s.Board.GetField(pos).FType != FieldType.water)
                     return false;
             }
 
@@ -221,8 +220,8 @@ namespace SochaClient.Backend
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
 
-            // TODO: idk
-            return true;
+            return curShip.Pos == otherShip.Pos &&
+                   s.Board.GetField(otherShip.Pos + CubeCoords.DirToOffset(direction))?.FType == FieldType.water;
         }
 
         public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false)
@@ -231,7 +230,7 @@ namespace SochaClient.Backend
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
 
             otherShip.Pos += CubeCoords.DirToOffset(direction);
-            // TODO: probably something else too
+            curShip.MovementPoints -= 1;
         }
 
         public override string ToXML() => $"<push direction=\"{direction}\" />\n";

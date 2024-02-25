@@ -108,7 +108,10 @@ namespace SochaClient.Backend
         private List<Move> GeneratePossibleMoveEndings(List<Action> pastActions, State curState, Ship curShip, Ship otherShip)
         {
             // Check for illegal state early
-            if (curShip.Coal < 0 || curShip.MovementPoints < 0 || Board.GetField(curShip.Pos) == null)
+            if (curShip.Coal < 0 || 
+                curShip.MovementPoints < 0 || 
+                Board.GetField(curShip.Pos) == null ||
+                (curShip.Pos == otherShip.Pos && curShip.MovementPoints <= 0))
                 return new List<Move>();
 
             // Return early if done
@@ -117,33 +120,15 @@ namespace SochaClient.Backend
 
             List<Move> re = new();
 
-            if (curShip.MovementPoints > 0 && (!pastActions.Any() || pastActions.Last() is not Advance))
+            if (otherShip.Pos == curShip.Pos)
             {
-                // Add advance action
-                for (int i = 1; i < curShip.MovementPoints + 1; i++)
-                {
-                    var newAction = new Advance(i);
-
-                    if (newAction.IsLegalOn(this, curShip, otherShip))
-                    {
-                        var newCurShip = (Ship)curShip.Clone();
-                        var newOtherShip = (Ship)otherShip.Clone();
-                        var newActions = pastActions.Clone();
-                        newActions.Add(newAction);
-                        newAction.PerformOn(curState, newCurShip, newOtherShip, false);
-
-                        // You're on a path in the woods, and at the end of that path is a cabin...
-                        re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
-                    }
-                }
-            }
-
-            if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && (!pastActions.Any() || pastActions.Last() is not Backend.Turn))
-            {
-                // Add turn action
+                // Add push action
                 for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
                 {
-                    var newAction = new Backend.Turn((Direction)i);
+                    if ((Direction)i == curShip.Dir.Opposite())
+                        continue;
+
+                    var newAction = new Push((Direction)i);
 
                     if (newAction.IsLegalOn(this, curShip, otherShip))
                     {
@@ -155,6 +140,50 @@ namespace SochaClient.Backend
 
                         // You're on a path in the woods, and at the end of that path is a cabin...
                         re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
+                    }
+                }
+            }
+            else
+            {
+                // Add advance action
+                if (curShip.MovementPoints > 0 && (!pastActions.Any() || pastActions.Last() is not Advance))
+                {
+                    for (int i = 1; i < curShip.MovementPoints + 1; i++)
+                    {
+                        var newAction = new Advance(i);
+
+                        if (newAction.IsLegalOn(this, curShip, otherShip))
+                        {
+                            var newCurShip = (Ship)curShip.Clone();
+                            var newOtherShip = (Ship)otherShip.Clone();
+                            var newActions = pastActions.Clone();
+                            newActions.Add(newAction);
+                            newAction.PerformOn(curState, newCurShip, newOtherShip, false);
+
+                            // You're on a path in the woods, and at the end of that path is a cabin...
+                            re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
+                        }
+                    }
+                }
+
+                // Add turn action
+                if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && (!pastActions.Any() || pastActions.Last() is not Backend.Turn))
+                {
+                    for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
+                    {
+                        var newAction = new Backend.Turn((Direction)i);
+
+                        if (newAction.IsLegalOn(this, curShip, otherShip))
+                        {
+                            var newCurShip = (Ship)curShip.Clone();
+                            var newOtherShip = (Ship)otherShip.Clone();
+                            var newActions = pastActions.Clone();
+                            newActions.Add(newAction);
+                            newAction.PerformOn(this, newCurShip, newOtherShip);
+
+                            // You're on a path in the woods, and at the end of that path is a cabin...
+                            re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
+                        }
                     }
                 }
             }
