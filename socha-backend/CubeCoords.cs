@@ -21,11 +21,6 @@ namespace SochaClient.Backend
                 throw new ArgumentException("Incorrect s");
         }
 
-        public static CubeCoords operator +(CubeCoords a, CubeCoords b)
-            => new(a.q + b.q, a.r + b.r);
-        public static CubeCoords operator *(CubeCoords a, float scalar)
-            => new((int)(a.q * scalar), (int)(a.r * scalar));
-
         public CubeCoords Rotate(bool clockwise) => 
             clockwise ? new CubeCoords(-r, -s, -q) : new CubeCoords(-s, -q, -r);
         public CubeCoords RotateByDir(Direction dir) =>
@@ -51,6 +46,19 @@ namespace SochaClient.Backend
                 _ => throw new ArgumentException("wat"),
             };
 
+        public static CubeCoords operator +(CubeCoords a, CubeCoords b)
+            => new(a.q + b.q, a.r + b.r);
+        public static CubeCoords operator *(CubeCoords a, float scalar)
+            => new((int)(a.q * scalar), (int)(a.r * scalar));
+
+        public override int GetHashCode() => q + r * 10000;
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != typeof(CubeCoords))
+                return false;
+            var cobj = obj as CubeCoords;
+            return cobj.q == q && cobj.r == r;
+        }
         public object Clone() => MemberwiseClone();
     }
 }

@@ -104,11 +104,11 @@ namespace SochaClient.Backend
             {
                 pos += CubeCoords.DirToOffset(curShip.Dir);
                 
-                if (s.Board.GetField(pos) == null || s.Board.GetField(pos).FType != FieldType.water)
+                if (s.Board.GetField(pos) == null || 
+                    s.Board.GetField(pos).FType != FieldType.water ||
+                    otherShip.Pos == pos)
                     return false;
             }
-
-            // TODO: Check for other player pos
 
             return true;
         }
