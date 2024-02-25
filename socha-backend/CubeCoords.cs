@@ -50,6 +50,10 @@ namespace SochaClient.Backend
             => new(a.q + b.q, a.r + b.r);
         public static CubeCoords operator *(CubeCoords a, float scalar)
             => new((int)(a.q * scalar), (int)(a.r * scalar));
+        public static bool operator ==(CubeCoords a, CubeCoords b)
+            => (a is null && b is null) || (a is not null && a.Equals(b));
+        public static bool operator !=(CubeCoords a, CubeCoords b)
+            => (a is not null || b is not null) && (a is null || !a.Equals(b));
 
         public override int GetHashCode() => q + r * 10000;
         public override bool Equals(object obj)
