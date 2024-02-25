@@ -78,7 +78,7 @@ namespace SochaClient.Backend
     {
         abstract public bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null);
 
-        abstract public void PerformOn(State s, Ship curShip = null, Ship otherShip = null);
+        abstract public void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false);
 
         abstract public string ToXML();
 
@@ -113,7 +113,7 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false)
         {
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
@@ -125,8 +125,6 @@ namespace SochaClient.Backend
                 curShip.MovementPoints -= 1;
             curShip.Pos += shipLookVector * distance;
             curShip.MovementPoints -= distance;
-
-            // TODO: Check for passengers
         }
 
         public override string ToXML() => $"<advance distance=\"{distance}\" />\n";
@@ -153,7 +151,7 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false)
         {
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
@@ -188,7 +186,7 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false)
         {
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;
@@ -227,7 +225,7 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null)
+        public override void PerformOn(State s, Ship curShip = null, Ship otherShip = null, bool modifyState = false)
         {
             curShip ??= s.CurrentPlayer.Ship;
             otherShip ??= s.GetOtherPlayer(s.CurrentPlayer).Ship;

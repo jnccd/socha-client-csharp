@@ -8,6 +8,7 @@ namespace SochaClient.Backend
     {
         public static PlayerTeam OtherTeam(this PlayerTeam t) => t == PlayerTeam.ONE ? PlayerTeam.TWO : PlayerTeam.ONE;
         public static Direction Step(this Direction d, int stepWidth) => (Direction)(((int)d + stepWidth) % Enum.GetNames(typeof(Direction)).Length);
+        public static Direction Opposite(this Direction d) => (Direction)(((int)d + 3) % Enum.GetNames(typeof(Direction)).Length);
         public static int Difference(this Direction d, Direction e) => Math.Min(Math.Abs((int)d - 6) - (int)e,
                                                                        Math.Min(Math.Abs((int)d)     - (int)e,
                                                                                 Math.Abs((int)d + 6) - (int)e));
