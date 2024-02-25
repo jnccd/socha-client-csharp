@@ -6,17 +6,21 @@ namespace SochaClient.Backend
 {
     public class Field : ICloneable
     {
-        public FieldType FType;
-        public bool IsMidstream;
-        public Board Parent { get; private set; }
+        public FieldType FType { get; private set; }
+        public bool IsMidstream { get; private set; }
         public CubeCoords Coords { get; private set; }
-       
-        public Field(FieldType fType, bool isMidstream, CubeCoords coords, Board parent)
+        public Board Parent { get; private set; }
+        public Direction? Dir { get; private set; }
+        public int? Passengers { get; private set; }
+
+        public Field(FieldType fType, bool isMidstream, CubeCoords coords, Board parent, Direction? dir = null, int? passengers = null)
         {
             FType = fType;
             IsMidstream = isMidstream;
             Coords = coords;
             Parent = parent;
+            Dir = dir;
+            Passengers = passengers;
         }
 
         public override string ToString() =>

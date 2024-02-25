@@ -47,8 +47,22 @@ namespace SochaClient.Backend
         {
             State re = cloneState ? (State)Clone() : this;
 
+            // Perform actions
             foreach (var action in m.actions)
-                action.PerformOn(this);
+                action.PerformOn(this, modifyState: true);
+
+            // Get passengers
+            if (CurrentPlayer.Ship.Speed == 1 || 
+                (Board.GetField(CurrentPlayer.Ship.Pos).IsMidstream && CurrentPlayer.Ship.Speed == 2))
+                for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
+                {
+                    var passengerCheckPos = CurrentPlayer.Ship.Pos + CubeCoords.DirToOffset((Direction)i);
+                    var pasengerCheckField = Board.GetField(passengerCheckPos);
+                    if (pasengerCheckField.FType == FieldType.passenger && 
+                        pasengerCheckField.Passengers > 0 && 
+                        pasengerCheckField.Dir == ((Direction)i).Opposite())
+                        Board.SetField(passengerCheckPos, new Field(FieldType.island, false, passengerCheckPos, Board));
+                }
 
             // Update current player
             CurrentPlayer = GetOtherPlayer(CurrentPlayer);
@@ -83,15 +97,15 @@ namespace SochaClient.Backend
 
                     // You're on a path in the woods, and at the end of that path is a cabin...
                     if (acc == 0)
-                        re.AddRange(GeneratePossibleMoveEndings(new List<Action> { }, newCurShip, newOtherShip));
+                        re.AddRange(GeneratePossibleMoveEndings(new List<Action> { },           this, newCurShip, newOtherShip));
                     else
-                        re.AddRange(GeneratePossibleMoveEndings(new List<Action> { newAction }, newCurShip, newOtherShip));
+                        re.AddRange(GeneratePossibleMoveEndings(new List<Action> { newAction }, this, newCurShip, newOtherShip));
                 }
             }
 
             return re;
         }
-        private List<Move> GeneratePossibleMoveEndings(List<Action> pastActions, Ship curShip, Ship otherShip)
+        private List<Move> GeneratePossibleMoveEndings(List<Action> pastActions, State curState, Ship curShip, Ship otherShip)
         {
             // Check for illegal state early
             if (curShip.Coal < 0 || curShip.MovementPoints < 0 || Board.GetField(curShip.Pos) == null)
@@ -116,10 +130,10 @@ namespace SochaClient.Backend
                         var newOtherShip = (Ship)otherShip.Clone();
                         var newActions = pastActions.Clone();
                         newActions.Add(newAction);
-                        newAction.PerformOn(this, newCurShip, newOtherShip);
+                        newAction.PerformOn(curState, newCurShip, newOtherShip, false);
 
                         // You're on a path in the woods, and at the end of that path is a cabin...
-                        re.AddRange(GeneratePossibleMoveEndings(newActions, newCurShip, newOtherShip));
+                        re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
                     }
                 }
             }
@@ -140,7 +154,7 @@ namespace SochaClient.Backend
                         newAction.PerformOn(this, newCurShip, newOtherShip);
 
                         // You're on a path in the woods, and at the end of that path is a cabin...
-                        re.AddRange(GeneratePossibleMoveEndings(newActions, newCurShip, newOtherShip));
+                        re.AddRange(GeneratePossibleMoveEndings(newActions, curState, newCurShip, newOtherShip));
                     }
                 }
             }
