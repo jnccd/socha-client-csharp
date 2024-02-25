@@ -91,7 +91,8 @@ namespace SochaClient.Backend
             Board b = new();
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                    b.Fields[x, y] = Fields[x, y].CloneWParent(b);
+                    if (Fields[x, y] != null)
+                        b.Fields[x, y] = Fields[x, y].CloneWParent(b);
             return b;
         }
     }
