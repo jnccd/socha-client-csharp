@@ -1,4 +1,4 @@
-# C# client for Software-Challenge Germany 2022/2023
+# C# client for Software-Challenge Germany 2023/2024
 
 [![Tests](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
 [![Nuget CD](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml)
@@ -7,7 +7,7 @@
 [![Discord](https://img.shields.io/discord/233577109363097601?color=blue&label=Discord)](https://discord.gg/ARZamDptG5)
 [![Documentation](https://img.shields.io/badge/Software--Challenge%20-Documentation-%234299e1)](https://docs.software-challenge.de/)
 
-This repository contains a random client for the game "Hey, Danke für den Fisch" written for the .NET platform.
+This repository contains a random client for the game "Mississippi Queen" written for the .NET platform.
 
 Because it is a random client, it will only do seemingly random moves. If you wish to build your own client on top of this one you have two options. 
 
