@@ -43,6 +43,14 @@ namespace SochaClient.Backend
             Points = points;
             Speed = speed;
             Pos = pos;
+
+            InitTurn();
+        }
+
+        public void InitTurn()
+        {
+            MovementPoints = Speed;
+            FreeTurns = 1;
         }
 
         public object Clone()
