@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\socha-backend\socha-backend.csproj" />
+    <ProjectReference Include="..\socha-backend\Socha.Backend.csproj" />
   </ItemGroup>
 
 </Project>

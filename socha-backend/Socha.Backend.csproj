@@ -49,4 +49,8 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Action\" />
+  </ItemGroup>
 </Project>
