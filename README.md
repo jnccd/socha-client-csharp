@@ -1,4 +1,4 @@
-# C# client for Software-Challenge Germany 2023/2024
+# C# client for Software-Challenge Germany 2024
 
 [![Tests](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/build-and-test.yml)
 [![Nuget CD](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml/badge.svg)](https://github.com/jnccd/socha-client-csharp/actions/workflows/publish.yml)
