@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Socha.Backend.Action;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Action = Socha.Backend.Action.Action;
 
 namespace SochaClient.Backend
 {
@@ -180,12 +182,12 @@ namespace SochaClient.Backend
 
                 // Add turn action
                 if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && 
-                    (!pastActions.Any() || pastActions.Last() is not Backend.Turn) &&
-                    pastActions.Where(x => x is Backend.Turn).Count() < 2)
+                    (!pastActions.Any() || pastActions.Last() is not Socha.Backend.Action.Turn) &&
+                    pastActions.Where(x => x is Turn).Count() < 2)
                 {
                     for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
                     {
-                        var newAction = new Backend.Turn((Direction)i);
+                        var newAction = new Turn((Direction)i);
 
                         // Prune turns
                         if ((Direction)i == curShip.Dir ||
