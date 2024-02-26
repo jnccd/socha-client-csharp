@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Software-Challenge C# Client Template</Title>
-    <Version>23.0.2.1</Version>
+    <Version>24.1.5</Version>
     <Authors>Dobiko</Authors>
     <Company>Software-Challenge</Company>
     <Product>Software Challenge Client</Product>
@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/jnccd/socha-client-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>socha;software-challenge;software-challenge-germany</PackageTags>
-    <PackageReleaseNotes>Initial release with support for the game "Hey, danke für den Fisch!" in the season 22/23</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial release with support for the game "Mississippi Queen" in the season 23/24</PackageReleaseNotes>
     <NeutralLanguage>en-DE</NeutralLanguage>
     <PackageIcon>resources\logo.png</PackageIcon>
     <PackageId>Socha</PackageId>
