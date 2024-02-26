@@ -32,6 +32,10 @@ namespace SochaClient.Backend
         /// </summary>
         public State Perform(Move m, bool cloneState = true)
         {
+            // Init move vars of current players ship
+            CurrentPlayer.Ship.InitTurn();
+
+            // Check for legality and perform
             if (m.IsLegalOn(this))
                 return PerformWithoutChecks(m, cloneState);
             else
@@ -47,6 +51,9 @@ namespace SochaClient.Backend
         {
             State re = cloneState ? (State)Clone() : this;
 
+            // Init move vars of current players ship
+            CurrentPlayer.Ship.InitTurn();
+
             // Perform actions
             foreach (var action in m.actions)
                 action.PerformOn(this, modifyState: true);
@@ -58,7 +65,8 @@ namespace SochaClient.Backend
                 {
                     var passengerCheckPos = CurrentPlayer.Ship.Pos + CubeCoords.DirToOffset((Direction)i);
                     var pasengerCheckField = Board.GetField(passengerCheckPos);
-                    if (pasengerCheckField.FType == FieldType.passenger && 
+                    if (pasengerCheckField != null &&
+                        pasengerCheckField.FType == FieldType.passenger && 
                         pasengerCheckField.Passengers > 0 && 
                         pasengerCheckField.Dir == ((Direction)i).Opposite())
                         Board.SetField(passengerCheckPos, new Field(FieldType.island, false, passengerCheckPos, Board));
@@ -146,7 +154,8 @@ namespace SochaClient.Backend
             else
             {
                 // Add advance action
-                if (curShip.MovementPoints > 0 && (!pastActions.Any() || pastActions.Last() is not Advance))
+                if (curShip.MovementPoints > 0 && 
+                    (!pastActions.Any() || pastActions.Last() is not Advance))
                 {
                     for (int i = 1; i < curShip.MovementPoints + 1; i++)
                     {
