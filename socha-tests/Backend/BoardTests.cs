@@ -14,17 +14,15 @@ namespace SochaClient.Tests
         [TestMethod()]
         public void BoardIsCorrectlyCloned()
         {
-            //Board board = new();
-            //board.GetField(1, 1).fishes = 2;
+            Board board = new();
+            board.SetField(new CubeCoords(1, 1), new Field(FieldType.island, false, new CubeCoords(1, 1), board));
 
-            //var clone = (Board)board.Clone();
-            //clone.GetField(2, 2).fishes = 3;
+            var clone = (Board)board.Clone();
+            clone.SetField(new CubeCoords(1, 1), new Field(FieldType.water, false, new CubeCoords(1, 1), board));
 
-            //Assert.AreEqual(board.GetField(1, 1).fishes, 2);
-            //Assert.AreEqual(board.GetField(2, 2).fishes, 0);
+            Assert.AreEqual(board.GetField(1, 1).FType, FieldType.island);
 
-            //Assert.AreEqual(clone.GetField(1, 1).fishes, 2);
-            //Assert.AreEqual(clone.GetField(2, 2).fishes, 3);
+            Assert.AreEqual(clone.GetField(1, 1).FType, FieldType.water);
         }
     }
 }
