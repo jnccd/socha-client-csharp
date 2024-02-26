@@ -95,6 +95,9 @@ namespace SochaClient.Backend
             for (int i = 1; i < 6 + 1; i++)
             {
                 int acc = i - curShip.Speed;
+                // Prune accelerations
+                if (Math.Abs(acc) > 3)
+                    continue;
                 var newAction = new Acceleration(acc);
 
                 if (newAction.IsLegalOn(this))
@@ -184,7 +187,9 @@ namespace SochaClient.Backend
                     {
                         var newAction = new Backend.Turn((Direction)i);
 
-                        if ((Direction)i == curShip.Dir)
+                        // Prune turns
+                        if ((Direction)i == curShip.Dir ||
+                            Math.Abs(curShip.Dir.Difference((Direction)i)) > 1)
                             continue;
 
                         if (newAction.IsLegalOn(this, curShip, otherShip))
