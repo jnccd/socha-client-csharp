@@ -167,11 +167,16 @@ namespace SochaClient.Backend
                 }
 
                 // Add turn action
-                if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && (!pastActions.Any() || pastActions.Last() is not Backend.Turn))
+                if ((curShip.Coal > 0 || curShip.FreeTurns > 0) && 
+                    (!pastActions.Any() || pastActions.Last() is not Backend.Turn) &&
+                    pastActions.Where(x => x is Backend.Turn).Count() < 2)
                 {
                     for (int i = 0; i < Enum.GetNames(typeof(Direction)).Length; i++)
                     {
                         var newAction = new Backend.Turn((Direction)i);
+
+                        if ((Direction)i == curShip.Dir)
+                            continue;
 
                         if (newAction.IsLegalOn(this, curShip, otherShip))
                         {
