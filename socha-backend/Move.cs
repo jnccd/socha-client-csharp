@@ -21,22 +21,24 @@ namespace SochaClient.Backend
         /// Checks if this move can be performed on game State S
         /// </summary>
         /// <param name="S"> The game State this move should be performed on </param> 
-        public bool IsLegalOn(State s) // https://youtu.be/nz20lu2AM2k?t=8
+        public bool IsLegalOn(State s, Ship curShip = null, Ship otherShip = null) // https://youtu.be/nz20lu2AM2k?t=8
         {
             if (s is null)
                 throw new ArgumentNullException(nameof(s));
 
+            curShip ??= (Ship)s.CurrentPlayer.Ship.Clone();
+            otherShip ??= (Ship)s.GetOtherPlayer(s.CurrentPlayer).Ship.Clone();
+
             // Perform and check actions
-            var sc = (State)s.Clone();
             foreach (var action in actions)
             {
-                if (!action.IsLegalOn(sc))
+                if (!action.IsLegalOn(s, curShip, otherShip))
                     return false;
-                action.PerformOn(sc);
+                action.PerformOn(s, curShip, otherShip);
             }
 
             // Check final state
-            if (sc.CurrentPlayer.Ship.Coal < 0 || sc.CurrentPlayer.Ship.MovementPoints != 0)
+            if (curShip.Coal < 0 || curShip.MovementPoints != 0)
                 return false;
             // Check for correct Acceleration placement
             bool encoutneredNonAcc = false;
@@ -51,7 +53,7 @@ namespace SochaClient.Backend
             return true;
         }
 
-        public void PerformOn(State s) => s.Perform(this);
+        public State PerformOn(State s, bool cloneState = true) => s.Perform(this, cloneState);
 
         /// <summary>
         /// Converts this Move to XML
